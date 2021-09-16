@@ -25,6 +25,7 @@ jobs:
       - name: Build
         run: |
           npm ci
+          npm run serve
 
       - name: Test
         run: npm test
