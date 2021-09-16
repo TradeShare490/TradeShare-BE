@@ -15,4 +15,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./routes')(app);
 
-app.listen(PORT, () => console.log(`Running on ${HOST}:${PORT}/ ⚡`));
+app.listen(PORT, () => console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`));
