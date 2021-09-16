@@ -4,7 +4,9 @@
 `npm ci` (this will install based on the given package-lock.json hence guarantee of dependencies'versions)
 
 ## Step 2: Running project : 
-`npm run serve` 
+`npm run serve` : Development mode
+
+`npm start` : Production mode
 
 --
 
