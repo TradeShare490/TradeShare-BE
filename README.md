@@ -14,4 +14,4 @@
 `npm test` 
 
 ## Test report:
-To receive a coverage report (in `.html` format) run `npm test-report`
+To receive a coverage report (in `.html` format) run `npm test-report` 
