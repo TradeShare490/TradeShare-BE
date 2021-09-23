@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
-import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -10,8 +10,9 @@ const HOST = process.env.HOST || 'http://localhost'
 const app: Express = express();
 
 app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors())
 
 require('./routes')(app);
 
