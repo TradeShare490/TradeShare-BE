@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import connect from "./db/connect";
 
 dotenv.config();
 
@@ -16,4 +17,7 @@ app.use(cors())
 
 require('./routes')(app);
 
-app.listen(PORT, () => console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`));
+app.listen(PORT, () => {
+    console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`)
+    connect();
+});
