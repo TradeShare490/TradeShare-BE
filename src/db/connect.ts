@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 function connect() {
-    const dbUri = "mongodb+srv://damienleu:tradeshare@cluster0.s6elo.mongodb.net/tradesharedb?retryWrites=true&w=majority";
+
+    const DB_URI = process.env.DB_URI || "mongodb+srv://damienleu:tradeshare@cluster0.s6elo.mongodb.net/tradesharedb?retryWrites=true&w=majority";
 
     return mongoose
-        .connect(dbUri)
+        .connect(DB_URI)
         .then(() => {
             console.log("Database connected");
         })
