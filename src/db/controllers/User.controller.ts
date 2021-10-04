@@ -7,7 +7,7 @@ import { IUserInfo } from "../models/UserInfo.model";
 export interface UserFindParameters {
 	email?: string;
 	searchQuery?: any;
-	_id?: string;
+	id?: string;
 	limit?: number;
 	skip?: number;
 }
@@ -17,7 +17,7 @@ export default class UserController {
 	private userInfoCollection: Model<IUserInfo>;
 	constructor(loginUserCollection: Model<ILoginUser>, userInfoCollection: Model<IUserInfo>) {
 		this.loginUserCollection = loginUserCollection;
-		this.userInfoCollection = userInfoCollection
+		this.userInfoCollection = userInfoCollection;
 	}
 
 	/**
@@ -29,16 +29,13 @@ export default class UserController {
 		var params = { ...originalParams }; // make a deep copy, so we don't change the original if there is error
 
 		// if searching for specific item by id
-		if (params._id !== undefined) {
+		if (params.id !== undefined) {
 			return {
-				find: { _id: params._id },
+				find: { _id: params.id },
 				limit: 1,
 				skip: 0,
 			};
-		}
-
-		// if searching for specific Ericsson enum
-		if (params.email !== undefined) {
+		} else if (params.email !== undefined) {
 			return {
 				find: { email: params.email },
 				limit: 1,
@@ -81,7 +78,7 @@ export default class UserController {
 	async createUser(input: any): Promise<MessageResponse> {
 		try {
 			const response = await this.loginUserCollection.create(input);
-			return messages.successMessage("New user created", "user", response);
+			return messages.createdMessage("New user created", "user", response);
 		} catch (error: any) {
 			console.error(error);
 			return messages.internalError(error.message);
@@ -93,10 +90,14 @@ export default class UserController {
 	 * @param id User id to be deleted
 	 * @returns
 	 */
-	async deleteUser(id: UserFindParameters["_id"]): Promise<MessageResponse> {
+	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
 		try {
 			const response = await this.loginUserCollection.deleteOne({ _id: id });
-			return messages.successMessage(`${response.deletedCount} user has been deleted`, "deletedCount", response.deletedCount);
+			return messages.successMessage(
+				`${response.deletedCount} user has been deleted`,
+				"deletedCount",
+				response.deletedCount
+			);
 		} catch (error: any) {
 			return messages.internalError(error.message);
 		}
@@ -114,7 +115,9 @@ export default class UserController {
 				.find(parsedParam.find)
 				.skip(parsedParam.skip)
 				.limit(parsedParam.limit);
-			return messages.successMessage("The user has been found", "user", response[0]);
+			return response.length > 0
+				? messages.successMessage("The user has been found", "user", response[0])
+				: messages.successMessage("No match found", "user", []);
 		} catch (error: any) {
 			return messages.internalError(error.message);
 		}
@@ -126,7 +129,7 @@ export default class UserController {
 	 * @param input content for update
 	 * @returns response with new User object
 	 */
-	async updateUser(id: UserFindParameters["_id"], input: any): Promise<MessageResponse> {
+	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
 		try {
 			const updateResponse = await this.loginUserCollection.findByIdAndUpdate(id, input, {
 				new: true,

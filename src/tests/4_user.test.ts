@@ -46,7 +46,7 @@ describe.only("User service can", () => {
 	});
 
 	it('get the user by id', async () => {
-		const res = await userService.getUser({_id: mockedUser._id})
+		const res = await userService.getUser({id: mockedUser._id})
 		expect(res.success).to.be.true 
 		expect(res).to.have.property('user')
 	

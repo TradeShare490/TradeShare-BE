@@ -22,6 +22,15 @@ export const messages = {
      */
     successMessage<T>(message: string, type: string, entity: T): MessageResponse{
         return{
+            status: 200,
+            success: true,
+            message: message,
+            [type]: entity
+        }
+    },
+
+    createdMessage<T>(message: string, type: string, entity: T): MessageResponse{
+        return{
             status: 201,
             success: true,
             message: message,

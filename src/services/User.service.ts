@@ -24,7 +24,7 @@ class UserService {
 	 * @param id User id to be deleted
 	 * @returns
 	 */
-	async deleteUser(id: UserFindParameters["_id"]): Promise<MessageResponse> {
+	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
 		return await this.userController.deleteUser(id);
 	}
 
@@ -43,7 +43,7 @@ class UserService {
 	 * @param input content for update
 	 * @returns response with new User object
 	 */
-	async updateUser(id: UserFindParameters["_id"], input: any): Promise<MessageResponse> {
+	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
 		return await this.userController.updateUser(id, input);
 	}
 }
