@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express';
-import DefaultService from '../services/default.service';
+import DefaultService from '../../services/default.service';
 
 const defaultRoute = (app: Express) => {
   const defaultService = new DefaultService()
@@ -12,9 +12,9 @@ const defaultRoute = (app: Express) => {
     res.send(defaultService.apiCheck());
   });
 
-  app.get('*', (req: Request, res:Response) => {
-    res.send(defaultService.notFound())
-  })
+  // app.get('*', (req: Request, res:Response) => {
+  //   res.send(defaultService.notFound())
+  // })
 };
 
 export default defaultRoute
