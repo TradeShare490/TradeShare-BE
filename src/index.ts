@@ -15,9 +15,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 
-require('./routes')(app);
+require('./routes/v1')(app);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`)
-    connect();
+    await connect();
 });
