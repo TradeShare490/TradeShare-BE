@@ -11,7 +11,7 @@ describe('Default service can', () => {
     it('say hello', () => {
         const res = service.hello() 
         expect(res, 'to include hello').to.include('Hello')
-    })
+    }) 
 
     it('say testing', () => {
         const res = service.apiCheck() 
