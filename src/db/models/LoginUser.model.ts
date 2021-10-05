@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-export interface ILoginUser extends mongoose.Document {
+export interface LoginUser extends mongoose.Document {
 	email: string;
 	password: string;
 }
@@ -10,4 +10,4 @@ const UserSchema: Schema = new Schema({
 	password: { type: String, required: true },
 });
 
-export default mongoose.model<ILoginUser>("LoginUser", UserSchema);
+export default mongoose.model<LoginUser>("LoginUser", UserSchema);

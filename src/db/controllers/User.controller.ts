@@ -1,8 +1,8 @@
 import { Model } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
-import { ILoginUser } from "../models/LoginUser.model";
-import { IUserInfo } from "../models/UserInfo.model";
+import { LoginUser } from "../models/LoginUser.model";
+import { UserInfo } from "../models/UserInfo.model";
 
 export interface UserFindParameters {
 	email?: string;
@@ -13,9 +13,9 @@ export interface UserFindParameters {
 }
 
 export default class UserController {
-	private loginUserCollection: Model<ILoginUser>; // a reference from the collection inside the database
-	private userInfoCollection: Model<IUserInfo>;
-	constructor(loginUserCollection: Model<ILoginUser>, userInfoCollection: Model<IUserInfo>) {
+	private loginUserCollection: Model<LoginUser>; // a reference from the collection inside the database
+	private userInfoCollection: Model<UserInfo>;
+	constructor(loginUserCollection: Model<LoginUser>, userInfoCollection: Model<UserInfo>) {
 		this.loginUserCollection = loginUserCollection;
 		this.userInfoCollection = userInfoCollection;
 	}
