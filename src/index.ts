@@ -17,7 +17,7 @@ app.use(cors())
 
 require('./routes/v1')(app);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`)
-    connect();
+    await connect();
 });

@@ -25,6 +25,8 @@ jobs:
           npm ci
       - name: Build
         run: CI='' npm run build
+        env: 
+          DB_URI: mongodb+srv://damienleu:tradeshare@cluster0.s6elo.mongodb.net/tradesharedb?retryWrites=true&w=majority
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -32,3 +34,5 @@ jobs:
           path: build
       - name: Test
         run: npm test
+        env: 
+          TEST_DB_URI: mongodb+srv://ken:5ta9cHYDPIRS6PMa@cluster0.wva5y.mongodb.net/TradeShareTestDB?retryWrites=true&w=majority 
