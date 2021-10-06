@@ -14,7 +14,12 @@ export interface MailOption {
 
 export class EmailSender {
 	private transporter: Mail;
+	private service: string;
+	private email: string;
+	private email_password: string;
+
 	constructor() {
+		// check .env variables
 		if (
 			process.env.SERVICE === undefined ||
 			process.env.EMAIL === undefined ||
@@ -25,11 +30,17 @@ export class EmailSender {
 			);
 		}
 
+		// setup values
+		this.service = process.env.SERVICE || "gmail";
+		this.email = process.env.EMAIL || "tradeshare.ca@gmail.com";
+		this.email_password = process.env.EMAIL_PASSWORD || "tradeshare123";
+
+		// setup transporter
 		this.transporter = nodemailer.createTransport({
-			service: process.env.SERVICE || "gmail",
+			service: this.service,
 			auth: {
-				user: process.env.EMAIL || "tradeshare.ca@gmail.com",
-				pass: process.env.EMAIL_PASSWORD || "tradeshare123",
+				user: this.email,
+				pass: this.email_password,
 			},
 		});
 	}
@@ -41,7 +52,7 @@ export class EmailSender {
 	 */
 	private fillMailOption(originalMailOption: MailOption): Mail.Options {
 		let mailOption: Mail.Options = { ...originalMailOption };
-		mailOption.from = `${process.env.EMAIL}`; // update sender
+		mailOption.from = this.email; // update sender
 		return mailOption;
 	}
 
