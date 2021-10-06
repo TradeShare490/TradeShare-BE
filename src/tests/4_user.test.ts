@@ -8,7 +8,7 @@ describe("User service can", () => {
 
 	it("be setup", () => {
 		userService = new UserService();
-		expect(userService).not.equal("undefined");
+		expect(userService).not.equal(undefined);
 	});
 
 	it("create a new user", async () => {
