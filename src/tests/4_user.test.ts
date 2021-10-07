@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { LoginUser } from "../db/models/LoginUser.model";
-import UserService from "../services/User.service";
+import { LoginUser } from "../db/models/loginUser.model";
+import UserService from "../services/user.service";
 
 describe("User service can", () => {
 	let mockedUser: LoginUser;

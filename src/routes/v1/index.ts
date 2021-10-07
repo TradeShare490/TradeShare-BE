@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import defaultRoute from './default.route';
-import userRoute from './User.route'
+import userRoute from './user.route'
 
 module.exports = function (app: Express) {
   // Register the routes

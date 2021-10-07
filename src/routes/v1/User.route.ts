@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import UserService from "../../services/User.service";
+import UserService from "../../services/user.service";
 
 const userRoute = (app: Express) => {
 	const userService = new UserService();

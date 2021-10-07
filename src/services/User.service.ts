@@ -1,7 +1,7 @@
-import UserController, { UserFindParameters } from "../db/controllers/User.controller";
+import UserController, { UserFindParameters } from "../db/controllers/user.controller";
 import { MessageResponse } from "../db/messages";
-import LoginUserCollection from "../db/models/LoginUser.model";
-import UserInfoCollection from "../db/models/UserInfo.model";
+import LoginUserCollection from "../db/models/loginUser.model";
+import UserInfoCollection from "../db/models/userInfo.model";
 
 class UserService {
 	private userController: UserController;

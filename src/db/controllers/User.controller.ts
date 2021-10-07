@@ -1,8 +1,8 @@
 import { Model } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
-import { LoginUser } from "../models/LoginUser.model";
-import { UserInfo } from "../models/UserInfo.model";
+import { LoginUser } from "../models/loginUser.model";
+import { UserInfo } from "../models/userInfo.model";
 
 export interface UserFindParameters {
 	email?: string;

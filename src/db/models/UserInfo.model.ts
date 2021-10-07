@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { LoginUser } from "./LoginUser.model";
+import { LoginUser } from "./loginUser.model";
 
 export interface UserInfo extends mongoose.Document {
 	firstname: string;
