@@ -1,9 +1,9 @@
-import { Model } from "mongoose";
+import { Model, DocumentDefinition } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
-import { LoginUser } from "../models/loginUser.model";
+import { UserDocument } from "../models/user.model";
 import { UserInfo } from "../models/userInfo.model";
-
+import { CreateUserInput } from "../schema/user.schema";
 export interface UserFindParameters {
 	email?: string;
 	searchQuery?: any;
@@ -12,11 +12,11 @@ export interface UserFindParameters {
 	skip?: number;
 }
 
-export default class UserController {
-	private loginUserCollection: Model<LoginUser>; // a reference from the collection inside the database
+export default class UserService {
+	private UserDocumentCollection: Model<UserDocument>; // a reference from the collection inside the database
 	private userInfoCollection: Model<UserInfo>;
-	constructor(loginUserCollection: Model<LoginUser>, userInfoCollection: Model<UserInfo>) {
-		this.loginUserCollection = loginUserCollection;
+	constructor(UserDocumentCollection: Model<UserDocument>, userInfoCollection: Model<UserInfo>) {
+		this.UserDocumentCollection = UserDocumentCollection;
 		this.userInfoCollection = userInfoCollection;
 	}
 
@@ -75,12 +75,13 @@ export default class UserController {
 	 * @param input the data for creating new user, please consult the UserSchema as a reference
 	 * @returns a new User object with _id
 	 */
-	async createUser(input: any): Promise<MessageResponse> {
+	async createUser(input: DocumentDefinition<
+		Omit<UserDocument, "createdAt" | "updatedAt" | "comparePassword">
+	  >) {
 		try {
-			const response = await this.loginUserCollection.create(input);
-			return messages.createdMessage("New user created", "user", response);
+			const user = await this.UserDocumentCollection.create(input);
+			return 
 		} catch (error: any) {
-			console.error(error);
 			return messages.internalError(error.message);
 		}
 	}
@@ -92,7 +93,7 @@ export default class UserController {
 	 */
 	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
 		try {
-			const response = await this.loginUserCollection.deleteOne({ _id: id });
+			const response = await this.UserDocumentCollection.deleteOne({ _id: id });
 			return messages.successMessage(
 				`${response.deletedCount} user has been deleted`,
 				"deletedCount",
@@ -111,7 +112,7 @@ export default class UserController {
 	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
 		try {
 			const parsedParam = this.parseParams(originalParam);
-			const response = await this.loginUserCollection
+			const response = await this.UserDocumentCollection
 				.find(parsedParam.find)
 				.skip(parsedParam.skip)
 				.limit(parsedParam.limit);
@@ -131,7 +132,7 @@ export default class UserController {
 	 */
 	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
 		try {
-			const updateResponse = await this.loginUserCollection.findByIdAndUpdate(id, input, {
+			const updateResponse = await this.UserDocumentCollection.findByIdAndUpdate(id, input, {
 				new: true,
 				setDefaultsOnInsert: true,
 			});

@@ -1,13 +1,15 @@
-import UserController, { UserFindParameters } from "../db/controllers/user.controller";
+import UserService, { UserFindParameters } from "../db/service/user.service";
+import { Request, Response } from "express";
 import { MessageResponse } from "../db/messages";
-import LoginUserCollection from "../db/models/loginUser.model";
+import LoginUserCollection, {UserDocument} from "../db/models/user.model";
 import UserInfoCollection from "../db/models/userInfo.model";
-
-class UserService {
-	private userController: UserController;
+import { CreateUserInput } from "../db/schema/user.schema";
+import { omit } from "lodash";
+class UserController {
+	private userService: UserService;
 
 	constructor() {
-		this.userController = new UserController(LoginUserCollection, UserInfoCollection);
+		this.userService = new UserService(LoginUserCollection, UserInfoCollection);
 	}
 
 	/**
@@ -15,8 +17,9 @@ class UserService {
 	 * @param input the data for creating new user, please consult the UserSchema as a reference
 	 * @returns a new User object with _id
 	 */
-	async createUser(input: any): Promise<MessageResponse> {
-		return await this.userController.createUser(input);
+	async createUser(req: Request<{}, {}, CreateUserInput["body"]>,
+	res: Response) {
+		return await this.userService.createUser(req.body);
 	}
 
 	/**
@@ -25,7 +28,7 @@ class UserService {
 	 * @returns
 	 */
 	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
-		return await this.userController.deleteUser(id);
+		return await this.userService.deleteUser(id);
 	}
 
 	/**
@@ -34,7 +37,7 @@ class UserService {
 	 * @returns response with the user found
 	 */
 	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
-		return await this.userController.getUser(originalParam);
+		return await this.userService.getUser(originalParam);
 	}
 
 	/**
@@ -44,8 +47,8 @@ class UserService {
 	 * @returns response with new User object
 	 */
 	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
-		return await this.userController.updateUser(id, input);
+		return await this.userService.updateUser(id, input);
 	}
 }
 
-export default UserService;
+export default UserController;

@@ -1,23 +1,23 @@
 import mongoose, { Schema } from "mongoose";
-import { LoginUser } from "./loginUser.model";
+import { UserDocument } from "./user.model";
 
 export interface UserInfo extends mongoose.Document {
 	firstname: string;
 	lastname: string;
-	email: LoginUser["email"];
+	email: UserDocument["email"];
 	portfolio: any[];
-	id: LoginUser["_id"];
-	followers: LoginUser["_id"][];
-	following: LoginUser["_id"][];
+	id: UserDocument["_id"];
+	followers: UserDocument["_id"][];
+	following: UserDocument["_id"][];
 }
 
 const UserSchema: Schema = new Schema({
 	firstname: { type: String, required: true },
 	lastname: { type: String, required: true },
-    email: {type: String, ref: 'LoginUser'},
-    id: {type: mongoose.Schema.Types.ObjectId, ref: 'LoginUser'},
-	followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'LoginUser', default: []} ],
-	following: [{type: mongoose.Schema.Types.ObjectId, ref: 'LoginUser', default: []} ]
+    email: {type: String, ref: 'UserDocument'},
+    id: {type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument'},
+	followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument', default: []} ],
+	following: [{type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument', default: []} ]
 });
 
 export default mongoose.model<UserInfo>("UserInfo", UserSchema);

@@ -1,32 +1,31 @@
 import express, { Express, Request, Response } from "express";
-import UserService from "../../services/user.service";
-
+import UserController from "../../controllers/user.controller";
+import { createUserSchema } from "../../db/schema/user.schema";
+import validateResource from "../../middleware/validateResource";
 const userRoute = (app: Express) => {
-	const userService = new UserService();
+	const userController = new UserController();
 	const router = express.Router();
 
 	// All paths have the prefix /api/v1/account/
 
-	router.post("/", async (req: Request, res: Response) => {
-		res.send(await userService.createUser(req.body));
-	});
+	router.post("/", validateResource(createUserSchema), userController.createUser);
 
 	router.get("/:email", async (req: Request, res: Response, next) => {
 		if (req.params.email && req.params.email.includes("@")) {
-			res.send(await userService.getUser(req.params));
+			res.send(await userController.getUser(req.params));
 		} else next();
 	});
 
 	router.get("/:id", async (req: Request, res: Response) => {
-		res.send(await userService.getUser(req.params));
+		res.send(await userController.getUser(req.params));
 	});
 
 	router.patch("/:id", async (req: Request, res: Response) => {
-		res.send(await userService.updateUser(req.params.id, req.body));
+		res.send(await userController.updateUser(req.params.id, req.body));
 	});
 
 	router.delete("/:id", async (req: Request, res: Response) => {
-		res.send(await userService.deleteUser(req.params.id));
+		res.send(await userController.deleteUser(req.params.id));
 	});
 
 	app.use("/api/v1/account/", router);

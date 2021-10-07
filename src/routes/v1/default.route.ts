@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express';
-import DefaultService from '../../services/default.service';
+import DefaultService from '../../controllers/default.service';
 
 const defaultRoute = (app: Express) => {
   const defaultService = new DefaultService()
