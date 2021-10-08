@@ -4,6 +4,8 @@ import { createUserSchema } from "../../db/schema/user.schema";
 import validateResource from "../../middleware/validateResource";
 const userRoute = (app: Express) => {
 	const userController = new UserController();
+	console.log("test");
+	console.log(userController);
 	const router = express.Router();
 
 	// All paths have the prefix /api/v1/account/

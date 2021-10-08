@@ -1,15 +1,15 @@
 import UserService, { UserFindParameters } from "../db/service/user.service";
 import { Request, Response } from "express";
 import { MessageResponse } from "../db/messages";
-import LoginUserCollection, {UserDocument} from "../db/models/user.model";
+import UserCollection from "../db/models/user.model";
 import UserInfoCollection from "../db/models/userInfo.model";
 import { CreateUserInput } from "../db/schema/user.schema";
-import { omit } from "lodash";
+
 class UserController {
 	private userService: UserService;
 
 	constructor() {
-		this.userService = new UserService(LoginUserCollection, UserInfoCollection);
+		this.userService = new UserService(UserCollection, UserInfoCollection);
 	}
 
 	/**
@@ -19,7 +19,14 @@ class UserController {
 	 */
 	async createUser(req: Request<{}, {}, CreateUserInput["body"]>,
 	res: Response) {
-		return await this.userService.createUser(req.body);
+		try{
+		console.log("test user service");
+		console.log(this.userService);	
+		const user = await this.userService.createUser(req.body);
+		return res.send(user);
+		} catch (e:any){
+			return res.status(409).send(e.message)
+		}
 	}
 
 	/**

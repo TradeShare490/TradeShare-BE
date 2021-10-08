@@ -1,9 +1,9 @@
 import { Model, DocumentDefinition } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
-import { UserDocument } from "../models/user.model";
+import UserModel, { UserDocument } from "../models/user.model";
+import { omit } from "lodash";
 import { UserInfo } from "../models/userInfo.model";
-import { CreateUserInput } from "../schema/user.schema";
 export interface UserFindParameters {
 	email?: string;
 	searchQuery?: any;
@@ -75,12 +75,18 @@ export default class UserService {
 	 * @param input the data for creating new user, please consult the UserSchema as a reference
 	 * @returns a new User object with _id
 	 */
-	async createUser(input: DocumentDefinition<
-		Omit<UserDocument, "createdAt" | "updatedAt" | "comparePassword">
-	  >) {
+	async createUser(
+		input: DocumentDefinition<Omit<UserDocument, "createdAt" | "updatedAt" | "comparePassword">>
+	) {
 		try {
-			const user = await this.UserDocumentCollection.create(input);
-			return 
+			const user = await UserModel.create(input);
+			console.log("User created");
+			console.log(user);
+			return messages.createdMessage(
+				"User has beeen created",
+				"user",
+				omit(user.toJSON(), "password")
+			);
 		} catch (error: any) {
 			return messages.internalError(error.message);
 		}
@@ -112,8 +118,7 @@ export default class UserService {
 	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
 		try {
 			const parsedParam = this.parseParams(originalParam);
-			const response = await this.UserDocumentCollection
-				.find(parsedParam.find)
+			const response = await this.UserDocumentCollection.find(parsedParam.find)
 				.skip(parsedParam.skip)
 				.limit(parsedParam.limit);
 			return response.length > 0
