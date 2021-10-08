@@ -77,11 +77,9 @@ export default class UserService {
 	 */
 	async createUser(
 		input: DocumentDefinition<Omit<UserDocument, "createdAt" | "updatedAt" | "comparePassword">>
-	) {
+	): Promise<MessageResponse> {
 		try {
 			const user = await UserModel.create(input);
-			console.log("User created");
-			console.log(user);
 			return messages.createdMessage(
 				"User has beeen created",
 				"user",

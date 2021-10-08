@@ -20,7 +20,6 @@ describe("User service can", () => {
 		} catch (error) {
 			console.error(error);
 		}
-		console.log(response);
 		expect(response).to.have.property("user");
 		expect(response.user).to.have.property("_id");
 		expect(response.user).to.have.property("email");

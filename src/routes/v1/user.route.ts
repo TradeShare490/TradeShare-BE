@@ -4,13 +4,15 @@ import { createUserSchema } from "../../db/schema/user.schema";
 import validateResource from "../../middleware/validateResource";
 const userRoute = (app: Express) => {
 	const userController = new UserController();
-	console.log("test");
-	console.log(userController);
 	const router = express.Router();
 
 	// All paths have the prefix /api/v1/account/
 
-	router.post("/", validateResource(createUserSchema), userController.createUser);
+	router.use("/", validateResource(createUserSchema));
+
+	router.post("/", (req, res) => {
+		userController.createUser(req, res);
+	});
 
 	router.get("/:email", async (req: Request, res: Response, next) => {
 		if (req.params.email && req.params.email.includes("@")) {
@@ -30,7 +32,7 @@ const userRoute = (app: Express) => {
 		res.send(await userController.deleteUser(req.params.id));
 	});
 
-	app.use("/api/v1/account/", router);
+	app.use("/api/v1/user/", router);
 };
 
 export default userRoute;
