@@ -14,10 +14,10 @@ export interface UserInfo extends mongoose.Document {
 const UserSchema: Schema = new Schema({
 	firstname: { type: String, required: true },
 	lastname: { type: String, required: true },
-    email: {type: String, ref: 'UserDocument'},
-    id: {type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument'},
-	followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument', default: []} ],
-	following: [{type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument', default: []} ]
+	email: { type: String, ref: "UserDocument" },
+	id: { type: mongoose.Schema.Types.ObjectId, ref: "UserDocument" },
+	followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserDocument", default: [] }],
+	following: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserDocument", default: [] }],
 });
 
 export default mongoose.model<UserInfo>("UserInfo", UserSchema);

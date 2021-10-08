@@ -1,9 +1,9 @@
-import UserService, { UserFindParameters } from '../db/service/user.service';
-import { Request, Response } from 'express';
-import { MessageResponse } from '../db/messages';
-import UserCollection from '../db/models/user.model';
-import UserInfoCollection from '../db/models/userInfo.model';
-import { CreateUserInput } from '../db/schema/user.schema';
+import UserService, { UserFindParameters } from "../db/service/user.service";
+import { Request, Response } from "express";
+import { MessageResponse } from "../db/messages";
+import UserCollection from "../db/models/user.model";
+import UserInfoCollection from "../db/models/userInfo.model";
+import { CreateUserInput } from "../db/schema/user.schema";
 
 class UserController {
 	private userService: UserService;
@@ -17,7 +17,7 @@ class UserController {
 	 * @param input the data for creating new user, please consult the UserSchema as a reference
 	 * @returns a new User object with _id
 	 */
-	async createUser(req: Request<{}, {}, CreateUserInput['body']>, res: Response) {
+	async createUser(req: Request<{}, {}, CreateUserInput["body"]>, res: Response) {
 		res.send(await this.userService.createUser(req.body));
 	}
 
@@ -26,7 +26,7 @@ class UserController {
 	 * @param id User id to be deleted
 	 * @returns
 	 */
-	async deleteUser(id: UserFindParameters['id']): Promise<MessageResponse> {
+	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
 		return await this.userService.deleteUser(id);
 	}
 
@@ -45,7 +45,7 @@ class UserController {
 	 * @param input content for update
 	 * @returns response with new User object
 	 */
-	async updateUser(id: UserFindParameters['id'], input: any): Promise<MessageResponse> {
+	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
 		return await this.userService.updateUser(id, input);
 	}
 }
