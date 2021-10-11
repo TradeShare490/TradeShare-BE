@@ -9,7 +9,7 @@ describe("User service can", () => {
 
 	it("be setup", () => {
 		userService = new UserService(UserCollection, UserInfoCollection);
-		expect(userService).not.equal("undefined");
+		expect(userService).not.equal(undefined);
 	});
 
 	it("create a new user", async () => {
@@ -32,7 +32,7 @@ describe("User service can", () => {
 		expect(res.success).to.be.true;
 		expect(res).to.have.property("user");
 
-		expect(res.user._id).not.to.equal("undefined");
+		expect(res.user._id).not.to.equal(undefined);
 	});
 
 	it("get the user by username", async () => {
@@ -57,7 +57,7 @@ describe("User service can", () => {
 		} catch (error) {
 			console.error(error);
 		}
-		expect(response).not.equal("undefined");
+		expect(response).not.equal(undefined);
 		expect(response).to.have.property("deletedCount");
 		expect(response.deletedCount).to.equal(1);
 	});
