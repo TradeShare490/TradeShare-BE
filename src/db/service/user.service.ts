@@ -13,10 +13,10 @@ export interface UserFindParameters {
 }
 
 export default class UserService {
-	private UserDocumentCollection: Model<UserDocument>; // a reference from the collection inside the database
+	private userDocumentCollection: Model<UserDocument>; // a reference from the collection inside the database
 	private userInfoCollection: Model<UserInfo>;
-	constructor(UserDocumentCollection: Model<UserDocument>, userInfoCollection: Model<UserInfo>) {
-		this.UserDocumentCollection = UserDocumentCollection;
+	constructor(userDocumentCollection: Model<UserDocument>, userInfoCollection: Model<UserInfo>) {
+		this.userDocumentCollection = userDocumentCollection;
 		this.userInfoCollection = userInfoCollection;
 	}
 
@@ -79,7 +79,7 @@ export default class UserService {
 		input: DocumentDefinition<Omit<UserDocument, "createdAt" | "updatedAt" | "comparePassword">>
 	): Promise<MessageResponse> {
 		try {
-			const user = await UserModel.create(input);
+			const user = await this.userDocumentCollection.create(input);
 			return messages.createdMessage(
 				"User has beeen created",
 				"user",
@@ -97,7 +97,7 @@ export default class UserService {
 	 */
 	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
 		try {
-			const response = await this.UserDocumentCollection.deleteOne({ _id: id });
+			const response = await this.userDocumentCollection.deleteOne({ _id: id });
 			return messages.successMessage(
 				`${response.deletedCount} user has been deleted`,
 				"deletedCount",
@@ -116,7 +116,7 @@ export default class UserService {
 	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
 		try {
 			const parsedParam = this.parseParams(originalParam);
-			const response = await this.UserDocumentCollection.find(parsedParam.find)
+			const response = await this.userDocumentCollection.find(parsedParam.find)
 				.skip(parsedParam.skip)
 				.limit(parsedParam.limit);
 			return response.length > 0
@@ -135,7 +135,7 @@ export default class UserService {
 	 */
 	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
 		try {
-			const updateResponse = await this.UserDocumentCollection.findByIdAndUpdate(id, input, {
+			const updateResponse = await this.userDocumentCollection.findByIdAndUpdate(id, input, {
 				new: true,
 				setDefaultsOnInsert: true,
 			});
