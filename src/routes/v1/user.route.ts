@@ -1,0 +1,38 @@
+import express, { Express, Request, Response } from "express";
+import UserController from "../../controllers/user.controller";
+import { createUserSchema } from "../../db/schema/user.schema";
+import validateResource from "../../middleware/validateResource";
+const userRoute = (app: Express) => {
+	const userController = new UserController();
+	const router = express.Router();
+
+	// All paths have the prefix /api/v1/account/
+
+	router.use("/", validateResource(createUserSchema));
+
+	router.post("/", (req, res) => {
+		userController.createUser(req, res);
+	});
+
+	router.get("/:email", async (req: Request, res: Response, next) => {
+		if (req.params.email && req.params.email.includes("@")) {
+			res.send(await userController.getUser(req.params));
+		} else next();
+	});
+
+	router.get("/:id", async (req: Request, res: Response) => {
+		res.send(await userController.getUser(req.params));
+	});
+
+	router.patch("/:id", async (req: Request, res: Response) => {
+		res.send(await userController.updateUser(req.params.id, req.body));
+	});
+
+	router.delete("/:id", async (req: Request, res: Response) => {
+		res.send(await userController.deleteUser(req.params.id));
+	});
+
+	app.use("/api/v1/user/", router);
+};
+
+export default userRoute;

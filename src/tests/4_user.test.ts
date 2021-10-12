@@ -1,18 +1,19 @@
 import { expect } from "chai";
-import { LoginUser } from "../db/models/LoginUser.model";
-import UserService from "../services/User.service";
-
+import { UserDocument } from "../db/models/user.model";
+import UserService from "../db/service/user.service";
+import UserCollection from "../db/models/user.model";
+import UserInfoCollection from "../db/models/userInfo.model";
 describe("User service can", () => {
-	let mockedUser: LoginUser;
+	let mockedUser: UserDocument;
 	let userService: UserService;
 
 	it("be setup", () => {
-		userService = new UserService();
+		userService = new UserService(UserCollection, UserInfoCollection);
 		expect(userService).not.equal(undefined);
 	});
 
 	it("create a new user", async () => {
-		const input = { email: "ken", password: "1234" };
+		const input = { email: "ken@email.com", password: "ken123456" };
 		let response: any;
 		try {
 			response = await userService.createUser(input);
@@ -23,8 +24,6 @@ describe("User service can", () => {
 		expect(response.user).to.have.property("_id");
 		expect(response.user).to.have.property("email");
 		expect(response.user.email).to.equal(input.email);
-		expect(response.user).to.have.property("password");
-		expect(response.user.password).to.equal(input.password);
 		mockedUser = response.user;
 	});
 
@@ -33,7 +32,7 @@ describe("User service can", () => {
 		expect(res.success).to.be.true;
 		expect(res).to.have.property("user");
 
-		expect(res.user._id).not.to.equal("undefined");
+		expect(res.user._id).not.to.equal(undefined);
 	});
 
 	it("get the user by username", async () => {
@@ -58,7 +57,7 @@ describe("User service can", () => {
 		} catch (error) {
 			console.error(error);
 		}
-		expect(response).not.equal("undefined");
+		expect(response).not.equal(undefined);
 		expect(response).to.have.property("deletedCount");
 		expect(response.deletedCount).to.equal(1);
 	});

@@ -1,6 +1,6 @@
-import EmailService from "../services/email.service";
+import EmailService from "../utils/email/email.service";
 import { expect } from "chai";
-import { MailOption } from "../utils/email";
+import { MailOption } from "../utils/email/email";
 
 describe("Email Service can", () => {
 	let emailService: EmailService;

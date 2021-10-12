@@ -1,4 +1,4 @@
-import { EmailSender, MailOption } from "../utils/email";
+import { EmailSender, MailOption } from "./email";
 
 export default class EmailService {
 	private emailSender: EmailSender;
