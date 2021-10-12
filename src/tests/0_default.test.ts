@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import DefaultService from "../controllers/default.service";
+import DefaultService from "../db/service/default.service";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 dotenv.config();
