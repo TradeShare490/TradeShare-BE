@@ -144,4 +144,18 @@ export default class UserService {
 			return messages.internalError(error.message);
 		}
 	}
+
+	async validatePassword({ email, password }: { email: string; password: string }) {
+		const user = await this.userDocumentCollection.findOne({ email });
+	
+		if (!user) {
+			return false;
+		}
+	
+		const isValid = await user.comparePassword(password);
+	
+		if (!isValid) return false;
+	
+		return omit(user.toJSON(), "password");
+	}
 }

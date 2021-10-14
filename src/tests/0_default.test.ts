@@ -2,11 +2,12 @@ import { expect } from "chai";
 import DefaultService from "../db/service/default.service";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
+import config from "../config/config";
 dotenv.config();
 
 // Setup MongoDB connection
 before(async () => {
-    const mongoUrl = process.env.TEST_DB_URI || "mongodb+srv://ken:5ta9cHYDPIRS6PMa@cluster0.wva5y.mongodb.net/TradeShareTestDB?retryWrites=true&w=majority";
+    const mongoUrl = config.testDbUri;
     if (!mongoUrl) {
         console.log("ERROR: Please check if mongodb url exists in your .env file");
         throw new Error("MONGODB_URL not found. Please check if mongodb url exists in your .env file");

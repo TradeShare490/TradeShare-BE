@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-
+import config from "./../config/config";
 async function connect() {
 
-    const DB_URI = process.env.DB_URI || "mongodb+srv://damienleu:tradeshare@cluster0.s6elo.mongodb.net/tradesharedb?retryWrites=true&w=majority";
+    const DB_URI = config.dbUri;
 
     return await mongoose
         .connect(DB_URI)
