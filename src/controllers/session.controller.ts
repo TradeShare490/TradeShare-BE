@@ -41,6 +41,21 @@ class SessionController {
 
 		return res.send({ accessToken, refreshToken });
 	}
+
+	async getSession(req: Request, res: Response) {
+		const userId = res.locals.user._id;
+		const sessions = await this.sessionService.findSessions({ user: userId, valid: true });
+		return res.send(sessions);
+	}
+
+	async deleteSession(req: Request, res: Response) {
+		const sessionID = res.locals.user.session;
+		await this.sessionService.updateSession({ _id: sessionID }, { valid: false });
+		return res.send({
+			accessToken: null,
+			refreshToken: null,
+		});
+	}
 }
 
 export default SessionController;

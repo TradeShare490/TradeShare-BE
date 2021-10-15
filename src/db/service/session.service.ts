@@ -1,5 +1,5 @@
-import SessionModel from "../models/session.model";
-
+import { FilterQuery, UpdateQuery } from "mongoose";
+import SessionModel, { SessionDocument } from "../models/session.model";
 export default class SessionService {
 	constructor() {}
 
@@ -8,4 +8,13 @@ export default class SessionService {
 
 		return session.toJSON();
 	}
+
+	async findSessions(query: FilterQuery<SessionDocument>) {
+		return SessionModel.find(query).lean();
+	}
+
+	async updateSession(query: FilterQuery<SessionDocument>, update: UpdateQuery<SessionDocument>) {
+		return SessionModel.updateOne(query, update);
+	}
+
 }
