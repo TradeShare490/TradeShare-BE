@@ -3,7 +3,7 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import cors from "cors";
 import connect from "./db/connect";
-import desirializeUser from "./middleware/deserializeUser";
+import deserializeUser from "./middleware/deserializeUser";
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(desirializeUser);
+app.use(deserializeUser);
 require("./routes/v1")(app);
 
 app.listen(PORT, async () => {

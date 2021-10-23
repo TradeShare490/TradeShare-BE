@@ -116,7 +116,8 @@ export default class UserService {
 	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
 		try {
 			const parsedParam = this.parseParams(originalParam);
-			const response = await this.userDocumentCollection.find(parsedParam.find)
+			const response = await this.userDocumentCollection
+				.find(parsedParam.find)
 				.skip(parsedParam.skip)
 				.limit(parsedParam.limit);
 			return response.length > 0
@@ -147,15 +148,15 @@ export default class UserService {
 
 	async validatePassword({ email, password }: { email: string; password: string }) {
 		const user = await this.userDocumentCollection.findOne({ email });
-	
+
 		if (!user) {
 			return false;
 		}
-	
+
 		const isValid = await user.comparePassword(password);
-	
+
 		if (!isValid) return false;
-	
+
 		return omit(user.toJSON(), "password");
 	}
 }

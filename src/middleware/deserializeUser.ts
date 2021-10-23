@@ -3,7 +3,7 @@ import { get } from "lodash";
 import { verifyJwt } from "../utils/authentication/jwt.utils";
 
 
-const desirializeUser = (req: Request, res: Response, next: NextFunction) => {
+const deserializeUser = (req: Request, res: Response, next: NextFunction) => {
 
     const accessToken = get(req, "headers.authorization", "").replace(/^Bearer\s/, "")
 
@@ -20,8 +20,9 @@ const desirializeUser = (req: Request, res: Response, next: NextFunction) => {
     }
 
     if(expired && refreshToken) {
-        
+        // Will add reauthorize access token 
+        return next()
     }
 };
 
-export default desirializeUser;
+export default deserializeUser;

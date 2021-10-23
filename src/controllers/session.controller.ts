@@ -4,6 +4,7 @@ import UserService from "../db/service/user.service";
 import UserCollection from "../db/models/user.model";
 import UserInfoCollection from "../db/models/userInfo.model";
 import { signJwt } from "../utils/authentication/jwt.utils";
+import { messages } from "../db/messages";
 
 class SessionController {
 	private sessionService: SessionService;
@@ -17,7 +18,8 @@ class SessionController {
 		const user = await this.userService.validatePassword(req.body);
 
 		if (!user) {
-			return res.status(401).send("Invalid email or password");
+			const payload =  messages.notAuthorized();
+			return res.status(payload.status).send(payload);
 		}
 
 		const session = await this.sessionService.createSession(user._id, req.get("user-agent") || "");
@@ -44,7 +46,7 @@ class SessionController {
 
 	async getSession(req: Request, res: Response) {
 		const userId = res.locals.user._id;
-		const sessions = await this.sessionService.findSessions({ user: userId, valid: true });
+		const sessions = await this.sessionService.findSessions({ userId: userId, valid: true });
 		return res.send(sessions);
 	}
 

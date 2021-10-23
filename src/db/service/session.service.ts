@@ -4,7 +4,7 @@ export default class SessionService {
 	constructor() {}
 
 	async createSession(userID: string, userAgent: string) {
-		const session = await SessionModel.create({ user: userID, userAgent });
+		const session = await SessionModel.create({ userId: userID, userAgent });
 
 		return session.toJSON();
 	}
