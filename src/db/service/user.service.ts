@@ -1,4 +1,4 @@
-import { Model, DocumentDefinition } from "mongoose";
+import { Model, DocumentDefinition, FilterQuery } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
 import UserModel, { UserDocument } from "../models/user.model";
@@ -158,5 +158,9 @@ export default class UserService {
 		if (!isValid) return false;
 
 		return omit(user.toJSON(), "password");
+	}
+
+	async findUser(query: FilterQuery<UserDocument>){
+		return this.userDocumentCollection.findOne(query).lean()
 	}
 }

@@ -38,7 +38,7 @@ class SessionController {
 				...user,
 				session: session._id,
 			},
-			{ expiresIn: "15m" }
+			{ expiresIn: "1y" }
 		);
 
 		return res.send({ accessToken, refreshToken });
