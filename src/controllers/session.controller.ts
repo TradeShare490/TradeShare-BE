@@ -18,7 +18,7 @@ class SessionController {
 		const user = await this.userService.validatePassword(req.body);
 
 		if (!user) {
-			const payload =  messages.notAuthorized();
+			const payload =  messages.internalError("Incorrect Credentials");
 			return res.status(payload.status).send(payload);
 		}
 
