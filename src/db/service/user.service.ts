@@ -1,9 +1,10 @@
-import { Model, DocumentDefinition, FilterQuery } from "mongoose";
+import { Model, DocumentDefinition, FilterQuery, Mongoose } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
-import UserModel, { UserDocument } from "../models/user.model";
+import { UserDocument } from "../models/user.model";
 import { omit } from "lodash";
 import { UserInfo } from "../models/userInfo.model";
+import mongoose, { Schema } from "mongoose";
 export interface UserFindParameters {
 	email?: string;
 	searchQuery?: any;
@@ -160,7 +161,23 @@ export default class UserService {
 		return omit(user.toJSON(), "password");
 	}
 
-	async findUser(query: FilterQuery<UserDocument>){
-		return this.userDocumentCollection.findOne(query).lean()
+	async findUser(query: FilterQuery<UserDocument>) {
+		return this.userDocumentCollection.findOne(query).lean();
+	}
+
+	async createUserInfo(id: mongoose.Schema.Types.ObjectId, body: any): Promise<MessageResponse> {
+		try {
+			const input = {
+				firstname: body.firstname,
+				lastname: body.lastname,
+				userId: id,
+				username: body.username,
+				email: body.email,
+			};
+			const userInfo = await this.userInfoCollection.create(input);
+			return messages.createdMessage("UserInfo has beeen created", "user", userInfo.toJSON());
+		} catch (error: any) {
+			return messages.internalError(error.message);
+		}
 	}
 }

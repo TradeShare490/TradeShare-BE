@@ -1,6 +1,6 @@
 import UserService, { UserFindParameters } from "../db/service/user.service";
 import { Request, Response } from "express";
-import { MessageResponse } from "../db/messages";
+import { MessageResponse, messages } from "../db/messages";
 import UserCollection from "../db/models/user.model";
 import UserInfoCollection from "../db/models/userInfo.model";
 import { CreateUserInput } from "../db/schema/user.schema";
@@ -18,7 +18,15 @@ class UserController {
 	 * @returns a new User object with _id
 	 */
 	async createUser(req: Request<{}, {}, CreateUserInput["body"]>, res: Response) {
-		res.send(await this.userService.createUser(req.body));
+		let user = await this.userService.createUser(req.body);
+		let info = await this.userService.createUserInfo(user._id, req.body);
+		
+		if (user.success && info.success) {
+			res.send(user);
+		} else {
+			const payload = user.success ? info : user;
+			res.status(payload.status).send(payload);
+		}
 	}
 
 	/**
