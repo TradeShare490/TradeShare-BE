@@ -8,9 +8,7 @@ const userRoute = (app: Express) => {
 
 	// All paths have the prefix /api/v1/account/
 
-	router.use("/", validateResource(createUserSchema));
-
-	router.post("/", (req, res) => {
+	router.post("/", validateResource(createUserSchema),(req, res) => {
 		userController.createUser(req, res);
 	});
 

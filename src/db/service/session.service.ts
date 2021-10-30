@@ -1,7 +1,15 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
+import { get } from "lodash";
+import { verifyJwt, signJwt } from "../../utils/authentication/jwt.utils";
 import SessionModel, { SessionDocument } from "../models/session.model";
+import UserService from "./user.service";
+import UserCollection from "../models/user.model";
+import UserInfoCollection from "../models/userInfo.model";
 export default class SessionService {
-	constructor() {}
+	private userService: UserService;
+	constructor() {
+		this.userService = new UserService(UserCollection, UserInfoCollection);
+	}
 
 	async createSession(userID: string, userAgent: string) {
 		const session = await SessionModel.create({ userId: userID, userAgent });
@@ -17,4 +25,26 @@ export default class SessionService {
 		return SessionModel.updateOne(query, update);
 	}
 
+	async reIssueAccessToken({ refreshToken }: { refreshToken: string }) {
+		const { decoded } = verifyJwt(refreshToken);
+		if (!decoded || !get(decoded, "session")) return false;
+
+		const session = await SessionModel.findById(get(decoded, "session"));
+
+		if (!session || !session.valid) return false;
+
+		const user = await this.userService.findUser({ _id: session.userId });
+
+		if (!user) return false;
+
+		const accessToken = signJwt(
+			{
+				...user,
+				session: session._id,
+			},
+			{ expiresIn: "15m" }
+		);
+
+		return accessToken
+	}
 }
