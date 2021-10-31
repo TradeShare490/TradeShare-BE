@@ -165,6 +165,9 @@ export default class UserService {
 		return this.userDocumentCollection.findOne(query).lean();
 	}
 
+	async findUserInfo(query: FilterQuery<UserInfo>) {
+		return this.userInfoCollection.findOne(query).lean();
+	}
 	async createUserInfo(id: mongoose.Schema.Types.ObjectId, body: any): Promise<MessageResponse> {
 		try {
 			const input = {

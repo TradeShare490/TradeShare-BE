@@ -19,7 +19,7 @@ class UserController {
 	 */
 	async createUser(req: Request<{}, {}, CreateUserInput["body"]>, res: Response) {
 		let user = await this.userService.createUser(req.body);
-		let info = await this.userService.createUserInfo(user._id, req.body);
+		let info = await this.userService.createUserInfo(user.user._id, req.body);
 		
 		if (user.success && info.success) {
 			res.send(user);
