@@ -23,7 +23,7 @@ class SessionController {
 		}
 
 		const session = await this.sessionService.createSession(user._id, req.get("user-agent") || "");
-
+		const userInfo = await this.userService.findUserInfo({userId: session.userId})
 		const accessToken = signJwt(
 			{
 				...user,
@@ -41,7 +41,7 @@ class SessionController {
 			{ expiresIn: "1y" }
 		);
 
-		return res.send({ accessToken, refreshToken });
+		return res.send({ accessToken, refreshToken, userInfo });
 	}
 
 	async getSession(req: Request, res: Response) {
