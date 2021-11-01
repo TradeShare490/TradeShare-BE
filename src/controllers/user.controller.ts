@@ -19,14 +19,20 @@ class UserController {
 	 */
 	async createUser(req: Request<{}, {}, CreateUserInput["body"]>, res: Response) {
 		let user = await this.userService.createUser(req.body);
-		let info = await this.userService.createUserInfo(user.user._id, req.body);
-		
-		if (user.success && info.success) {
-			res.send(user);
-		} else {
-			const payload = user.success ? info : user;
+		if (user.success){
+			let info = await this.userService.createUserInfo(user.user._id, req.body);
+			if (info.success) {
+				res.send(user);
+			} else {
+				const payload = info
+				res.status(payload.status).send(payload);
+			}
+		}
+		else{
+			const payload = user;
 			res.status(payload.status).send(payload);
 		}
+		
 	}
 
 	/**
