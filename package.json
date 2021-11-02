@@ -52,11 +52,11 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
-    "zod": "^3.9.8"
+    "zod": "^3.9.8",
+    "@types/bcrypt": "^5.0.0",
+    "@types/lodash": "^4.14.175"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
-    "@types/lodash": "^4.14.175",
     "concurrently": "^6.2.1",
     "nodemon": "^2.0.12"
   },
