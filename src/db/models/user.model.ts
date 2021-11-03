@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
-
+import userInfoModel from "./userInfo.model";
 export interface UserDocument extends mongoose.Document {
 	email: string;
 	password: string;
@@ -27,6 +27,12 @@ userSchema.pre("save", async function (next) {
 
 	user.password = hash;
 
+	return next();
+});
+
+userSchema.pre("delete", async function (next) {
+	let user = this as unknown as UserDocument;
+	userInfoModel.remove({ userId: user._id });
 	return next();
 });
 
