@@ -13,5 +13,5 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: "2b6f91d1-f9b7-4201-94be-3ea636871827"
-          heroku_app_name: "ancient-waters-32375" #Must be unique in Heroku
+          heroku_app_name: "tradeshare-backend-for-test" #Must be unique in Heroku
           heroku_email: "kenn.tnguyen@gmail.com"
