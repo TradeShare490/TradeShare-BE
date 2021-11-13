@@ -35,7 +35,7 @@ describe("User service can", () => {
 		expect(res.user._id).not.to.equal(undefined);
 	});
 
-	it("get the user by username", async () => {
+	it("get the user by email", async () => {
 		const res = await userService.getUser({ email: mockedUser.email });
 		expect(res.success).to.be.true;
 		expect(res).to.have.property("user");
