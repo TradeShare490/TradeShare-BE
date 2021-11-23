@@ -5,25 +5,28 @@ import UserCollection from "../db/models/user.model";
 import UserInfoCollection from "../db/models/userInfo.model";
 import { signJwt } from "../utils/authentication/jwt.utils";
 import { messages } from "../db/messages";
+import UserInfoService from "../db/service/userInfo.service";
 
 class SessionController {
 	private sessionService: SessionService;
+	private userInfoService: UserInfoService;
 	private userService: UserService;
 	constructor() {
+		this.userService = new UserService(UserCollection);
 		this.sessionService = new SessionService();
-		this.userService = new UserService(UserCollection, UserInfoCollection);
+		this.userInfoService = new UserInfoService(UserInfoCollection);
 	}
 
 	async createSession(req: Request, res: Response) {
 		const user = await this.userService.validatePassword(req.body);
 
 		if (!user) {
-			const payload =  messages.internalError("Incorrect Credentials");
+			const payload = messages.internalError("Incorrect Credentials");
 			return res.status(payload.status).send(payload);
 		}
 
 		const session = await this.sessionService.createSession(user._id, req.get("user-agent") || "");
-		const userInfo = await this.userService.findUserInfo({userId: session.userId})
+		const userInfo = await this.userInfoService.findUserInfo({ userId: session.userId });
 		const accessToken = signJwt(
 			{
 				...user,

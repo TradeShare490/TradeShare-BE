@@ -1,10 +1,8 @@
-import { Model, DocumentDefinition, FilterQuery, Mongoose } from "mongoose";
+import { Model, DocumentDefinition, FilterQuery, UpdateQuery, QueryOptions } from "mongoose";
 import { messages, MessageResponse } from "../messages";
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
 import { UserDocument } from "../models/user.model";
 import { omit } from "lodash";
-import { UserInfo } from "../models/userInfo.model";
-import mongoose, { Schema } from "mongoose";
 export interface UserFindParameters {
 	email?: string;
 	searchQuery?: any;
@@ -15,10 +13,8 @@ export interface UserFindParameters {
 
 export default class UserService {
 	private userDocumentCollection: Model<UserDocument>; // a reference from the collection inside the database
-	private userInfoCollection: Model<UserInfo>;
-	constructor(userDocumentCollection: Model<UserDocument>, userInfoCollection: Model<UserInfo>) {
+	constructor(userDocumentCollection: Model<UserDocument>) {
 		this.userDocumentCollection = userDocumentCollection;
-		this.userInfoCollection = userInfoCollection;
 	}
 
 	/**
@@ -87,11 +83,10 @@ export default class UserService {
 				omit(user.toJSON(), "password")
 			);
 		} catch (error: any) {
-			if(error.message.includes("key error")){
+			if (error.message.includes("key error")) {
 				return messages.internalError("Email already exists");
-			}
-			else{
-				return messages.internalError(error.message)
+			} else {
+				return messages.internalError(error.message);
 			}
 		}
 	}
@@ -168,24 +163,5 @@ export default class UserService {
 
 	async findUser(query: FilterQuery<UserDocument>) {
 		return this.userDocumentCollection.findOne(query).lean();
-	}
-
-	async findUserInfo(query: FilterQuery<UserInfo>) {
-		return this.userInfoCollection.findOne(query).lean();
-	}
-	async createUserInfo(id: mongoose.Schema.Types.ObjectId, body: any): Promise<MessageResponse> {
-		try {
-			const input = {
-				firstname: body.firstname,
-				lastname: body.lastname,
-				userId: id,
-				username: body.username,
-				email: body.email,
-			};
-			const userInfo = await this.userInfoCollection.create(input);
-			return messages.createdMessage("UserInfo has beeen created", "user", userInfo.toJSON());
-		} catch (error: any) {
-			return messages.internalError(error.message);
-		}
 	}
 }
