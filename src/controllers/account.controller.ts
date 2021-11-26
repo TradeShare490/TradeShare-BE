@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import UserInfoService from "../db/service/userInfo.service";
 import UserInfoCollection from "../db/models/userInfo.model";
 import mongoose from "mongoose";
-import axios from "axios";
+import axios from "../utils/axios/axios.v1";
 class AccountController {
 	private userInfoService: UserInfoService;
 	constructor() {
@@ -15,7 +15,7 @@ class AccountController {
 		let account = {};
 		if (userInfo?.alpacaToken) {
 			const alpacaToken = userInfo.alpacaToken;
-			const response = await axios.get("https://paper-api.alpaca.markets/v2/account", {
+			const response = await axios.get("/account", {
 				headers: { Authorization: `Bearer ` + alpacaToken },
 			});
 			account = response.data;
