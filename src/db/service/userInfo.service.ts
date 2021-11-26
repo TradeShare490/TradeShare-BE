@@ -10,8 +10,12 @@ export default class UserInfoService {
 	}
 
 	async findUserInfo(query: FilterQuery<UserInfo>) {
-		const userInfo = this.userInfoCollection.findOne(query);
-		return userInfo;
+		try {
+			const userInfo = this.userInfoCollection.findOne(query);
+			return userInfo;
+		} catch (error: any) {
+			return messages.internalError(error.message);
+		}
 	}
 
 	async createUserInfo(id: mongoose.Schema.Types.ObjectId, body: any): Promise<MessageResponse> {
@@ -35,6 +39,10 @@ export default class UserInfoService {
 		update: UpdateQuery<UserInfo>,
 		options: QueryOptions
 	) {
-		return await this.userInfoCollection.findOneAndUpdate(query, update, options);
+		try {
+			return await this.userInfoCollection.findOneAndUpdate(query, update, options);
+		} catch (error: any) {
+			return messages.internalError(error.message);
+		}
 	}
 }
