@@ -2,13 +2,13 @@ import { expect } from "chai";
 import { UserDocument } from "../db/models/user.model";
 import UserService from "../db/service/user.service";
 import UserCollection from "../db/models/user.model";
-import UserInfoCollection from "../db/models/userInfo.model";
+
 describe("User service can", () => {
 	let mockedUser: UserDocument;
 	let userService: UserService;
 
 	it("be setup", () => {
-		userService = new UserService(UserCollection, UserInfoCollection);
+		userService = new UserService(UserCollection);
 		expect(userService).not.equal(undefined);
 	});
 

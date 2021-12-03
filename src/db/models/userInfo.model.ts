@@ -7,6 +7,7 @@ export interface UserInfo extends mongoose.Document {
 	email: UserDocument["email"];
 	portfolio: any[];
 	userId: UserDocument["_id"];
+	alpacaToken: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -14,6 +15,7 @@ const UserSchema: Schema = new Schema({
 	lastname: { type: String, required: true },
 	email: { type: String, ref: "UserDocument" },
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: "UserDocument" },
+	alpacaToken: { type: String },
 });
 
 export default mongoose.model<UserInfo>("UserInfo", UserSchema);

@@ -4,12 +4,14 @@ import { MessageResponse, messages } from "../db/messages";
 import UserCollection from "../db/models/user.model";
 import UserInfoCollection from "../db/models/userInfo.model";
 import { CreateUserInput } from "../db/schema/user.schema";
+import UserInfoService from "../db/service/userInfo.service";
 
 class UserController {
 	private userService: UserService;
-
+	private userInfoService: UserInfoService;
 	constructor() {
-		this.userService = new UserService(UserCollection, UserInfoCollection);
+		this.userService = new UserService(UserCollection);
+		this.userInfoService = new UserInfoService(UserInfoCollection);
 	}
 
 	/**
@@ -19,20 +21,18 @@ class UserController {
 	 */
 	async createUser(req: Request<{}, {}, CreateUserInput["body"]>, res: Response) {
 		let user = await this.userService.createUser(req.body);
-		if (user.success){
-			let info = await this.userService.createUserInfo(user.user._id, req.body);
+		if (user.success) {
+			let info = await this.userInfoService.createUserInfo(user.user._id, req.body);
 			if (info.success) {
 				res.send(user);
 			} else {
-				const payload = info
+				const payload = info;
 				res.status(payload.status).send(payload);
 			}
-		}
-		else{
+		} else {
 			const payload = user;
 			res.status(payload.status).send(payload);
 		}
-		
 	}
 
 	/**

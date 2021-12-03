@@ -4,7 +4,6 @@ import SessionService from "../db/service/session.service";
 import UserService from "../db/service/user.service";
 import { signJwt } from "../utils/authentication/jwt.utils";
 import UserCollection from "../db/models/user.model";
-import UserInfoCollection from "../db/models/userInfo.model";
 
 describe("Session service can", () => {
 	let mockedSession: SessionDocument;
@@ -13,7 +12,7 @@ describe("Session service can", () => {
 	let user: any;
 	it("be setup", async () => {
 		sessionService = new SessionService();
-		userService = new UserService(UserCollection, UserInfoCollection);
+		userService = new UserService(UserCollection);
 		user = await userService.createUser({
 			email: "sessionTest10@email.com",
 			password: "ken123456",

@@ -4,11 +4,11 @@ import { verifyJwt, signJwt } from "../../utils/authentication/jwt.utils";
 import SessionModel, { SessionDocument } from "../models/session.model";
 import UserService from "./user.service";
 import UserCollection from "../models/user.model";
-import UserInfoCollection from "../models/userInfo.model";
+
 export default class SessionService {
 	private userService: UserService;
 	constructor() {
-		this.userService = new UserService(UserCollection, UserInfoCollection);
+		this.userService = new UserService(UserCollection);
 	}
 
 	async createSession(userID: string, userAgent: string) {
@@ -45,6 +45,6 @@ export default class SessionService {
 			{ expiresIn: "15m" }
 		);
 
-		return accessToken
+		return accessToken;
 	}
 }
