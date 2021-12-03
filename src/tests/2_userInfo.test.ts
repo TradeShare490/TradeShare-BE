@@ -48,7 +48,6 @@ describe("User Info Service can", () => {
 	});
 	it("get user info", async () => {
 		const res = await userInfoService.findUserInfo({ userId: mockedUser._id });
-		console.log(res);
 		expect(res?.email).to.equal(mockedInfo.email);
 		expect(res?.firstname).to.equal(mockedInfo.firstname);
 		expect(res?.lastname).to.equal(mockedInfo.lastname);
