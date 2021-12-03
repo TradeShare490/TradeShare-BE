@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import UserInfoController from "../../controllers/userInfo.controller";
+
 const userInfoRoute = (app: Express) => {
 	const userInfoController = new UserInfoController();
 	const router = express.Router();
