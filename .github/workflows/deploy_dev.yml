@@ -6,12 +6,23 @@ on:
       - main
 
 jobs:
-  build:
+  deploy-to-test-server:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
-          heroku_api_key: "2b6f91d1-f9b7-4201-94be-3ea636871827"
-          heroku_app_name: "tradeshare-backend-for-dev" #Must be unique in Heroku
-          heroku_email: "kenn.tnguyen@gmail.com"
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_TEST_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+
+  deploy-to-dev-server:
+    runs-on: ubuntu-latest
+    needs: deploy-to-test-server
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_DEV_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
