@@ -5,7 +5,7 @@ import UserService from "../db/service/user.service";
 import { signJwt } from "../utils/authentication/jwt.utils";
 import UserCollection from "../db/models/user.model";
 
-describe("Session service can", () => {
+describe.only("Session service can", () => {
 	let mockedSession: SessionDocument;
 	let sessionService: SessionService;
 	let userService: UserService;
