@@ -44,6 +44,8 @@ jobs:
           GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
           SERVICE: ${{secrets.SERVICE}}
           EMAIL: ${{secrets.EMAIL}}
+          JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
+          JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -56,3 +58,5 @@ jobs:
           GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
           SERVICE: ${{secrets.SERVICE}}
           EMAIL: ${{secrets.EMAIL}}
+          JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
+          JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
