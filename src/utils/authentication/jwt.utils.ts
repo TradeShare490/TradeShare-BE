@@ -7,9 +7,6 @@ if (!process.env.JWT_PRIVATE_KEY || !process.env.JWT_PUBLIC_KEY) {
 const privateKey = `${process.env.JWT_PRIVATE_KEY}`.trim();
 const publicKey = `${process.env.JWT_PUBLIC_KEY}`.trim();
 
-console.log(privateKey);
-console.log(publicKey);
-
 export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
 	return jwt.sign(object, privateKey, {
 		...(options && options),
