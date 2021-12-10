@@ -23,18 +23,16 @@ export class EmailSender {
 		if (
 			process.env.SERVICE === undefined ||
 			process.env.EMAIL === undefined ||
-			process.env.EMAIL_PASSWORD === undefined
+			process.env.GMAIL_APP_PASSWORD_DEV === undefined
 		) {
-			console.log(
-				"Will setup email sender with default setup, please provide env for custom configuration"
-			);
+			console.log("Email configuration is missing. Please update in the environment data");
+			process.exit(-1);
 		}
 
 		// setup values
-		this.service = process.env.SERVICE || "gmail";
-		this.email = process.env.EMAIL || "tradeshare.ca@gmail.com";
-		this.email_password = process.env.EMAIL_PASSWORD || "tradeshare123";
-
+		this.service = process.env.SERVICE;
+		this.email = process.env.EMAIL;
+		this.email_password = process.env.GMAIL_APP_PASSWORD_DEV;
 		// setup transporter
 		this.transporter = nodemailer.createTransport({
 			service: this.service,

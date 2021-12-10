@@ -40,7 +40,12 @@ jobs:
       - name: Build
         run: CI='' npm run build
         env: 
-          DB_URI: mongodb+srv://damienleu:tradeshare@cluster0.s6elo.mongodb.net/tradesharedb?retryWrites=true&w=majority
+          DB_URI: ${{secrets.DB_URI}}
+          GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
+          SERVICE: ${{secrets.SERVICE}}
+          EMAIL: ${{secrets.EMAIL}}
+          JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
+          JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -49,4 +54,9 @@ jobs:
       - name: Test
         run: npm test
         env: 
-          TEST_DB_URI: mongodb+srv://ken:5ta9cHYDPIRS6PMa@cluster0.wva5y.mongodb.net/TradeShareTestDB?retryWrites=true&w=majority 
+          TEST_DB_URI: ${{secrets.TEST_DB_URI}}
+          GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
+          SERVICE: ${{secrets.SERVICE}}
+          EMAIL: ${{secrets.EMAIL}}
+          JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
+          JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
