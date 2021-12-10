@@ -18,6 +18,6 @@ app.use(deserializeUser);
 require("./routes/v1")(app);
 
 app.listen(PORT, async () => {
-	console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`);
 	await connect();
+	console.log(`Running on ${HOST}:${PORT}/ ⚡ || ${process.env.NODE_ENV} mode`);
 });
