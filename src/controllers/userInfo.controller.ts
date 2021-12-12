@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import UserInfoCollection from "../db/models/userInfo.model";
 import UserInfoService from "../db/service/userInfo.service";
 import mongoose from "mongoose";
+import axios from "axios";
 
 class UserInfoController {
 	private userInfoService: UserInfoService;
@@ -22,6 +23,39 @@ class UserInfoController {
 			new: true,
 		});
 		return res.send(updatedInfo);
+	}
+
+	async updateAlpacaToken(req: Request, res: Response) {
+		const clientId = process.env.CLIENT_ID as string
+		const clientSecret = process.env.CLIENT_SECRET as string
+		let code = req.body.code;
+		const userId = new mongoose.Types.ObjectId(req.params.userId);
+		const params = new URLSearchParams();
+		params.append("grant_type", "authorization_code");
+		params.append("code", code);
+		params.append("client_id", clientId);
+		params.append("client_secret", clientSecret);
+		params.append("redirect_uri", "http://localhost:8081/confirm");
+
+		try {
+			const response = await axios.post("https://api.alpaca.markets/oauth/token", params, {
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+			});
+			const alpacaToken = response.data.access_token;
+			const updatedInfo = await this.userInfoService.updateUserInfo(
+				{ userId: userId },
+				{ alpacaToken: alpacaToken },
+				{
+					new: true,
+				}
+			);
+
+			return res.send(updatedInfo);
+		} catch (error: any) {
+			return res.send(error.response.data.message);
+		}
 	}
 }
 
