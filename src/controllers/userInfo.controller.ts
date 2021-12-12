@@ -28,6 +28,7 @@ class UserInfoController {
 	async updateAlpacaToken(req: Request, res: Response) {
 		const clientId = process.env.CLIENT_ID as string
 		const clientSecret = process.env.CLIENT_SECRET as string
+		const redirectURI = process.env.REDIRECT_URI as string
 		let code = req.body.code;
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const params = new URLSearchParams();
@@ -35,7 +36,7 @@ class UserInfoController {
 		params.append("code", code);
 		params.append("client_id", clientId);
 		params.append("client_secret", clientSecret);
-		params.append("redirect_uri", "http://localhost:8081/confirm");
+		params.append("redirect_uri", redirectURI);
 
 		try {
 			const response = await axios.post("https://api.alpaca.markets/oauth/token", params, {
