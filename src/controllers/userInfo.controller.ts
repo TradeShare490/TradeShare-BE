@@ -39,12 +39,15 @@ class UserInfoController {
 		params.append("redirect_uri", redirectURI);
 
 		try {
-			const response = await axios.post("https://api.alpaca.markets/oauth/token", params, {
+			const {data} = await axios.post("https://api.alpaca.markets/oauth/token", params, {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
 			});
-			const alpacaToken = response.data.access_token;
+			if(!data.access_token){
+				return res.status(500).send("No token");
+			 }
+			const alpacaToken = data.access_token;
 			const updatedInfo = await this.userInfoService.updateUserInfo(
 				{ userId: userId },
 				{ alpacaToken: alpacaToken },
