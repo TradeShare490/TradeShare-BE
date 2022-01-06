@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import AccountController from "../../controllers/account.controller";
 import requireUser from "../../middleware/requireUser";
 
-const sessionRoute = (app: Express) => {
+const accountRoute = (app: Express) => {
 	const accountController = new AccountController();
 	const router = express.Router();
 
@@ -15,4 +15,4 @@ const sessionRoute = (app: Express) => {
 	app.use("/api/v1/account/", router);
 };
 
-export default sessionRoute;
+export default accountRoute;

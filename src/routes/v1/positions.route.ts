@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import PositionsController from "../../controllers/positions.controller";
 import requireUser from "../../middleware/requireUser";
 
-const sessionRoute = (app: Express) => {
+const positionsRoute = (app: Express) => {
 	const accountController = new PositionsController();
 	const router = express.Router();
 
@@ -15,4 +15,4 @@ const sessionRoute = (app: Express) => {
 	app.use("/api/v1/positions/", router);
 };
 
-export default sessionRoute;
+export default positionsRoute;

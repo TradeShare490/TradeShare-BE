@@ -5,7 +5,7 @@ import userRoute from './user.route'
 import userInfoRoute from './userInfo.route'
 import accountRoute from './account.route'
 import positionsRoute from './positions.route'
-
+import activitiesRoute from './activities.route'
 module.exports = function (app: Express) {
   // Register the routes
   defaultRoute(app)
@@ -14,5 +14,6 @@ module.exports = function (app: Express) {
   userInfoRoute(app)
   accountRoute(app)
   positionsRoute(app)
+  activitiesRoute(app)
   //other routes..
 };
