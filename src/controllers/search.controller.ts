@@ -20,7 +20,12 @@ class SearchController {
 			return res.send(messages.successMessage("success", "searchResult", searchResults))
 		}
 		catch (error: any) {
-			 res.send(messages.internalError(error.response.data.message));
+            if(error.response == undefined) {
+                res.send(messages.internalError(error.message));
+            } else {
+                res.send(messages.internalError(error.response.data.message))
+            }
+			 
 		}
 	}
 }
