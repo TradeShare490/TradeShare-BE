@@ -7,11 +7,13 @@ class SearchController {
 	async getStocksSuggestions(req: Request, res: Response) {
 		const searchString = req.params.searchString;
         const url = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH'
-        const APIKEY = 'PF5GHI9MOCIS3WV0';
 		let searchResults = {};
 		
 		try{
-			const response = await axios.get(`${url}&keywords=${searchString}&apikey=${APIKEY}`, {
+            if(process.env.ALPHAVANTAGE_API_KEY == undefined) {
+                throw new Error("Alphavantage api key is undefined");
+            }
+			const response = await axios.get(`${url}&keywords=${searchString}&apikey=${process.env.ALPHAVANTAGE_API_KEY}`, {
 				headers: { 'User-Agent': 'request' },
 			});
 			searchResults = response.data;
