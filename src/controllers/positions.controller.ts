@@ -2,33 +2,25 @@ import { Request, Response } from "express";
 import UserInfoService from "../db/service/userInfo.service";
 import UserInfoCollection from "../db/models/userInfo.model";
 import mongoose from "mongoose";
-import axios from "../utils/axios/axios.v1";
 import { messages } from "../db/messages";
+import AlpacaService from "../db/service/alpaca.service";
 
 class PositionsController {
 	private userInfoService: UserInfoService;
+	private alpacaService: AlpacaService;
 	constructor() {
 		this.userInfoService = new UserInfoService(UserInfoCollection);
+		this.alpacaService = new AlpacaService();
 	}
 
 	async getPositions(req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId });
-		let account = {};
 		if (userInfo?.alpacaToken) {
-			try{
-			const alpacaToken = userInfo.alpacaToken;
-			const response = await axios.get("/positions", {
-				headers: { Authorization: `Bearer ` + alpacaToken },
-			});
-			account = response.data;
-			return res.send(messages.successMessage("success", "positions", account))
+			return this.alpacaService.getInfo(req, res, "/positions", "positions", userInfo.alpacaToken);
+		} else {
+			res.send(messages.internalError("User hasn't linked any Alpaca account"));
 		}
-		catch (error: any) {
-			 res.send(messages.internalError(error.response.data.message));
-		}
-		}
-		res.send(messages.internalError("User hasn't linked any Alpaca account"));
 	}
 }
 
