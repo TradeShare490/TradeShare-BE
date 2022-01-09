@@ -1,6 +1,5 @@
 import express, { Express } from "express";
 import AccountController from "../../controllers/account.controller";
-import requireUser from "../../middleware/requireUser";
 
 const accountRoute = (app: Express) => {
 	const accountController = new AccountController();

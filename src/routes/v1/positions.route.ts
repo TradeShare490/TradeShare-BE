@@ -1,6 +1,5 @@
 import express, { Express } from "express";
 import PositionsController from "../../controllers/positions.controller";
-import requireUser from "../../middleware/requireUser";
 
 const positionsRoute = (app: Express) => {
 	const accountController = new PositionsController();
