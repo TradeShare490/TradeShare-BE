@@ -16,7 +16,7 @@ class ActivitiesController {
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId });
 		if (userInfo?.alpacaToken) {
-			return this.alpacaService.getInfo(
+			return await this.alpacaService.getInfo(
 				req,
 				res,
 				"/account/activities/FILL",

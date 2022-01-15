@@ -17,9 +17,9 @@ class PositionsController {
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId });
 		if (userInfo?.alpacaToken) {
-			return this.alpacaService.getInfo(req, res, "/positions", "positions", userInfo.alpacaToken);
+			return await this.alpacaService.getInfo(req, res, "/positions", "positions", userInfo.alpacaToken);
 		} else {
-			res.send(messages.internalError("User hasn't linked any Alpaca account"));
+			return res.send(messages.internalError("User hasn't linked any Alpaca account"));
 		}
 	}
 }

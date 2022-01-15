@@ -12,12 +12,11 @@ export default class AlpacaService {
 		alpacaToken: string
 	) {
 		try {
-			let alpacaInfo = {};
-			const response = await axios.get(endPoint, {
+			const { data } = await axios.get(endPoint, {
 				headers: { Authorization: `Bearer ` + alpacaToken },
 			});
-			alpacaInfo = response.data;
-			return res.send(messages.successMessage("success", infoType, alpacaInfo));
+
+			return res.send(messages.successMessage("success", infoType, data));
 		} catch (error: any) {
 			return res.send(messages.internalError(error.response.data.message));
 		}
