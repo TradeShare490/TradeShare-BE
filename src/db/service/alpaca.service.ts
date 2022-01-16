@@ -4,9 +4,8 @@ import { messages } from "../../db/messages";
 export default class AlpacaService {
 	constructor() {}
 
+
 	async getInfo(
-		req: Request,
-		res: Response,
 		endPoint: string,
 		infoType: string,
 		alpacaToken: string
@@ -16,9 +15,10 @@ export default class AlpacaService {
 				headers: { Authorization: `Bearer ` + alpacaToken },
 			});
 
-			return res.send(messages.successMessage("success", infoType, data));
+			return messages.successMessage("success", infoType, data);
 		} catch (error: any) {
-			return res.send(messages.internalError(error.response.data.message));
+			return messages.internalError(error.response.data.message);
 		}
+		
 	}
 }

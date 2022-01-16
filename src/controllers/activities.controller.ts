@@ -16,12 +16,12 @@ class ActivitiesController {
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId });
 		if (userInfo?.alpacaToken) {
-			return await this.alpacaService.getInfo(
-				req,
-				res,
-				"/account/activities/FILL",
-				"activities",
-				userInfo.alpacaToken
+			return res.send(
+				await this.alpacaService.getInfo(
+					"/account/activities/FILL",
+					"activities",
+					userInfo.alpacaToken
+				)
 			);
 		} else {
 			return res.send(messages.internalError("User hasn't linked any Alpaca account"));
