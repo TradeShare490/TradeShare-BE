@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import AlpacaService from "../db/service/alpaca.service";
+
 describe("Alpaca service can", () => {
 	let alpacaService: AlpacaService;
 	let alpacaToken = "75320e3b-f7db-4d32-81e1-58b30d7a34bb";
@@ -7,7 +8,7 @@ describe("Alpaca service can", () => {
 		alpacaService = new AlpacaService();
 	});
 
-	it("can get positions info", async () => {
+	it("get positions info", async () => {
 		let response = await alpacaService.getInfo("/positions", "positions", alpacaToken);
 		expect(response.status).equals(200);
 		expect(response.success).equals(true);
@@ -15,15 +16,15 @@ describe("Alpaca service can", () => {
 		expect(response.positions).to.be.an("Array");
 	});
 
-	it("can get account info", async () => {
+	it("get account info", async () => {
 		let response = await alpacaService.getInfo("/account", "account", alpacaToken);
 		expect(response.status).equals(200);
 		expect(response.success).equals(true);
 		expect(response.message).equals("success");
-		expect(response.account).not.equals(undefined)
+		expect(response.account).not.equals(undefined);
 	});
 
-	it("can get activities info", async () => {
+	it("get activities info", async () => {
 		let response = await alpacaService.getInfo(
 			"/account/activities/FILL",
 			"activities",
