@@ -13,7 +13,7 @@ describe("User service can", () => {
 	});
 
 	it("create a new user", async () => {
-		const input = { email: "ken@email.com", password: "ken123456" };
+		const input = { email: "ken@email.com", password: "ken123456", username: "kentest" };
 		let response: any;
 		try {
 			response = await userService.createUser(input);

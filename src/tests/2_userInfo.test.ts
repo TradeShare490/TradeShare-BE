@@ -21,6 +21,7 @@ describe("User Info Service can", () => {
 		const input = {
 			email: "ken@email.com",
 			password: "ken123456",
+			username: "kentest"
 		};
 		let response: any;
 		try {

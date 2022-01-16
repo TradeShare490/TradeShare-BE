@@ -147,14 +147,18 @@ export default class UserService {
 		}
 	}
 
-	async validatePassword({ email, password }: { email: string; password: string }) {
-		const user = await this.userDocumentCollection.findOne({ email });
-
+	async validatePassword(body: any) {
+		let user ;
+		if (body.email) {
+			user = await this.userDocumentCollection.findOne({ email: body.email });
+		} else {
+			user = await this.userDocumentCollection.findOne({ username: body.username });
+		}
 		if (!user) {
 			return false;
 		}
 
-		const isValid = await user.comparePassword(password);
+		const isValid = await user.comparePassword(body.password);
 
 		if (!isValid) return false;
 
