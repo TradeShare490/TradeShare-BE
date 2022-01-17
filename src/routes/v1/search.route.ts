@@ -7,8 +7,8 @@ const searchRoute = (app: Express) => {
 
 	// All paths have the prefix /api/v1/session/
 
-	router.get("/:searchString", (req, res) => {
-		accountController.getStocksSuggestions(req, res);
+	router.get("/:searchString", async (req, res) => {
+		await accountController.getStocksSuggestions(req, res);
 	});
 
 	app.use("/api/v1/searchRecommendations/", router);
