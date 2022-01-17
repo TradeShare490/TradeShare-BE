@@ -6,6 +6,8 @@ import userInfoRoute from './userInfo.route'
 import accountRoute from './account.route'
 import positionsRoute from './positions.route'
 import activitiesRoute from './activities.route'
+import searchRoute from './search.route';
+
 module.exports = function (app: Express) {
   // Register the routes
   defaultRoute(app)
@@ -15,5 +17,6 @@ module.exports = function (app: Express) {
   accountRoute(app)
   positionsRoute(app)
   activitiesRoute(app)
+  searchRoute(app)
   //other routes..
 };
