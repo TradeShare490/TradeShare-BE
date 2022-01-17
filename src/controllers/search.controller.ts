@@ -20,9 +20,9 @@ class SearchController {
 		}
 		catch (error: any) {
             if(error.response == undefined) {
-                res.send(messages.internalError(error.message));
+                return res.send(messages.internalError(error.message));
             } else {
-                res.send(messages.internalError(error.response.data.message))
+                return res.send(messages.internalError(error.response.data.message))
             }
 			 
 		}
