@@ -1,7 +1,4 @@
 import { Request, Response } from "express";
-import mongoose from "mongoose";
-import axios from "../utils/axios/axios.v1";
-import { messages } from "../db/messages";
 import SearchService from "../db/service/search.service";
 
 class SearchController {   

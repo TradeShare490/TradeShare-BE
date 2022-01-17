@@ -1,9 +1,9 @@
 import axios from "../../utils/axios/axios.v1";
-import { Request, Response } from "express";
 import { messages } from "../../db/messages";
 export default class SearchService {
-	constructor() {}
-
+	constructor() {
+        // This is intentional
+    }
 
 	async getStockSuggestions(
 		url: string,
