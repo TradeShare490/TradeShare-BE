@@ -13,11 +13,10 @@ class SearchController {
             if(process.env.ALPHAVANTAGE_API_KEY == undefined) {
                 throw new Error("Alphavantage api key is undefined");
             }
-			const response = await axios.get(`${url}&keywords=${searchString}&apikey=${process.env.ALPHAVANTAGE_API_KEY}`, {
+			const {data}= await axios.get(`${url}&keywords=${searchString}&apikey=${process.env.ALPHAVANTAGE_API_KEY}`, {
 				headers: { 'User-Agent': 'request' },
 			});
-			searchResults = response.data;
-			return res.send(messages.successMessage("success", "searchResult", searchResults))
+			return res.send(messages.successMessage("success", "searchResult", data))
 		}
 		catch (error: any) {
             if(error.response == undefined) {
