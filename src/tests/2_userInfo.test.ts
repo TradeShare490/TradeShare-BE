@@ -6,7 +6,7 @@ import UserCollection from "../db/models/user.model";
 import UserInfoService from "../db/service/userInfo.service";
 import UserInfoCollection from "../db/models/userInfo.model";
 
-describe("User Info Service can", () => {
+describe.only("User Info Service can", () => {
 	let mockedUser: UserDocument;
 	let mockedInfo: UserInfo;
 	let userService: UserService;
@@ -38,6 +38,7 @@ describe("User Info Service can", () => {
 			firstname: "Ken",
 			lastname: "Nguyen",
 			email: "ken@email.com",
+			username: "kentest"
 		};
 
 		let infoResponse: any;
@@ -53,13 +54,21 @@ describe("User Info Service can", () => {
 		mockedInfo = infoResponse.user;
 	});
 
-	it("get user info", async () => {
+	it("get user info by userId", async () => {
 		const res = await userInfoService.findUserInfo({ userId: mockedUser._id });
 		expect(res?.email).to.equal(mockedInfo.email);
 		expect(res?.firstname).to.equal(mockedInfo.firstname);
 		expect(res?.lastname).to.equal(mockedInfo.lastname);
 		expect(res?.userId.toHexString()).to.equal(mockedUser._id.toHexString());
 	});
+
+	it("get user info by username", async () => {
+		const res = await userInfoService.findUserInfo({ username: mockedUser.username })
+		expect(res?.email).to.equal(mockedInfo.email);
+		expect(res?.firstname).to.equal(mockedInfo.firstname);
+		expect(res?.lastname).to.equal(mockedInfo.lastname);
+		expect(res?.userId.toHexString()).to.equal(mockedUser._id.toHexString());
+	})
 
 	it("update user info", async () => {
 		const updateInput = {
