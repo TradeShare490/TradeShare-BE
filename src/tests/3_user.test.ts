@@ -20,7 +20,7 @@ describe("User service can", () => {
 	});
 
 	it("create a new user", async () => {
-		input = { email: "ken@email.com", password: "ken123456", username: "kentest" };
+		input = { email: "ken@email.com", password: "" + Math.random() * 100, username: "kentest" };
 		let response: any;
 		try {
 			response = await userService.createUser(input);
