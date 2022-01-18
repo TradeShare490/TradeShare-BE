@@ -61,4 +61,18 @@ export const messages = {
 			message: message,
 		};
 	},
+
+	/**
+	 * Default response for bad input request
+	 * @param message Detail of the error
+	 * @returns
+	 */
+
+	badInput(message: string): MessageResponse {
+		return {
+			status: 400,
+			success: false,
+			message: message,
+		};
+	},
 };

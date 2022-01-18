@@ -3,9 +3,16 @@ import { UserDocument } from "../db/models/user.model";
 import UserService from "../db/service/user.service";
 import UserCollection from "../db/models/user.model";
 
+interface CreateUserInput {
+	email: string;
+	password: string;
+	username: string;
+}
+
 describe("User service can", () => {
 	let mockedUser: UserDocument;
 	let userService: UserService;
+	let input: CreateUserInput;
 
 	it("be setup", () => {
 		userService = new UserService(UserCollection);
@@ -13,7 +20,7 @@ describe("User service can", () => {
 	});
 
 	it("create a new user", async () => {
-		const input = { email: "ken@email.com", password: "ken123456", username: "kentest" };
+		input = { email: "ken@email.com", password: "ken123456", username: "kentest" };
 		let response: any;
 		try {
 			response = await userService.createUser(input);
@@ -31,7 +38,6 @@ describe("User service can", () => {
 		const res = await userService.getUser({ id: mockedUser._id });
 		expect(res.success).to.be.true;
 		expect(res).to.have.property("user");
-
 		expect(res.user._id).not.to.equal(undefined);
 	});
 
@@ -39,7 +45,14 @@ describe("User service can", () => {
 		const res = await userService.getUser({ email: mockedUser.email });
 		expect(res.success).to.be.true;
 		expect(res).to.have.property("user");
-		expect(res.user.email).to.equal(mockedUser.email);
+		expect(res.user.email).to.equal(input.email);
+	});
+
+	it("get the user by username", async () => {
+		const res = await userService.getUser({ username: input.username });
+		expect(res.success).to.be.true;
+		expect(res).to.have.property("user");
+		expect(res.user.username).to.equal(input.username);
 	});
 
 	it("update user profile by id", async () => {

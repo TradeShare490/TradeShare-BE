@@ -5,6 +5,7 @@ import { UserDocument } from "../models/user.model";
 import { omit } from "lodash";
 export interface UserFindParameters {
 	email?: string;
+	username?: string;
 	searchQuery?: any;
 	id?: string;
 	limit?: number;
@@ -38,16 +39,16 @@ export default class UserService {
 				limit: 1,
 				skip: 0,
 			};
-		}
-
-		// searching for a range of result
-		var searchParams = {};
-		if (params.searchQuery) {
-			searchParams = {
-				...searchParams,
-				$or: [{ username: { $regex: params.searchQuery, $option: "i" } }],
+		} else if (params.username !== undefined) {
+			return {
+				find: { username: params.username },
+				limit: 1,
+				skip: 0,
 			};
 		}
+
+		// searching for a range of result, empty means taking any available items
+		var searchParams = {};
 
 		// Default limit and skip - in case require pagination
 		const limit = params.limit || GLOBAL_QUERY_LIMIT;
@@ -56,7 +57,6 @@ export default class UserService {
 		// if ommited, will try to match on field which doesn't exist
 		delete params.limit;
 		delete params.skip;
-		delete params.searchQuery;
 
 		searchParams = { ...searchParams, ...params }; // ...params in case something remains
 
@@ -67,6 +67,7 @@ export default class UserService {
 			skip: skip,
 		};
 	}
+
 	/**
 	 * Create a new user in MongoDB
 	 * @param input the data for creating new user, please consult the UserSchema as a reference
@@ -115,6 +116,14 @@ export default class UserService {
 	 * @returns response with the user found
 	 */
 	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
+		const validInput =
+			originalParam.email !== undefined ||
+			originalParam.username !== undefined ||
+			originalParam.id !== undefined;
+		if (!validInput) {
+			return messages.badInput("Missing email or username");
+		}
+
 		try {
 			const parsedParam = this.parseParams(originalParam);
 			const response = await this.userDocumentCollection
@@ -148,21 +157,18 @@ export default class UserService {
 	}
 
 	async validatePassword(body: any) {
-		let user ;
-		if (body.email) {
-			user = await this.userDocumentCollection.findOne({ email: body.email });
-		} else {
-			user = await this.userDocumentCollection.findOne({ username: body.username });
-		}
-		if (!user) {
+		const result = await this.getUser(body);
+		const notFound = !result.success || result.user.length == 0;
+		if (notFound) {
+			console.log(result.message);
 			return false;
 		}
 
-		const isValid = await user.comparePassword(body.password);
+		const isValid = await result.user.comparePassword(body.password);
 
 		if (!isValid) return false;
 
-		return omit(user.toJSON(), "password");
+		return omit(result.user.toJSON(), "password");
 	}
 
 	async findUser(query: FilterQuery<UserDocument>) {
