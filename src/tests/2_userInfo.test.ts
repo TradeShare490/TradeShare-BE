@@ -6,7 +6,7 @@ import UserCollection from "../db/models/user.model";
 import UserInfoService from "../db/service/userInfo.service";
 import UserInfoCollection from "../db/models/userInfo.model";
 
-describe.only("User Info Service can", () => {
+describe("User Info Service can", () => {
 	let mockedUser: UserDocument;
 	let mockedInfo: UserInfo;
 	let userService: UserService;
@@ -23,7 +23,7 @@ describe.only("User Info Service can", () => {
 		const input = {
 			email: "ken@email.com",
 			password: "ken123456",
-			username: "kentest"
+			username: "kentest4"
 		};
 		let response: any;
 
@@ -38,7 +38,7 @@ describe.only("User Info Service can", () => {
 			firstname: "Ken",
 			lastname: "Nguyen",
 			email: "ken@email.com",
-			username: "kentest"
+			username: "kentest4"
 		};
 
 		let infoResponse: any;
@@ -84,5 +84,6 @@ describe.only("User Info Service can", () => {
 
 	it("Clean up", async () => {
 		userService.deleteUser(mockedUser._id);
+		userInfoService.deleteUser(mockedUser._id);
 	});
 });
