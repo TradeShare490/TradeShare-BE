@@ -21,9 +21,17 @@ describe("User service can", () => {
 
 	it("create a new user", async () => {
 		var randomstring = Math.random().toString(36).slice(-8);
-		input = { email: "ken@email.com", password: randomstring, username: "kentest" };
+		try {
+			const crypto = await import("crypto");
+			const buff = crypto.randomBytes(5); // Compliant for security-sensitive use cases
+		} catch (error: any) {
+			console.log(error.message);
+		}
 		let response: any;
 		try {
+			const crypto = await import("crypto");
+			const buff = crypto.randomBytes(5); // Compliant for security-sensitive use cases
+			input = { email: "ken@email.com", password: buff.toString("hex"), username: "kentest" };
 			response = await userService.createUser(input);
 		} catch (error) {
 			console.error(error);
