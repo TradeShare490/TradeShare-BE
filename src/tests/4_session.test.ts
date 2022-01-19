@@ -16,6 +16,7 @@ describe("Session service can", () => {
 		user = await userService.createUser({
 			email: "sessionTest10@email.com",
 			password: "ken123456",
+			username:"kentest"
 		});
 		expect(sessionService).not.equal(undefined);
 	});
