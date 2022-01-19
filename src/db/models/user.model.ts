@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import userInfoModel from "./userInfo.model";
 export interface UserDocument extends mongoose.Document {
+	username: string;
 	email: string;
 	password: string;
 	createdAt: Date;
@@ -11,6 +12,7 @@ export interface UserDocument extends mongoose.Document {
 
 const userSchema: Schema = new Schema({
 	email: { type: String, required: true, unique: true },
+	username: { type: String, required: true, unique: true },
 	password: { type: String, required: true },
 });
 

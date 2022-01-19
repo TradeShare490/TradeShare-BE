@@ -23,6 +23,7 @@ describe("User Info Service can", () => {
 		const input = {
 			email: "ken@email.com",
 			password: "ken123456",
+			username: "kentest4"
 		};
 		let response: any;
 
@@ -37,6 +38,7 @@ describe("User Info Service can", () => {
 			firstname: "Ken",
 			lastname: "Nguyen",
 			email: "ken@email.com",
+			username: "kentest4"
 		};
 
 		let infoResponse: any;
@@ -52,13 +54,21 @@ describe("User Info Service can", () => {
 		mockedInfo = infoResponse.user;
 	});
 
-	it("get user info", async () => {
+	it("get user info by userId", async () => {
 		const res = await userInfoService.findUserInfo({ userId: mockedUser._id });
 		expect(res?.email).to.equal(mockedInfo.email);
 		expect(res?.firstname).to.equal(mockedInfo.firstname);
 		expect(res?.lastname).to.equal(mockedInfo.lastname);
 		expect(res?.userId.toHexString()).to.equal(mockedUser._id.toHexString());
 	});
+
+	it("get user info by username", async () => {
+		const res = await userInfoService.findUserInfo({ username: mockedUser.username })
+		expect(res?.email).to.equal(mockedInfo.email);
+		expect(res?.firstname).to.equal(mockedInfo.firstname);
+		expect(res?.lastname).to.equal(mockedInfo.lastname);
+		expect(res?.userId.toHexString()).to.equal(mockedUser._id.toHexString());
+	})
 
 	it("update user info", async () => {
 		const updateInput = {
@@ -74,5 +84,6 @@ describe("User Info Service can", () => {
 
 	it("Clean up", async () => {
 		userService.deleteUser(mockedUser._id);
+		userInfoService.deleteUser(mockedUser._id);
 	});
 });

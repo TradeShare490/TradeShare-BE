@@ -45,4 +45,17 @@ export default class UserInfoService {
 			return messages.internalError(error.message);
 		}
 	}
+	
+	async deleteUser(id: string): Promise<MessageResponse> {
+		try {
+			const response = await this.userInfoCollection.deleteOne({ userId: id });
+			return messages.successMessage(
+				`${response.deletedCount} userinfo has been deleted`,
+				"deletedCount",
+				response.deletedCount
+			);
+		} catch (error: any) {
+			return messages.internalError(error.message);
+		}
+	}
 }
