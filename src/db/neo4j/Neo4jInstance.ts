@@ -28,6 +28,9 @@ class Neo4jInstance {
 		this.timeInterval = timeInterval;
 	}
 
+	/**
+	 * Setup connectivity to Neo4j, re-try for a number of time
+	 */
 	async connect() {
 		// try connecting to Neo4j db
 		for (let count = 0; count < this.numbRetry && !this.isConnected; count++) {
@@ -41,6 +44,9 @@ class Neo4jInstance {
 		}
 	}
 
+	/**
+	 * Setup connectivity to Neo4j and test the connectivity
+	 */
 	async connectOnce() {
 		try {
 			console.log("Connecting Neo4j...");
