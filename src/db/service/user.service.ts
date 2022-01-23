@@ -134,6 +134,7 @@ export default class UserService {
 				? messages.successMessage("The user has been found", "user", response[0])
 				: messages.successMessage("No match found", "user", []);
 		} catch (error: any) {
+			/* istanbul ignore next */
 			return messages.internalError(error.message);
 		}
 	}
@@ -155,7 +156,7 @@ export default class UserService {
 			return messages.internalError(error.message);
 		}
 	}
-
+	/* istanbul ignore next */
 	async validatePassword(body: any) {
 		const result = await this.getUser(body);
 		const notFound = !result.success || result.user.length == 0;

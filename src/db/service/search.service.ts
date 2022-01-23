@@ -20,6 +20,7 @@ export default class SearchService {
 			return messages.successMessage("success", "searchResult", data);
 		}
 		catch (error: any) {
+			/* istanbul ignore else  */
             if(error.response == undefined) {
                 return messages.internalError(error.message);
             } else {

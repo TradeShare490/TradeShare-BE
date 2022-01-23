@@ -8,6 +8,13 @@ describe("Alpaca service can", () => {
 		alpacaService = new AlpacaService();
 	});
 
+	it("cant get anything with wrong alpacaToken",async () => {
+		let response = await alpacaService.getInfo("/positions", "positions", "fakeAlpacaToken")
+		expect(response.status).equals(501);
+		expect(response.success).equals(false);
+		expect(response.message).equals("request is not authorized");
+	})
+
 	it("get positions info", async () => {
 		let response = await alpacaService.getInfo("/positions", "positions", alpacaToken);
 		expect(response.status).equals(200);
