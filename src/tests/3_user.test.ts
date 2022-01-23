@@ -72,7 +72,7 @@ describe("User service can", () => {
 	});
 
 	it("can't update unknown user", async () => {
-		const updateInput = { password: "4567" };
+		const updateInput = { email: "test@abcdef.com" };
 		const res = await userService.updateUser("unknown", updateInput);
 		expect(res.success).to.be.false;
 		expect(res.status).to.equal(501);
