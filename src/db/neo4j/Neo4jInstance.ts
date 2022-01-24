@@ -1,4 +1,4 @@
-import neo4j, { Driver } from "neo4j-driver";
+import neo4j, { Driver, Record } from "neo4j-driver";
 import { sleep } from "../../utils/utils";
 import dotenv from "dotenv";
 dotenv.config();
@@ -9,6 +9,17 @@ interface Neo4jInstanceInput {
 	username: string;
 	password: string;
 	timeInterval: number;
+}
+
+export interface Neo4jCustomQueryResponse {
+	success: boolean;
+	data?: any;
+	message: string;
+}
+
+export enum QueryMode {
+	write = "write",
+	read = "read",
 }
 
 class Neo4jInstance {
@@ -70,6 +81,84 @@ class Neo4jInstance {
 		await this.driver.close();
 		console.log("Neo4j has been closed");
 	}
+
+	async testConnectivity() {
+		// call verify
+		try {
+			await this.driver.verifyConnectivity();
+		} catch (error) {
+			console.log("Neo4j connectivity lost...");
+			// re-connect
+			await this.connect();
+		}
+	}
+
+	/**
+	 * For general query when the user is not sure if it is for read or write
+	 * @param query
+	 * @param params
+	 * @returns
+	 */
+	async runQuery<T = { [key: string]: any }>(query: string, params: T) {
+		await this.testConnectivity();
+
+		// once here, a connectivity is secured
+		const session = this.driver.session();
+		let response: Neo4jCustomQueryResponse;
+		try {
+			const result = await session.run(query, params);
+			response = { success: true, data: result.records, message: "Done" };
+		} catch (error: any) {
+			console.log(error.message);
+			response = { success: false, message: error.message };
+		} finally {
+			await session.close();
+		}
+		return response;
+	}
+
+	// Ref: https://medium.com/neo4j/querying-neo4j-clusters-7d6fde75b5b4
+	/**
+	 * Run a query in a transaction
+	 * @param query the query string
+	 * @param params the object for params defined from the query
+	 * @param mode either read/write
+	 * @returns
+	 */
+	async runQueryInTransaction<T>(query: string, params: T, mode: string) {
+		await this.testConnectivity();
+
+		// once here, a connectivity is secured
+		const session = this.driver.session();
+		let response: Neo4jCustomQueryResponse;
+		// TODO:  what if there is an error ?
+		try {
+			let data: Record[];
+			if (mode === QueryMode.write) {
+				data = await session.writeTransaction(async (txc) => {
+					let tempResult = await txc.run(query, params);
+					return tempResult.records;
+				});
+			} else if (mode === QueryMode.read) {
+				data = await session.readTransaction(async (txc) => {
+					let tempResult = await txc.run(query, params);
+					return tempResult.records;
+				});
+			} else {
+				// unknown value passed for mode
+				throw new Error("Unexpected mode passed");
+			}
+
+			response = { success: true, message: "Done", data: data };
+		} catch (error: any) {
+			console.log(error.message);
+			response = { success: false, message: error.message };
+		} finally {
+			await session.close();
+		}
+
+		return response;
+	}
 }
 
 // input declarations
@@ -87,5 +176,5 @@ const input: Neo4jInstanceInput = {
 	timeInterval: Number.isInteger(parsedInterval) ? parsedInterval : 10,
 };
 
-const instance = new Neo4jInstance(input);
-export default instance;
+const neo4jInstance = new Neo4jInstance(input);
+export default neo4jInstance;
