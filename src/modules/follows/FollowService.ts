@@ -140,7 +140,7 @@ class FollowService {
 		if (queryResponse.success && queryResponse.data.length > 0) {
 			// update the return data
 			const listOfUserIds = [];
-			// will receive an array of IDs which the user follows
+			// will receive an array of IDs which follows the user
 			for (const record of queryResponse.data) {
 				listOfUserIds.push(record.get("followerId"));
 			}
