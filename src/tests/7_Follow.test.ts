@@ -84,7 +84,6 @@ describe.only("Follow service can", () => {
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()
 			);
-			console.log(result);
 			expect(result.success).to.be.true;
 		});
 
@@ -94,7 +93,12 @@ describe.only("Follow service can", () => {
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()
 			);
-			console.log(result);
+			expect(result.success).to.be.false;
+		});
+
+		it("detect invalid userID", async () => {
+			// mockedFollower sends request to mockedUser
+			const result = await followService.follow(123, { id: "object type id" });
 			expect(result.success).to.be.false;
 		});
 
