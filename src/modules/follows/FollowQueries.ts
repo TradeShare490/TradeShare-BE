@@ -22,4 +22,15 @@ export const followQueries = {
                 MATCH (n:User)-[r:Follows{isPending: false}]->(m:User{userId: $userId})
                 RETURN n.userId as followerId
         `,
+	DELETE_RELATIONSHIP_BY_USER_ID: `
+                MATCH (src: User{userId: $src})-[r:Follows{isPending:$isPending}]->(target: User{userId: $target})
+                DELETE r
+                RETURN COUNT(*) as numbDeleted
+        `,
+	DELETE_USER_NODE_BY_ID: `
+                MATCH (n:User{userId: $userId})
+                DELETE n
+                RETURN COUNT(*) as numbDeleted 
+                
+        `,
 };

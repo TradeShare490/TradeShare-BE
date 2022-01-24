@@ -12,7 +12,7 @@ interface MockedUser {
 	mockedInfo: UserInfo;
 }
 
-describe.only("Follow service can", () => {
+describe("Follow service can", () => {
 	let followService: FollowService;
 	let mockedFollower: MockedUser;
 	let mockedUser: MockedUser;
@@ -43,7 +43,7 @@ describe.only("Follow service can", () => {
 					firstname: "Mocked",
 					lastname: "User",
 					email: "mocked@email.com",
-					username: "kentest4",
+					username: "mockedUser",
 				},
 			};
 
@@ -57,7 +57,7 @@ describe.only("Follow service can", () => {
 					firstname: "Mocked",
 					lastname: "Follower",
 					email: "mockedFollower@email.com",
-					username: "kentest4",
+					username: "mockedFollower",
 				},
 			};
 
@@ -132,26 +132,54 @@ describe.only("Follow service can", () => {
 		});
 	});
 
-	describe.skip("unfollow users", () => {
-		it("unfollow another user", () => {
+	describe("unfollow users", () => {
+		it("unfollow another user", async () => {
 			// mockedFollower unfollow mockedUser, check list of followings
+			const unfollowRes = await followService.unFollow(
+				mockedFollower.mockedInfo.userId.toJSON(),
+				mockedUser.mockedInfo.userId.toJSON()
+			);
+			expect(unfollowRes.success).to.be.true;
+			expect(unfollowRes.data).to.be.greaterThan(0); // number of relationship deleted
+
+			// double check
+			const isFollowed = await followService.verifyRelFollows(
+				mockedFollower.mockedInfo.userId.toJSON(),
+				mockedUser.mockedInfo.userId.toJSON()
+			);
+			expect(isFollowed).to.be.false;
 		});
 	});
 
 	describe("clean up the test suite", () => {
-		it("delete all mocked users", async () => {
+		it("delete mocked user", async () => {
 			// delete the mocked users
 			await cleanupMockedUserInfo({
 				mockedUserId: mockedUser.mockedInfo.userId,
 				userInfoService: userInfoService,
 				userService: userService,
 			});
+		});
 
+		it("delete mocked follower", async () => {
 			await cleanupMockedUserInfo({
 				mockedUserId: mockedFollower.mockedInfo.userId,
 				userInfoService: userInfoService,
 				userService: userService,
 			});
+		});
+
+		it("delete mocked nodes", async () => {
+			// Delete the mocked nodes
+			let tobeDeletedIDs = [
+				mockedFollower.mockedInfo.userId.toJSON(),
+				mockedUser.mockedInfo.userId.toJSON(),
+			];
+			for (const id of tobeDeletedIDs) {
+				const nodeDeleteRes = await followService.deleteUserNode(id);
+				expect(nodeDeleteRes.success).to.be.true;
+				expect(nodeDeleteRes.data).equal(1); // number of node deleted
+			}
 		});
 	});
 });

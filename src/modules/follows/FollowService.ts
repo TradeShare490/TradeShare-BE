@@ -154,6 +154,74 @@ class FollowService {
 			return queryResponse;
 		}
 	}
+
+	/**
+	 * Unfollow a user
+	 * @param srcUserId ID of the actor
+	 * @param targetUserId ID of the target
+	 * @returns Returns error if `Follows` already exists
+	 */
+	async unFollow(srcUserId: UserInfo["userId"], targetUserId: UserInfo["userId"]) {
+		return await this.deleteRelFollows(srcUserId, targetUserId);
+	}
+
+	/**
+	 * Delete a `Follows` relationship between the two users
+	 * @param srcUserId
+	 * @param targetUserId
+	 * @param isPending if true means cancelling a `follow` request, false by default. By default: unfollow
+	 * @returns
+	 */
+	async deleteRelFollows(
+		srcUserId: UserInfo["userId"],
+		targetUserId: UserInfo["userId"],
+		isPending = false
+	) {
+		const query = followQueries.DELETE_RELATIONSHIP_BY_USER_ID;
+		const params = {
+			src: srcUserId,
+			target: targetUserId,
+			isPending: isPending,
+		};
+
+		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write);
+		if (queryResponse.success && queryResponse.data[0]) {
+			// field_name based on the RETURN in the query
+			const numbDeleted = neo4j.integer.toNumber(queryResponse.data[0].get("numbDeleted"));
+			return {
+				success: true,
+				message: queryResponse.message,
+				data: numbDeleted,
+			};
+		} else {
+			return queryResponse;
+		}
+	}
+
+	/**
+	 * Delete a user node after running tests
+	 * @param userId
+	 * @returns
+	 */
+	async deleteUserNode(userId: UserInfo["userId"]) {
+		const query = followQueries.DELETE_USER_NODE_BY_ID;
+		const params = {
+			userId: userId,
+		};
+
+		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write);
+		if (queryResponse.success && queryResponse.data[0]) {
+			// field_name based on the RETURN in the query
+			const numbDeleted = neo4j.integer.toNumber(queryResponse.data[0].get("numbDeleted"));
+			return {
+				success: true,
+				message: queryResponse.message,
+				data: numbDeleted,
+			};
+		} else {
+			return queryResponse;
+		}
+	}
 }
 
 export default FollowService;

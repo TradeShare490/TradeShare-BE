@@ -115,7 +115,6 @@ export interface CleanupMockedUserInfoInput {
  */
 export const createAndTestUserInfo = async (input: CreateAndTestUserInfoInput) => {
 	let createUserDocumentResponse = await input.userService.createUser(input.createUserInput);
-
 	expect(createUserDocumentResponse.success).to.be.true;
 	expect(createUserDocumentResponse.user).not.equal(undefined);
 
