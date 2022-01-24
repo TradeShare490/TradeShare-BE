@@ -47,6 +47,9 @@ jobs:
           JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
           JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
           ALPHAVANTAGE_API_KEY: ${{secrets.ALPHAVANTAGE_API_KEY}}
+          NEO4J_USERNAME: ${{secrets.NEO4J_USERNAME}}
+          NEO4J_PASSWORD: ${{secrets.NEO4J_PASSWORD}}
+          NEO4J_URI: ${{secrets.NEO4J_URI}}
 
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v2
@@ -64,3 +67,6 @@ jobs:
           JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
           JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
           ALPHAVANTAGE_API_KEY: ${{secrets.ALPHAVANTAGE_API_KEY}}
+          NEO4J_USERNAME: ${{secrets.NEO4J_USERNAME}}
+          NEO4J_PASSWORD: ${{secrets.NEO4J_PASSWORD}}
+          NEO4J_URI: ${{secrets.NEO4J_URI}}
