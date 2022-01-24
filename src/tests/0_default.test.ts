@@ -2,6 +2,7 @@ import { expect } from "chai";
 import DefaultService from "../db/service/default.service";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import neo4jInstance from "../db/neo4j/Neo4jInstance";
 
 dotenv.config();
 
@@ -10,7 +11,9 @@ before(async () => {
 	const mongoUrl = process.env.TEST_DB_URI;
 	if (!mongoUrl) {
 		console.log("ERROR: Please check if mongodb url exists in your .env file");
-		throw new Error("TEST_DB_URI was not found. Please check if mongodb url exists in your .env file");
+		throw new Error(
+			"TEST_DB_URI was not found. Please check if mongodb url exists in your .env file"
+		);
 	} else {
 		await mongoose
 			.connect(mongoUrl)
@@ -20,10 +23,13 @@ before(async () => {
 				throw new Error(err.message);
 			});
 	}
+
+	await neo4jInstance.connect();
 });
 
 after(async () => {
 	await mongoose.disconnect();
+	await neo4jInstance.disconnect();
 });
 
 describe("Default service can", () => {
