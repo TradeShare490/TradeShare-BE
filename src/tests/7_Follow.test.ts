@@ -6,6 +6,7 @@ import UserCollection, { UserDocument } from "../db/models/user.model";
 import UserInfoCollection, { UserInfo } from "../db/models/userInfo.model";
 
 import { cleanupMockedUserInfo, createAndTestUserInfo } from "./2_userInfo.test";
+import { generateRandomPassword } from "../utils/utils";
 
 interface MockedUser {
 	mockedUser: UserDocument;
@@ -36,7 +37,7 @@ describe("Follow service can", () => {
 			const mockedUserInput = {
 				createUserInput: {
 					email: "mocked@email.com",
-					password: "ken123456",
+					password: await generateRandomPassword(),
 					username: "mockedUser",
 				},
 				createInfoInput: {
@@ -50,7 +51,7 @@ describe("Follow service can", () => {
 			const mockedFollowerInput = {
 				createUserInput: {
 					email: "mockedFollower@email.com",
-					password: "ken123456",
+					password: await generateRandomPassword(),
 					username: "mockedFollower",
 				},
 				createInfoInput: {
