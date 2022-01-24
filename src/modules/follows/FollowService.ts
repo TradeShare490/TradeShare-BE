@@ -1,8 +1,7 @@
-import { UserInfo } from "../../db/models/userInfo.model";
+import UserInfoCollection, { UserInfo } from "../../db/models/userInfo.model";
 import neo4jInstance, { QueryMode } from "../../db/neo4j/Neo4jInstance";
 import UserInfoService from "../../db/service/userInfo.service";
 import { followQueries } from "./FollowQueries";
-import UserInfoCollection from "../../db/models/userInfo.model";
 import mongoose from "mongoose";
 import neo4j from "neo4j-driver";
 
@@ -33,11 +32,9 @@ class FollowService {
 			userId: targetUserMongoId,
 		});
 		if (targerUserInfo?.isPrivate) {
-			// TODO: If private profile, continue here
-			// Requires: notification mechanism and set `Follows` relationship to `isPending`
 			return { success: false, message: "This function is not ready, work is in progress" };
 		} else {
-			return await this.createRelFollows(srcUserId, targetUserId);
+			return this.createRelFollows(srcUserId, targetUserId);
 		}
 	}
 
@@ -93,8 +90,7 @@ class FollowService {
 			QueryMode.read
 		);
 
-		const relExists = success && data != undefined && data[0].get("relExists") == true;
-		return relExists;
+		return success && data && data[0].get("relExists");
 	}
 
 	/**
@@ -161,8 +157,8 @@ class FollowService {
 	 * @param targetUserId ID of the target
 	 * @returns Returns error if `Follows` already exists
 	 */
-	async unFollow(srcUserId: UserInfo["userId"], targetUserId: UserInfo["userId"]) {
-		return await this.deleteRelFollows(srcUserId, targetUserId);
+	unFollow(srcUserId: UserInfo["userId"], targetUserId: UserInfo["userId"]) {
+		return this.deleteRelFollows(srcUserId, targetUserId);
 	}
 
 	/**
