@@ -57,12 +57,40 @@ describe("User service can", () => {
 		expect(res.user.username).to.equal(input.username);
 	});
 
+	it("can't get the user without username or email", async () => {
+		const res = await userService.getUser({});
+		expect(res.success).to.be.false;
+		expect(res.status).to.equal(400);
+	});
+
+	it("can validate correct password", async () => {
+		const res = await userService.validatePassword(input);
+		expect(res).not.to.equal(undefined);
+	});
+
 	it("update user profile by id", async () => {
 		const updateInput = { password: "4567" };
 		const res = await userService.updateUser(mockedUser._id, updateInput);
 		expect(res.success).to.be.true;
 		expect(res.user).to.have.property("password");
 		expect(res.user.password).to.equal(updateInput.password);
+	});
+
+	it("can validate incorrect password", async () => {
+		const res = await userService.validatePassword(input);
+		expect(res).to.be.false;
+	});
+
+	it("cant validate unknown user", async () => {
+		const res = await userService.validatePassword({ username: "unknown" });
+		expect(res).to.be.false;
+	});
+
+	it("can't update unknown user", async () => {
+		const updateInput = { email: "test@abcdef.com" };
+		const res = await userService.updateUser("unknown", updateInput);
+		expect(res.success).to.be.false;
+		expect(res.status).to.equal(501);
 	});
 
 	it("delete a user by id", async () => {
@@ -75,5 +103,12 @@ describe("User service can", () => {
 		expect(response).not.equal(undefined);
 		expect(response).to.have.property("deletedCount");
 		expect(response.deletedCount).to.equal(1);
+	});
+
+	it("can't delete a user by an unknown id", async () => {
+		let response: any;
+		response = await userService.deleteUser("fakeId123");
+		expect(response.success).to.be.false;
+		expect(response.status).to.equal(501);
 	});
 });

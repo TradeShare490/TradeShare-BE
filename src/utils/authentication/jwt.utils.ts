@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
+/* istanbul ignore if  */
 if (!process.env.JWT_PRIVATE_KEY || !process.env.JWT_PUBLIC_KEY) {
 	throw new Error("JWT keys are not detected");
 }
@@ -24,7 +25,6 @@ export function verifyJwt(token: string) {
 			decoded,
 		};
 	} catch (e: any) {
-		console.error(e);
 		return {
 			valid: false,
 			expired: e.message === "jwt expired",

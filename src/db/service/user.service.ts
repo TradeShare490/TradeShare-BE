@@ -134,6 +134,7 @@ export default class UserService {
 				? messages.successMessage("The user has been found", "user", response[0])
 				: messages.successMessage("No match found", "user", []);
 		} catch (error: any) {
+			/* istanbul ignore next */
 			return messages.internalError(error.message);
 		}
 	}
@@ -160,7 +161,6 @@ export default class UserService {
 		const result = await this.getUser(body);
 		const notFound = !result.success || result.user.length == 0;
 		if (notFound) {
-			console.log(result.message);
 			return false;
 		}
 

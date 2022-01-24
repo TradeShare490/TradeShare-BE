@@ -14,6 +14,7 @@ export default class UserInfoService {
 			const userInfo = this.userInfoCollection.findOne(query);
 			return userInfo;
 		} catch (error: any) {
+			/* istanbul ignore next  */
 			return messages.internalError(error.message);
 		}
 	}
@@ -30,6 +31,7 @@ export default class UserInfoService {
 			const userInfo = await this.userInfoCollection.create(input);
 			return messages.createdMessage("UserInfo has beeen created", "user", userInfo.toJSON());
 		} catch (error: any) {
+			/* istanbul ignore next  */
 			return messages.internalError(error.message);
 		}
 	}
@@ -42,6 +44,7 @@ export default class UserInfoService {
 		try {
 			return await this.userInfoCollection.findOneAndUpdate(query, update, options);
 		} catch (error: any) {
+			/* istanbul ignore next */
 			return messages.internalError(error.message);
 		}
 	}
@@ -55,6 +58,7 @@ export default class UserInfoService {
 				response.deletedCount
 			);
 		} catch (error: any) {
+			/* istanbul ignore next */
 			return messages.internalError(error.message);
 		}
 	}

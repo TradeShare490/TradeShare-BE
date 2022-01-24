@@ -41,6 +41,7 @@ export const messages = {
 	 * Default response for unauthorized requests
 	 * @returns a mutation response
 	 */
+	/* istanbul ignore next */
 	notAuthorized(): MessageResponse {
 		return {
 			status: 401,
