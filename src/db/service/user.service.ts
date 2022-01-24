@@ -156,12 +156,11 @@ export default class UserService {
 			return messages.internalError(error.message);
 		}
 	}
-	/* istanbul ignore next */
+
 	async validatePassword(body: any) {
 		const result = await this.getUser(body);
 		const notFound = !result.success || result.user.length == 0;
 		if (notFound) {
-			console.log(result.message);
 			return false;
 		}
 

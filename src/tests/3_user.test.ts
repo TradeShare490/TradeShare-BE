@@ -63,12 +63,27 @@ describe("User service can", () => {
 		expect(res.status).to.equal(400);
 	});
 
+	it("can validate correct password", async () => {
+		const res = await userService.validatePassword(input);
+		expect(res).not.to.equal(undefined);
+	});
+
 	it("update user profile by id", async () => {
 		const updateInput = { password: "4567" };
 		const res = await userService.updateUser(mockedUser._id, updateInput);
 		expect(res.success).to.be.true;
 		expect(res.user).to.have.property("password");
 		expect(res.user.password).to.equal(updateInput.password);
+	});
+
+	it("can validate incorrect password", async () => {
+		const res = await userService.validatePassword(input);
+		expect(res).to.be.false;
+	});
+
+	it("cant validate unknown user", async () => {
+		const res = await userService.validatePassword({ username: "unknown" });
+		expect(res).to.be.false;
 	});
 
 	it("can't update unknown user", async () => {
