@@ -93,30 +93,6 @@ class Neo4jInstance {
 		}
 	}
 
-	/**
-	 * For general query when the user is not sure if it is for read or write
-	 * @param query
-	 * @param params
-	 * @returns
-	 */
-	async runQuery<T = { [key: string]: any }>(query: string, params: T) {
-		await this.testConnectivity();
-
-		// once here, a connectivity is secured
-		const session = this.driver.session();
-		let response: Neo4jCustomQueryResponse;
-		try {
-			const result = await session.run(query, params);
-			response = { success: true, data: result.records, message: "Done" };
-		} catch (error: any) {
-			console.log(error.message);
-			response = { success: false, message: error.message };
-		} finally {
-			await session.close();
-		}
-		return response;
-	}
-
 	// Ref: https://medium.com/neo4j/querying-neo4j-clusters-7d6fde75b5b4
 	/**
 	 * Run a query in a transaction
@@ -131,7 +107,6 @@ class Neo4jInstance {
 		// once here, a connectivity is secured
 		const session = this.driver.session();
 		let response: Neo4jCustomQueryResponse;
-		// TODO:  what if there is an error ?
 		try {
 			let data: Record[];
 			if (mode === QueryMode.write) {
