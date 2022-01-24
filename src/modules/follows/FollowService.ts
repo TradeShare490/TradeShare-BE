@@ -113,9 +113,9 @@ class FollowService {
 			const listOfUserIds = [];
 			// will receive an array of IDs which the user follows
 			for (const record of queryResponse.data) {
-				let tempVal = record.get("followId");
-				listOfUserIds.push(tempVal);
+				listOfUserIds.push(record.get("followId"));
 			}
+
 			return {
 				success: true,
 				message: queryResponse.message,
@@ -142,9 +142,9 @@ class FollowService {
 			const listOfUserIds = [];
 			// will receive an array of IDs which the user follows
 			for (const record of queryResponse.data) {
-				let tempVal = record.get("followerId");
-				listOfUserIds.push(tempVal);
+				listOfUserIds.push(record.get("followerId"));
 			}
+
 			return {
 				success: true,
 				message: queryResponse.message,
