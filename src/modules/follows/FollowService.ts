@@ -96,6 +96,64 @@ class FollowService {
 		const relExists = success && data != undefined && data[0].get("relExists") == true;
 		return relExists;
 	}
+
+	/**
+	 * Get the list of account_ids the user follows
+	 * @param userId
+	 * @returns
+	 */
+	async getFollows(userId: UserInfo["userId"]) {
+		const query = followQueries.GET_FOLLOWS_FOR_USER;
+		const params = {
+			userId: userId,
+		};
+		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.read);
+		if (queryResponse.success && queryResponse.data.length > 0) {
+			// update the return data
+			const listOfUserIds = [];
+			// will receive an array of IDs which the user follows
+			for (const record of queryResponse.data) {
+				let tempVal = record.get("followId");
+				listOfUserIds.push(tempVal);
+			}
+			return {
+				success: true,
+				message: queryResponse.message,
+				data: listOfUserIds,
+			};
+		} else {
+			return queryResponse;
+		}
+	}
+
+	/**
+	 * Get the list of account_ids who follow this user
+	 * @param userId
+	 * @returns
+	 */
+	async getFollowers(userId: UserInfo["userId"]) {
+		const query = followQueries.GET_FOLLOWERS_FOR_USER;
+		const params = {
+			userId: userId,
+		};
+		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.read);
+		if (queryResponse.success && queryResponse.data.length > 0) {
+			// update the return data
+			const listOfUserIds = [];
+			// will receive an array of IDs which the user follows
+			for (const record of queryResponse.data) {
+				let tempVal = record.get("followerId");
+				listOfUserIds.push(tempVal);
+			}
+			return {
+				success: true,
+				message: queryResponse.message,
+				data: listOfUserIds,
+			};
+		} else {
+			return queryResponse;
+		}
+	}
 }
 
 export default FollowService;

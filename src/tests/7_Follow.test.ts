@@ -114,12 +114,21 @@ describe.only("Follow service can", () => {
 		});
 	});
 
-	describe.skip("get list of follows/followers for a user by userId", () => {
-		it("get list of followers", () => {
+	describe("get list of follows/followers for a user by userId", () => {
+		it("get list of followers", async () => {
 			// mockedUser get list of followers
+			const result = await followService.getFollowers(mockedUser.mockedInfo.userId.toJSON());
+			expect(result.success).to.be.true;
+			expect(result.data).to.be.an("array");
+			expect(result.data[0]).equal(mockedFollower.mockedInfo.userId.toJSON());
 		});
-		it("get list of followings", () => {
+
+		it("get list of followings", async () => {
 			// mockedFollower get list of followings
+			const result = await followService.getFollows(mockedFollower.mockedInfo.userId.toJSON());
+			expect(result.success).to.be.true;
+			expect(result.data).to.be.an("array");
+			expect(result.data[0]).equal(mockedUser.mockedInfo.userId.toJSON());
 		});
 	});
 
