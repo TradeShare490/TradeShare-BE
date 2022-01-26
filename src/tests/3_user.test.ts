@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { UserDocument } from "../db/models/user.model";
 import UserService from "../db/service/user.service";
 import UserCollection from "../db/models/user.model";
+import { generateRandomPassword } from "../utils/utils";
 
 interface CreateUserInput {
 	email: string;
@@ -22,9 +23,11 @@ describe("User service can", () => {
 	it("create a new user", async () => {
 		let response: any;
 		try {
-			const crypto = await import("crypto");
-			const buff = crypto.randomBytes(5); // Compliant for security-sensitive use cases
-			input = { email: "ken@email.com", password: buff.toString("hex"), username: "kentest" };
+			input = {
+				email: "ken@email.com",
+				password: await generateRandomPassword(),
+				username: "kentest",
+			};
 			response = await userService.createUser(input);
 		} catch (error) {
 			console.error(error);
