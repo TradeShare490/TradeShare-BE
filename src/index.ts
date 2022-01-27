@@ -25,19 +25,20 @@ const server = app.listen(PORT, async () => {
 });
 
 // Called when the server is either crashed or termininated
-const cleanUpServer = async () => {
-	server.close(async (err) => {
-		if (err) console.log(err.message);
-		else {
-			await neo4j.disconnect();
-			await mongoInstance.disconnect();
-			process.exit();
-		}
-	});
-};
+// const cleanUpServer = async () => {
+// 	server.close(async (err) => {
+// 		if (err) console.log(err.message);
+// 		else {
+// 			await neo4j.disconnect();
+// 			await mongoInstance.disconnect();
+// 			console.log("exit ?");
+// 			process.exit();
+// 		}
+// 	});
+// };
 
-const errorCodeArr = [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`];
+// const errorCodeArr = [`exit`, `SIGINT`];
 
-errorCodeArr.forEach((eventType) => {
-	process.on(eventType, cleanUpServer.bind(null, eventType));
-});
+// errorCodeArr.forEach((eventType) => {
+// 	process.on(eventType, cleanUpServer.bind(null, eventType));
+// });

@@ -15,26 +15,35 @@ class FollowService {
 	 * Set up relationship `Follows`
 	 * @param srcUserId ID of the actor
 	 * @param targetUserId ID of the target
-	 * @returns Returns error if `Follows` already exists
+	 * @returns Returns error if `Follows` already exists. Else , {data: {numOfPath, relId } }
 	 */
 	async follow(srcUserId: UserInfo["userId"], targetUserId: UserInfo["userId"]) {
+		// cannot follow yourself
+		if (srcUserId === targetUserId) return { success: false, message: "Cannot follow yourself" };
+
 		// Check if the relationship already exist or not
 		const relExists = await this.verifyRelFollows(srcUserId, targetUserId);
+
 		// If exists, return error and message: "Already exists"
 		if (relExists) {
 			return { success: false, message: "The actor already followed this user" };
 		}
 
 		// If does not exist, setup follow relationship between the two users
-		// Get the profile visibility of the target user
-		const targetUserMongoId = new mongoose.Types.ObjectId(targetUserId); // convert into MongoDB ID Object
-		const targerUserInfo = await this.userInfoService.findUserInfo({
-			userId: targetUserMongoId,
-		});
-		if (targerUserInfo?.isPrivate) {
-			return { success: false, message: "This function is not ready, work is in progress" };
-		} else {
-			return this.createRelFollows(srcUserId, targetUserId);
+		try {
+			// Get the profile visibility of the target user
+			const targetUserMongoId = new mongoose.Types.ObjectId(targetUserId); // convert into MongoDB ID Object
+			const targerUserInfo = await this.userInfoService.findUserInfo({
+				userId: targetUserMongoId,
+			});
+			if (targerUserInfo?.isPrivate) {
+				return { success: false, message: "This function is not ready, work is in progress" };
+			} else {
+				return this.createRelFollows(srcUserId, targetUserId);
+			}
+		} catch (error: any) {
+			console.log(error.message);
+			return { success: false, message: "Invalid target userID", data: {} };
 		}
 	}
 
@@ -43,7 +52,7 @@ class FollowService {
 	 * @param srcUserId
 	 * @param targetUserId
 	 * @param isPending whether this relationship requires approval, false by default
-	 * @returns
+	 * @returns \{success; message; data: {numOfPath, relId } }
 	 */
 	async createRelFollows(
 		srcUserId: UserInfo["userId"],
@@ -96,7 +105,7 @@ class FollowService {
 	/**
 	 * Get the list of account_ids the user follows
 	 * @param userId
-	 * @returns
+	 * @returns \{success, message, data: list of followers' IDs}
 	 */
 	async getFollows(userId: UserInfo["userId"]) {
 		const query = followQueries.GET_FOLLOWS_FOR_USER;
@@ -125,7 +134,7 @@ class FollowService {
 	/**
 	 * Get the list of account_ids who follow this user
 	 * @param userId
-	 * @returns
+	 * @returns \{success, message, data: ListOfFollowers}
 	 */
 	async getFollowers(userId: UserInfo["userId"]) {
 		const query = followQueries.GET_FOLLOWERS_FOR_USER;
@@ -155,7 +164,7 @@ class FollowService {
 	 * Unfollow a user
 	 * @param srcUserId ID of the actor
 	 * @param targetUserId ID of the target
-	 * @returns Returns error if `Follows` already exists
+	 * @returns \{success, message, data: numbDeleted}
 	 */
 	unFollow(srcUserId: UserInfo["userId"], targetUserId: UserInfo["userId"]) {
 		return this.deleteRelFollows(srcUserId, targetUserId);
@@ -166,7 +175,7 @@ class FollowService {
 	 * @param srcUserId
 	 * @param targetUserId
 	 * @param isPending if true means cancelling a `follow` request, false by default. By default: unfollow
-	 * @returns
+	 * @returns \{success, message, data: numbDeleted}
 	 */
 	async deleteRelFollows(
 		srcUserId: UserInfo["userId"],
@@ -187,7 +196,7 @@ class FollowService {
 			return {
 				success: true,
 				message: queryResponse.message,
-				data: numbDeleted,
+				data: { numbDeleted: numbDeleted },
 			};
 		} else {
 			return queryResponse;
@@ -197,7 +206,7 @@ class FollowService {
 	/**
 	 * Delete a user node after running tests
 	 * @param userId
-	 * @returns
+	 * @returns \{success, message, data: number of nodes deleted}
 	 */
 	async deleteUserNode(userId: UserInfo["userId"]) {
 		const query = followQueries.DELETE_USER_NODE_BY_ID;
