@@ -141,7 +141,7 @@ describe("Follow service can", () => {
 				mockedUser.mockedInfo.userId.toJSON()
 			);
 			expect(unfollowRes.success).to.be.true;
-			expect(unfollowRes.data).to.be.greaterThan(0); // number of relationship deleted
+			expect(unfollowRes.data.numbDeleted).to.be.greaterThan(0); // number of relationship deleted
 
 			// double check
 			const isFollowed = await followService.verifyRelFollows(
