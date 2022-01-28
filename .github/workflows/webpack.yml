@@ -35,28 +35,38 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install 
-          
+          npm install
+
       - name: Build
         run: CI='' npm run build
-        env: 
+        env:
           DB_URI: ${{secrets.DB_URI}}
           GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
           SERVICE: ${{secrets.SERVICE}}
           EMAIL: ${{secrets.EMAIL}}
           JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
           JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
+          ALPHAVANTAGE_API_KEY: ${{secrets.ALPHAVANTAGE_API_KEY}}
+          NEO4J_USERNAME: ${{secrets.NEO4J_USERNAME}}
+          NEO4J_PASSWORD: ${{secrets.NEO4J_PASSWORD}}
+          NEO4J_URI: ${{secrets.NEO4J_URI}}
+
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v2
         with:
           name: build
           path: build
+
       - name: Test
         run: npm test
-        env: 
+        env:
           TEST_DB_URI: ${{secrets.TEST_DB_URI}}
           GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
           SERVICE: ${{secrets.SERVICE}}
           EMAIL: ${{secrets.EMAIL}}
           JWT_PUBLIC_KEY: ${{secrets.JWT_PUBLIC_KEY}}
           JWT_PRIVATE_KEY: ${{secrets.JWT_PRIVATE_KEY}}
+          ALPHAVANTAGE_API_KEY: ${{secrets.ALPHAVANTAGE_API_KEY}}
+          NEO4J_USERNAME: ${{secrets.NEO4J_USERNAME}}
+          NEO4J_PASSWORD: ${{secrets.NEO4J_PASSWORD}}
+          NEO4J_URI: ${{secrets.NEO4J_URI}}

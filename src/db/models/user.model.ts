@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import userInfoModel from "./userInfo.model";
 export interface UserDocument extends mongoose.Document {
+	username: string;
 	email: string;
 	password: string;
 	createdAt: Date;
@@ -11,12 +12,13 @@ export interface UserDocument extends mongoose.Document {
 
 const userSchema: Schema = new Schema({
 	email: { type: String, required: true, unique: true },
+	username: { type: String, required: true, unique: true },
 	password: { type: String, required: true },
 });
 
 userSchema.pre("save", async function (next) {
 	let user = this as UserDocument;
-
+	/* istanbul ignore if  */
 	if (!user.isModified("password")) {
 		return next();
 	}
@@ -30,12 +32,13 @@ userSchema.pre("save", async function (next) {
 	return next();
 });
 
-userSchema.pre("delete", async function (next) {
-	let user = this as unknown as UserDocument;
-	userInfoModel.remove({ userId: user._id });
+userSchema.pre("deleteOne", async function (next) {
+	let user = this as UserDocument;
+	userInfoModel.deleteOne({ userId: user._id });
 	return next();
 });
 
+/* istanbul ignore next  */
 userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
 	const user = this as UserDocument;
 

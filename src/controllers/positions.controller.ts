@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import { messages } from "../db/messages";
 import AlpacaService from "../db/service/alpaca.service";
 
-class AccountController {
+class PositionsController {
 	private userInfoService: UserInfoService;
 	private alpacaService: AlpacaService;
 	constructor() {
@@ -13,12 +13,12 @@ class AccountController {
 		this.alpacaService = new AlpacaService();
 	}
 
-	async getAccount(req: Request, res: Response) {
+	async getPositions(req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId });
 		if (userInfo?.alpacaToken) {
 			return res.send(
-				await this.alpacaService.getInfo("/account", "account", userInfo.alpacaToken)
+				await this.alpacaService.getInfo("/positions", "positions", userInfo.alpacaToken)
 			);
 		} else {
 			return res.send(messages.internalError("User hasn't linked any Alpaca account"));
@@ -26,4 +26,4 @@ class AccountController {
 	}
 }
 
-export default AccountController;
+export default PositionsController;

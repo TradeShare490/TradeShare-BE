@@ -14,7 +14,9 @@ const userInfoRoute = (app: Express) => {
 		userInfoController.updateUserInfo(req, res);
 	});
 
-
+	router.patch("/alpaca/:userId", (req, res) => {
+		userInfoController.updateAlpacaToken(req,res);
+	})
 
 	app.use("/api/v1/userInfo/", router);
 };

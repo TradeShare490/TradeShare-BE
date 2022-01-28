@@ -41,6 +41,7 @@ export const messages = {
 	 * Default response for unauthorized requests
 	 * @returns a mutation response
 	 */
+	/* istanbul ignore next */
 	notAuthorized(): MessageResponse {
 		return {
 			status: 401,
@@ -57,6 +58,20 @@ export const messages = {
 	internalError(message: string): MessageResponse {
 		return {
 			status: 501,
+			success: false,
+			message: message,
+		};
+	},
+
+	/**
+	 * Default response for bad input request
+	 * @param message Detail of the error
+	 * @returns
+	 */
+
+	badInput(message: string): MessageResponse {
+		return {
+			status: 400,
 			success: false,
 			message: message,
 		};
