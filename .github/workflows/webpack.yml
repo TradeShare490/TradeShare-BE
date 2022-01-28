@@ -51,14 +51,8 @@ jobs:
           NEO4J_PASSWORD: ${{secrets.NEO4J_PASSWORD}}
           NEO4J_URI: ${{secrets.NEO4J_URI}}
 
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build
-
       - name: Test
-        run: npm test
+        run: npm run test-report
         env:
           TEST_DB_URI: ${{secrets.TEST_DB_URI}}
           GMAIL_APP_PASSWORD_DEV: ${{secrets.GMAIL_APP_PASSWORD_DEV}}
@@ -70,3 +64,9 @@ jobs:
           NEO4J_USERNAME: ${{secrets.NEO4J_USERNAME}}
           NEO4J_PASSWORD: ${{secrets.NEO4J_PASSWORD}}
           NEO4J_URI: ${{secrets.NEO4J_URI}}
+
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage
