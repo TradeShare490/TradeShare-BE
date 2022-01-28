@@ -31,7 +31,6 @@ const cleanUpServer = async () => {
 		else {
 			await neo4j.disconnect();
 			await mongoInstance.disconnect();
-			console.log("exit ?");
 			process.exit();
 		}
 	});
