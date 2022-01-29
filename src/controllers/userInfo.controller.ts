@@ -17,6 +17,11 @@ class UserInfoController {
 		return res.send(await this.userInfoService.findUserInfo({ userId: userId }));
 	}
 
+	async getUserInfos(req: Request, res: Response) {
+		const result = await this.userInfoService.getUserInfos(req.query);
+		return result.success ? res.send(result) : res.status(400).send(result);
+	}
+
 	async updateUserInfo(req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const updatedInfo = await this.userInfoService.updateUserInfo({ userId: userId }, req.body, {
@@ -26,9 +31,9 @@ class UserInfoController {
 	}
 
 	async updateAlpacaToken(req: Request, res: Response) {
-		const clientId = process.env.CLIENT_ID as string
-		const clientSecret = process.env.CLIENT_SECRET as string
-		const redirectURI = process.env.REDIRECT_URI as string
+		const clientId = process.env.CLIENT_ID as string;
+		const clientSecret = process.env.CLIENT_SECRET as string;
+		const redirectURI = process.env.REDIRECT_URI as string;
 		let code = req.body.code;
 		const userId = new mongoose.Types.ObjectId(req.params.userId);
 		const params = new URLSearchParams();
@@ -39,14 +44,14 @@ class UserInfoController {
 		params.append("redirect_uri", redirectURI);
 
 		try {
-			const {data} = await axios.post("https://api.alpaca.markets/oauth/token", params, {
+			const { data } = await axios.post("https://api.alpaca.markets/oauth/token", params, {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
 			});
-			if(!data.access_token){
+			if (!data.access_token) {
 				return res.status(500).send("No token");
-			 }
+			}
 			const alpacaToken = data.access_token;
 			const updatedInfo = await this.userInfoService.updateUserInfo(
 				{ userId: userId },
