@@ -43,7 +43,7 @@ const cleanUpServer = async () => {
 	});
 };
 
-const errorCodeArr = [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`];
+const errorCodeArr = [`exit`, `SIGINT`];
 
 errorCodeArr.forEach((eventType) => {
 	process.on(eventType, cleanUpServer.bind(null, eventType));

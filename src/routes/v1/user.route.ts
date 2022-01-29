@@ -8,12 +8,18 @@ const userRoute = (app: Express) => {
 
 	// All paths have the prefix /api/v1/account/
 
-	router.post("/", validateResource(createUserSchema),(req, res) => {
+	router.post("/", validateResource(createUserSchema), (req, res) => {
 		userController.createUser(req, res);
 	});
 
 	router.get("/:email", async (req: Request, res: Response, next) => {
 		if (req.params.email && req.params.email.includes("@")) {
+			res.send(await userController.getUser(req.params));
+		} else next();
+	});
+
+	router.get("/:username", async (req: Request, res: Response, next) => {
+		if (req.params.username && req.params.username.length < 24) {
 			res.send(await userController.getUser(req.params));
 		} else next();
 	});

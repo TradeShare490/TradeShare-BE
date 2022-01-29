@@ -40,8 +40,8 @@ class UserController {
 	 * @param id User id to be deleted
 	 * @returns
 	 */
-	async deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
-		return await this.userService.deleteUser(id);
+	deleteUser(id: UserFindParameters["id"]): Promise<MessageResponse> {
+		return this.userService.deleteUser(id);
 	}
 
 	/**
@@ -49,8 +49,8 @@ class UserController {
 	 * @param originalParam User id or username
 	 * @returns response with the user found
 	 */
-	async getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
-		return await this.userService.getUser(originalParam);
+	getUser(originalParam: UserFindParameters): Promise<MessageResponse> {
+		return this.userService.getUser(originalParam);
 	}
 
 	/**
@@ -59,8 +59,8 @@ class UserController {
 	 * @param input content for update
 	 * @returns response with new User object
 	 */
-	async updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
-		return await this.userService.updateUser(id, input);
+	updateUser(id: UserFindParameters["id"], input: any): Promise<MessageResponse> {
+		return this.userService.updateUser(id, input);
 	}
 }
 
