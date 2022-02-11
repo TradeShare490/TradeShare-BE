@@ -21,8 +21,7 @@ export default class ConversationService {
 
 	async findConversation(query: FilterQuery<Conversation>) {
 		try {
-			const conversation = await ConversationModel.findOne(query);
-			return conversation;
+			return await ConversationModel.findOne(query);
 		} catch (error: any) {
 			/* istanbul ignore next  */
 			return messages.internalError(error.message);

@@ -31,8 +31,8 @@ class MessageController {
 		const conversationId = new mongoose.Types.ObjectId(req.params.conversationId);
 		const conversation = await this.conversationService.findConversation({ _id: conversationId });
 		if (conversation?._id) {
-			let messages = await this.messageService.getMessage(conversation._id);
-			return res.status(messages.status).send(messages);
+			let foundMessages = await this.messageService.getMessage(conversation._id);
+			return res.status(foundMessages.status).send(foundMessages);
 		}
 		return res.send(messages.internalError("Conversation doesn't exist"));
 	}
