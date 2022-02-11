@@ -17,10 +17,6 @@ describe("Message service can", () => {
 		} catch (error) {
 			console.log(error);
 		}
-		expect(response).to.have.property("conversation");
-		expect(response.status).equals(200);
-		expect(response.success).equals(true);
-		expect(response.message).equals("Conversation is created");
 		mockedConversation = response.conversation;
 	});
 
