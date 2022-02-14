@@ -84,9 +84,13 @@ export default class UserService {
 				omit(user.toJSON(), "password")
 			);
 		} catch (error: any) {
-			if (error.message.includes("key error")) {
+			if (error.message.includes("username")) {
+				return messages.internalError("Username already exists");
+			} 
+			else if(error.message.includes("email")) {
 				return messages.internalError("Email already exists");
-			} else {
+			}
+			else {
 				return messages.internalError(error.message);
 			}
 		}
