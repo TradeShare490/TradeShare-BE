@@ -22,6 +22,13 @@ class MessageController {
 				req.body.message,
 				conversation._id
 			);
+			this.conversationService.updateConversation(
+				{ _id: conversation._id },
+				{ latestMessage: message.message },
+				{
+					new: true,
+				}
+			);
 			return res.status(message.status).send(message);
 		}
 		return res.send(messages.internalError("Conversation doesn't exist"));

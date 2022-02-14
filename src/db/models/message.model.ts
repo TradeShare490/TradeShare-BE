@@ -10,10 +10,15 @@ export interface Message extends mongoose.Document {
 	updatedAt: Date;
 }
 
-const MessageSchema: Schema = new Schema({
-	sender: { type: String, ref: "UserDocument", required: true },
-	conversationId: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation", required: true },
-	message: { type: String, required: true },
-});
+const MessageSchema: Schema = new Schema(
+	{
+		sender: { type: String, ref: "UserDocument", required: true },
+		conversationId: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation", required: true },
+		message: { type: String, required: true },
+	},
+	{
+		timestamps: true,
+	}
+);
 
 export default mongoose.model<Message>("Message", MessageSchema);
