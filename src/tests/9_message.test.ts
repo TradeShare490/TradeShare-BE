@@ -1,15 +1,15 @@
 import { expect } from "chai";
 import { Conversation } from "../db/models/conversation.model";
 import ConversationService from "../db/service/ConversationService";
-import MesssageService from "../db/service/MessageService";
+import MessageService from "../db/service/MessageService";
 
 describe("Message service can", () => {
 	let conversationService: ConversationService;
 	let mockedConversation: Conversation;
-	let messageService: MesssageService;
+	let messageService: MessageService;
 	it("be setup", async () => {
 		conversationService = new ConversationService();
-		messageService = new MesssageService();
+		messageService = new MessageService();
 		expect(messageService).not.equal(undefined);
 		let response: any;
 		try {

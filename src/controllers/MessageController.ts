@@ -1,15 +1,15 @@
-import MesssageService from "../db/service/MessageService";
+import MessageService from "../db/service/MessageService";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import ConversationService from "../db/service/ConversationService";
 import { messages } from "../db/messages";
 
 class MessageController {
-	private messageService: MesssageService;
+	private messageService: MessageService;
 	private conversationService: ConversationService;
 
 	constructor() {
-		this.messageService = new MesssageService();
+		this.messageService = new MessageService();
 		this.conversationService = new ConversationService();
 	}
 

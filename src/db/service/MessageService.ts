@@ -2,7 +2,7 @@ import MessageModel from "../models/message.model";
 import { messages } from "../messages";
 import mongoose from "mongoose";
 
-export default class MesssageService {
+export default class MessageService {
 	async createMessage(sender: string, message: string, conversationId: mongoose.Types.ObjectId) {
 		const createMessage = await MessageModel.create({
 			sender: sender,
