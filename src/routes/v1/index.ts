@@ -8,8 +8,8 @@ import positionsRoute from "./positions.route";
 import activitiesRoute from "./activities.route";
 import searchRoute from "./search.route";
 import followRoute from "../../modules/follows/FollowRoute";
-import conversationRoute from "./conversation.route"
-import messageRoute from "./message.route"
+import conversationRoute from "./ConversationRoute"
+import messageRoute from "./MessageRoute"
 module.exports = function (app: Express) {
 	// Register the routes
 	defaultRoute(app);

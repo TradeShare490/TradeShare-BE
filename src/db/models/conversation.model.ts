@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import { UserDocument } from "./user.model";
-import { Message } from "./message.model";
 export interface Conversation extends mongoose.Document {
 	members: UserDocument["username"][];
 	latestMessage: Object;

@@ -1,7 +1,7 @@
-import MesssageService from "../db/service/message.service";
+import MesssageService from "../db/service/MessageService";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import ConversationService from "../db/service/conversation.service";
+import ConversationService from "../db/service/ConversationService";
 import { messages } from "../db/messages";
 
 class MessageController {

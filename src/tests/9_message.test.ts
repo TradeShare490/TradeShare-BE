@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Conversation } from "../db/models/conversation.model";
-import ConversationService from "../db/service/conversation.service";
-import MesssageService from "../db/service/message.service";
+import ConversationService from "../db/service/ConversationService";
+import MesssageService from "../db/service/MessageService";
 
 describe("Message service can", () => {
 	let conversationService: ConversationService;

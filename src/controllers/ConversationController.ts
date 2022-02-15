@@ -1,4 +1,4 @@
-import ConversationService from "../db/service/conversation.service"; 
+import ConversationService from "../db/service/ConversationService"; 
 import {Request, Response} from "express"; 
 
 class ConversationController { 

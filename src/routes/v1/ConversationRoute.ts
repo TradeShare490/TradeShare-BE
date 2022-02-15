@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import ConversationController from "../../controllers/conversation.controller";
+import ConversationController from "../../controllers/ConversationController";
 
 const conversationRoute = (app: Express) => {
 
