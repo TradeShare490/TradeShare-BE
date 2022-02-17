@@ -9,7 +9,7 @@ export default class MessageService {
 			message: message,
 			conversationId: conversationId,
 		});
-		return messages.successMessage("Message is created", "message", createMessage);
+		return messages.createdMessage("Message is created", "message", createMessage);
 	}
 
 	async getMessage(conversationId: mongoose.Types.ObjectId) {
@@ -17,7 +17,7 @@ export default class MessageService {
 			const response = await MessageModel.find({
 				conversationId: conversationId,
 			});
-			return messages.createdMessage("Messages are found", "messages", response);
+			return messages.successMessage("Messages are found", "messages", response);
 		} catch (error: any) {
 			return messages.internalError(error.message);
 		}

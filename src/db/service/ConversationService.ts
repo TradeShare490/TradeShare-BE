@@ -4,8 +4,12 @@ import { messages } from "../messages";
 
 export default class ConversationService {
 	async createConversation(members: Array<string>) {
-		const conversation = await ConversationModel.create({ members: members });
-		return messages.successMessage("Conversation is created", "conversation", conversation);
+		try {
+			const conversation = await ConversationModel.create({ members: members });
+			return messages.successMessage("Conversation is created", "conversation", conversation);
+		} catch (error: any) {
+			return messages.internalError(error.message);
+		}
 	}
 
 	async getConversations(member: string) {
@@ -13,7 +17,7 @@ export default class ConversationService {
 			const conversations = await ConversationModel.find({
 				members: { $in: [member] },
 			});
-			return messages.createdMessage("Conversations are found", "conversations", conversations);
+			return messages.successMessage("Conversations are found", "conversations", conversations);
 		} catch (error: any) {
 			return messages.internalError(error.message);
 		}
@@ -40,7 +44,7 @@ export default class ConversationService {
 			return messages.internalError(error.message);
 		}
 	}
-	
+
 	async deleteConversation(id: string) {
 		try {
 			const response = await ConversationModel.deleteOne({

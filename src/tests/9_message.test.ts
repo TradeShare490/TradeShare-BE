@@ -12,23 +12,15 @@ describe("Message service can", () => {
 		messageService = new MessageService();
 		expect(messageService).not.equal(undefined);
 		let response: any;
-		try {
-			response = await conversationService.createConversation(["user1", "user2"]);
-		} catch (error) {
-			console.log(error);
-		}
+		response = await conversationService.createConversation(["user1", "user2"]);
 		mockedConversation = response.conversation;
 	});
 
 	it("create a new message", async () => {
 		let response: any;
-		try {
-			response = await messageService.createMessage("user1", "abcdef", mockedConversation._id);
-		} catch (error) {
-			console.log(error);
-		}
+		response = await messageService.createMessage("user1", "abcdef", mockedConversation._id);
 		expect(response).to.have.property("message");
-		expect(response.status).equals(200);
+		expect(response.status).equals(201);
 		expect(response.success).equals(true);
 		expect(response.message.conversationId).equals(mockedConversation._id);
 		expect(response.message.message).equals("abcdef");
@@ -36,7 +28,7 @@ describe("Message service can", () => {
 
 	it("get messages by conversationId", async () => {
 		const response = await messageService.getMessage(mockedConversation._id);
-		expect(response.status).equals(201);
+		expect(response.status).equals(200);
 		expect(response.success).equals(true);
 	});
 });

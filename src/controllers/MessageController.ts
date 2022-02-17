@@ -16,22 +16,22 @@ class MessageController {
 	async sendMessage(req: Request, res: Response) {
 		const conversationId = new mongoose.Types.ObjectId(req.body.conversationId);
 		const conversation = await this.conversationService.findConversation({ _id: conversationId });
-		if (conversation?._id) {
-			let message = await this.messageService.createMessage(
-				req.body.sender,
-				req.body.message,
-				conversation._id
-			);
-			this.conversationService.updateConversation(
-				{ _id: conversation._id },
-				{ latestMessage: message.message },
-				{
-					new: true,
-				}
-			);
-			return res.status(message.status).send(message);
+		if (!conversation?._id) {
+			return res.send(messages.internalError("Conversation doesn't exist"));
 		}
-		return res.send(messages.internalError("Conversation doesn't exist"));
+		let message = await this.messageService.createMessage(
+			req.body.sender,
+			req.body.message,
+			conversation._id
+		);
+		this.conversationService.updateConversation(
+			{ _id: conversation._id },
+			{ latestMessage: message.message },
+			{
+				new: true,
+			}
+		);
+		return res.status(message.status).send(message);
 	}
 
 	async getMessage(req: Request, res: Response) {

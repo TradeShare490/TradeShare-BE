@@ -12,11 +12,7 @@ describe("Conversation service can", () => {
 
 	it("create a new converation", async () => {
 		let response: any;
-		try {
-			response = await conversationService.createConversation(["user1", "user2"]);
-		} catch (error) {
-			console.log(error);
-		}
+		response = await conversationService.createConversation(["user1", "user2"]);
 		expect(response).to.have.property("conversation");
 		expect(response.status).equals(200);
 		expect(response.success).equals(true);
@@ -26,9 +22,8 @@ describe("Conversation service can", () => {
 
 	it("get the conversation by username", async () => {
 		const response = await conversationService.getConversations("user1");
-        console.log(response);
         expect(response).to.have.property("conversations");
-		expect(response.status).equals(201);
+		expect(response.status).equals(200);
 		expect(response.success).equals(true);
 		expect(response.message).equals("Conversations are found");
 	});
