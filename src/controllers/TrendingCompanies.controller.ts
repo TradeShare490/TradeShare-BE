@@ -7,7 +7,7 @@ function showTrendingCompanies(){
       params: {region: 'CA'},
       headers: {
         'x-rapidapi-host': 'yh-finance.p.rapidapi.com',
-        'x-rapidapi-key': '4bcf5c8155mshdd067ed153a9d3fp14a3e6jsnc8b2bbdacfae'
+        'x-rapidapi-key': process.env.RAPID_KEY
       }
     };
     
