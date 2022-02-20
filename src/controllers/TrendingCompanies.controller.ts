@@ -15,7 +15,7 @@ function showTrendingCompanies(){
         console.log(response.data);
         var stock_information = [];
         const list = response.data.finance.result.quotes;
-        for (let index = 0; index < 19; index++) {
+        for (let index = 0; index < 10; index++) {
             stock_information.push(list[index]);
         }
         return stock_information;
