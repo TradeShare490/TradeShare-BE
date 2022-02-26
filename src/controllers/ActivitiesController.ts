@@ -4,6 +4,7 @@ import UserInfoCollection from '../db/models/userInfo.model'
 import mongoose from 'mongoose'
 import { messages } from '../db/messages'
 import AlpacaService from '../db/service/AlpacaService'
+
 class ActivitiesController {
 	private userInfoService: UserInfoService;
 	private alpacaService: AlpacaService;
@@ -18,14 +19,14 @@ class ActivitiesController {
 		if (userInfo?.alpacaToken) {
 			return res.send(
 				await this.alpacaService.getInfo(
-	        	'/account/activities/FILL',
-	        	'activities',
-	        userInfo.alpacaToken
-	      )
-	    )
-	  } else {
-	    return res.send(messages.internalError("User hasn't linked any Alpaca account"))
-	  }
+					'/account/activities/FILL',
+					'activities',
+					userInfo.alpacaToken
+				)
+			)
+		} else {
+			return res.send(messages.internalError("User hasn't linked any Alpaca account"))
+		}
 	}
 }
 

@@ -1,7 +1,7 @@
-import mongoose, { FilterQuery, Model, QueryOptions, UpdateQuery } from "mongoose";
-import { GLOBAL_QUERY_LIMIT, ParsedParameters } from "../helpers";
-import { messages, MessageResponse } from "../messages";
-import { UserInfo } from "../models/userInfo.model";
+import mongoose, { FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose'
+import { GLOBAL_QUERY_LIMIT, ParsedParameters } from '../helpers'
+import { messages, MessageResponse } from '../messages'
+import { UserInfo } from '../models/userInfo.model'
 
 export interface UserInfoSearchInput {
 	email?: string;
@@ -15,8 +15,8 @@ export interface UserInfoSearchInput {
 export default class UserInfoService {
 	private userInfoCollection: Model<UserInfo>;
 
-	constructor(userInfoCollection: Model<UserInfo>) {
-		this.userInfoCollection = userInfoCollection;
+	constructor (userInfoCollection: Model<UserInfo>) {
+		this.userInfoCollection = userInfoCollection
 	}
 
 	/**
@@ -24,122 +24,122 @@ export default class UserInfoService {
 	 * @param originalParams Parameters passed from users
 	 * @returns MongoDB search filter
 	 */
-	parseParams(originalParams: UserInfoSearchInput): ParsedParameters {
-		var params = { ...originalParams }; // make a deep copy, so we don't change the original if there is error
+	parseParams (originalParams: UserInfoSearchInput): ParsedParameters {
+		const params = { ...originalParams } // make a deep copy, so we don't change the original if there is error
 		// if searching for specific item by id
 		if (params.userId !== undefined) {
 			return {
 				find: { userId: new mongoose.Types.ObjectId(params.userId) },
 				limit: 1,
-				skip: 0,
-			};
+				skip: 0
+			}
 		} else if (params.email !== undefined) {
 			return {
 				find: { email: params.email },
 				limit: 1,
-				skip: 0,
-			};
+				skip: 0
+			}
 		}
 
 		// searching for a range of result, empty means taking any available items
-		var searchParams = {};
+		let searchParams = {}
 
 		if (params.searchQuery) {
-			searchParams = { $or: [{ username: { $regex: params.searchQuery, $options: "i" } }] };
+			searchParams = { $or: [{ username: { $regex: params.searchQuery, $options: 'i' } }] }
 		}
 
 		// Default limit and skip - in case require pagination
-		const limit = params.limit || GLOBAL_QUERY_LIMIT;
-		const skip = params.skip || 0;
+		const limit = params.limit || GLOBAL_QUERY_LIMIT
+		const skip = params.skip || 0
 
 		// if ommited, will try to match on field which doesn't exist
-		delete params.limit;
-		delete params.skip;
+		delete params.limit
+		delete params.skip
 
-		searchParams = { ...searchParams, ...params }; // ...params in case something remains
+		searchParams = { ...searchParams, ...params } // ...params in case something remains
 
 		// Finally, return mongoDB search query (or so-called filter)
 		return {
 			find: searchParams,
 			limit: limit,
-			skip: skip,
-		};
-	}
-
-	async findUserInfo(query: FilterQuery<UserInfo>) {
-		try {
-			const userInfo = this.userInfoCollection.findOne(query);
-			return userInfo;
-		} catch (error: any) {
-			/* istanbul ignore next  */
-			return messages.internalError(error.message);
+			skip: skip
 		}
 	}
 
-	async getUserInfos(oriParams: UserInfoSearchInput) {
+	async findUserInfo (query: FilterQuery<UserInfo>) {
+		try {
+			const userInfo = this.userInfoCollection.findOne(query)
+			return userInfo
+		} catch (error: any) {
+			/* istanbul ignore next  */
+			return messages.internalError(error.message)
+		}
+	}
+
+	async getUserInfos (oriParams: UserInfoSearchInput) {
 		try {
 			// convert to integer
 			if (oriParams?.skip) {
-				oriParams.skip = Number.parseInt("" + oriParams.skip);
+				oriParams.skip = Number.parseInt('' + oriParams.skip)
 			}
 			if (oriParams?.limit) {
-				oriParams.limit = Number.parseInt("" + oriParams.limit);
+				oriParams.limit = Number.parseInt('' + oriParams.limit)
 			}
 
 			// parsing params
-			const parsedParam = this.parseParams(oriParams);
+			const parsedParam = this.parseParams(oriParams)
 			const response = await this.userInfoCollection
 				.find(parsedParam.find)
 				.skip(parsedParam.skip)
-				.limit(parsedParam.limit);
-			return { success: true, data: response };
+				.limit(parsedParam.limit)
+			return { success: true, data: response }
 		} catch (error: any) {
 			/* istanbul ignore next  */
-			return messages.internalError(error.message);
+			return messages.internalError(error.message)
 		}
 	}
 
-	async createUserInfo(id: mongoose.Schema.Types.ObjectId, body: any): Promise<MessageResponse> {
+	async createUserInfo (id: mongoose.Schema.Types.ObjectId, body: any): Promise<MessageResponse> {
 		try {
 			const input = {
 				firstname: body.firstname,
 				lastname: body.lastname,
 				userId: id,
 				username: body.username,
-				email: body.email,
-			};
-			const userInfo = await this.userInfoCollection.create(input);
-			return messages.createdMessage("UserInfo has beeen created", "user", userInfo.toJSON());
+				email: body.email
+			}
+			const userInfo = await this.userInfoCollection.create(input)
+			return messages.createdMessage('UserInfo has beeen created', 'user', userInfo.toJSON())
 		} catch (error: any) {
 			/* istanbul ignore next  */
-			return messages.internalError(error.message);
+			return messages.internalError(error.message)
 		}
 	}
 
-	async updateUserInfo(
+	async updateUserInfo (
 		query: FilterQuery<UserInfo>,
 		update: UpdateQuery<UserInfo>,
 		options: QueryOptions
 	) {
 		try {
-			return await this.userInfoCollection.findOneAndUpdate(query, update, options);
+			return await this.userInfoCollection.findOneAndUpdate(query, update, options)
 		} catch (error: any) {
 			/* istanbul ignore next */
-			return messages.internalError(error.message);
+			return messages.internalError(error.message)
 		}
 	}
 
-	async deleteUser(id: string): Promise<MessageResponse> {
+	async deleteUser (id: string): Promise<MessageResponse> {
 		try {
-			const response = await this.userInfoCollection.deleteOne({ userId: id });
+			const response = await this.userInfoCollection.deleteOne({ userId: id })
 			return messages.successMessage(
 				`${response.deletedCount} userinfo has been deleted`,
-				"deletedCount",
+				'deletedCount',
 				response.deletedCount
-			);
+			)
 		} catch (error: any) {
 			/* istanbul ignore next */
-			return messages.internalError(error.message);
+			return messages.internalError(error.message)
 		}
 	}
 }

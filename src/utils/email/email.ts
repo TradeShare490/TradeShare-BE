@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer";
-import Mail from "nodemailer/lib/mailer";
+import nodemailer from 'nodemailer'
+import Mail from 'nodemailer/lib/mailer'
 
 /**
  * A template for the email input
@@ -16,31 +16,31 @@ export class EmailSender {
 	private transporter: Mail;
 	private service: string;
 	private email: string;
-	private email_password: string;
+	private emailPassword: string;
 
-	constructor() {
+	constructor () {
 		// check .env variables
 		if (
 			process.env.SERVICE === undefined ||
 			process.env.EMAIL === undefined ||
 			process.env.GMAIL_APP_PASSWORD_DEV === undefined
 		) {
-			console.log("Email configuration is missing. Please update in the environment data");
-			process.exit(-1);
+			console.log('Email configuration is missing. Please update in the environment data')
+			process.exit(-1)
 		}
 
 		// setup values
-		this.service = process.env.SERVICE;
-		this.email = process.env.EMAIL;
-		this.email_password = process.env.GMAIL_APP_PASSWORD_DEV;
+		this.service = process.env.SERVICE
+		this.email = process.env.EMAIL
+		this.emailPassword = process.env.GMAIL_APP_PASSWORD_DEV
 		// setup transporter
 		this.transporter = nodemailer.createTransport({
 			service: this.service,
 			auth: {
 				user: this.email,
-				pass: this.email_password,
-			},
-		});
+				pass: this.emailPassword
+			}
+		})
 	}
 
 	/**
@@ -48,10 +48,10 @@ export class EmailSender {
 	 * @param originalMailOption
 	 * @returns
 	 */
-	private fillMailOption(originalMailOption: MailOption): Mail.Options {
-		let mailOption: Mail.Options = { ...originalMailOption };
-		mailOption.from = this.email; // update sender
-		return mailOption;
+	private fillMailOption (originalMailOption: MailOption): Mail.Options {
+		const mailOption: Mail.Options = { ...originalMailOption }
+		mailOption.from = this.email // update sender
+		return mailOption
 	}
 
 	/**
@@ -59,46 +59,43 @@ export class EmailSender {
 	 * @param mailOptions input
 	 * @returns An object with {isValidate: Boolean, message: string}
 	 */
-	private validateMailOptions(mailOptions: MailOption): { isValidate: boolean; message: string } {
-		let isValidate = true;
-		let message = "";
+	private validateMailOptions (mailOptions: MailOption): { isValidate: boolean; message: string } {
+		let isValidate = true
+		let message = ''
 		// check content
 		if (mailOptions.html === undefined && mailOptions.text === undefined) {
-			message = "No content to send, please fill the content with either text or html option";
-			isValidate = false;
+			message = 'No content to send, please fill the content with either text or html option'
+			isValidate = false
+		} else if (mailOptions.to === undefined || mailOptions.to === '') { // check receipients
+			message = 'No recipients, please give at least one.'
+			isValidate = false
 		}
 
-		// check receipients
-		else if (mailOptions.to === undefined || mailOptions.to === "") {
-			message = "No recipients, please give at least one.";
-			isValidate = false;
-		}
-
-		return { isValidate, message };
+		return { isValidate, message }
 	}
 
 	/**
 	 * Send an email
 	 * @param mailOptions
 	 */
-	send(mailOptions: MailOption) {
+	send (mailOptions: MailOption) {
 		// Validate the input
-		const validateResult = this.validateMailOptions(mailOptions);
+		const validateResult = this.validateMailOptions(mailOptions)
 		if (!validateResult.isValidate) {
-			throw new Error(validateResult.message);
+			throw new Error(validateResult.message)
 		}
 
 		// Fill sender
-		const content = this.fillMailOption(mailOptions);
+		const content = this.fillMailOption(mailOptions)
 
 		// Send
 		this.transporter.sendMail(content, (error, info) => {
 			if (error) {
-				console.log(error);
-				throw new Error(error.message);
+				console.log(error)
+				throw new Error(error.message)
 			} else {
-				console.log("Email sent: " + info.response);
+				console.log('Email sent: ' + info.response)
 			}
-		});
+		})
 	}
 }

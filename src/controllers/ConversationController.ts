@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import ConversationService from '../db/service/ConversationService'
 import { Request, Response } from 'express'
 

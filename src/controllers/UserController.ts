@@ -10,8 +10,8 @@ class UserController {
 	private userService: UserService;
 	private userInfoService: UserInfoService;
 	constructor () {
-	  this.userService = new UserService(UserCollection)
-	  this.userInfoService = new UserInfoService(UserInfoCollection)
+		this.userService = new UserService(UserCollection)
+		this.userInfoService = new UserInfoService(UserInfoCollection)
 	}
 
 	/**
@@ -20,19 +20,19 @@ class UserController {
 	 * @returns a new User object with _id
 	 */
 	async createUser (req: Request<{}, {}, CreateUserInput['body']>, res: Response) {
-	  const user = await this.userService.createUser(req.body)
-	  if (user.success) {
-	    const info = await this.userInfoService.createUserInfo(user.user._id, req.body)
-	    if (info.success) {
-	      res.send(user)
-	    } else {
-	      const payload = info
-	      res.status(payload.status).send(payload)
-	    }
-	  } else {
-	    const payload = user
-	    res.status(payload.status).send(payload)
-	  }
+		const user = await this.userService.createUser(req.body)
+		if (user.success) {
+			const info = await this.userInfoService.createUserInfo(user.user._id, req.body)
+			if (info.success) {
+				res.send(user)
+			} else {
+				const payload = info
+				res.status(payload.status).send(payload)
+			}
+		} else {
+			const payload = user
+			res.status(payload.status).send(payload)
+		}
 	}
 
 	/**
@@ -41,7 +41,7 @@ class UserController {
 	 * @returns
 	 */
 	deleteUser (id: UserFindParameters['id']): Promise<MessageResponse> {
-	  return this.userService.deleteUser(id)
+		return this.userService.deleteUser(id)
 	}
 
 	/**
@@ -50,7 +50,7 @@ class UserController {
 	 * @returns response with the user found
 	 */
 	getUser (originalParam: UserFindParameters): Promise<MessageResponse> {
-	  return this.userService.getUser(originalParam)
+		return this.userService.getUser(originalParam)
 	}
 
 	/**
@@ -60,7 +60,7 @@ class UserController {
 	 * @returns response with new User object
 	 */
 	updateUser (id: UserFindParameters['id'], input: any): Promise<MessageResponse> {
-	  return this.userService.updateUser(id, input)
+		return this.userService.updateUser(id, input)
 	}
 }
 

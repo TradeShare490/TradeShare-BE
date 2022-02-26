@@ -32,5 +32,5 @@ export const followQueries = {
                 DELETE n
                 RETURN COUNT(*) as numbDeleted 
                 
-        `,
-};
+        `
+}
