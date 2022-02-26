@@ -17,6 +17,30 @@ module.exports = {
 	],
 	rules: {
 		indent: ['error', 'tab'],
-		'no-tabs': ['error', { allowIndentationTabs: true }]
-	}
+		'no-tabs': ['error', { allowIndentationTabs: true }],
+		'@typescript-eslint/ban-types': ['error',
+			{
+				types: {
+					String: false,
+					Boolean: false,
+					Number: false,
+					Symbol: false,
+					'{}': false,
+					Object: false,
+					object: false,
+					Function: false
+				},
+				extendDefaults: true
+			}
+		],
+		'@typescript-eslint/no-explicit-any': 'off'
+	},
+	overrides: [
+		{
+			files: '*.test.ts',
+			rules: {
+				'no-unused-expressions': 'off'
+			}
+		}
+	]
 }

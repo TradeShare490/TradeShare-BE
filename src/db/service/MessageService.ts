@@ -9,7 +9,7 @@ export default class MessageService {
 			message: message,
 			conversationId: conversationId
 		})
-		return messages.createdMessage('Message is created', 'message', createMessage)
+		return messages.createdMessage('Message is created', 'createdMessage', createMessage)
 	}
 
 	async getMessage (conversationId: mongoose.Types.ObjectId) {

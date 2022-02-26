@@ -1,10 +1,6 @@
 import axios from '../../utils/axios/axios.v1'
 import { messages } from '../messages'
 export default class SearchService {
-	constructor () {
-		// This is intentional
-	}
-
 	async getStockSuggestions (
 		url: string,
 		searchString: string

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import express, { Express } from 'express'
 import helmet from 'helmet'
 import dotenv from 'dotenv'

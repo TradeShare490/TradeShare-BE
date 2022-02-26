@@ -1,4 +1,4 @@
-import { Model, DocumentDefinition, FilterQuery, UpdateQuery, QueryOptions } from 'mongoose'
+import { Model, DocumentDefinition, FilterQuery } from 'mongoose'
 import { messages, MessageResponse } from '../messages'
 import { GLOBAL_QUERY_LIMIT, ParsedParameters } from '../helpers'
 import { UserDocument } from '../models/user.model'

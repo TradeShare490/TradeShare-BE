@@ -26,7 +26,7 @@ class MessageController {
 		)
 		this.conversationService.updateConversation(
 			{ _id: conversation._id },
-			{ latestMessage: message.message },
+			{ latestMessage: message.createdMessage },
 			{
 				new: true
 			}
