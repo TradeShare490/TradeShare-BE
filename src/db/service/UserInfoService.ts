@@ -68,8 +68,7 @@ export default class UserInfoService {
 
 	async findUserInfo (query: FilterQuery<UserInfo>) {
 		try {
-			const userInfo = this.userInfoCollection.findOne(query)
-			return userInfo
+			return this.userInfoCollection.findOne(query)
 		} catch (error: any) {
 			/* istanbul ignore next  */
 			return messages.internalError(error.message)

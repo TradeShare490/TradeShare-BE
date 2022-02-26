@@ -9,8 +9,6 @@ const sessionRoute = (app: Express) => {
 
 	// All paths have the prefix /api/v1/session/
 
-	// router.use("/", validateResource(createSessionSchema));
-
 	router.post('/', validateResource(createSessionSchema), (req, res) => {
 		sessionController.createSession(req, res)
 	})

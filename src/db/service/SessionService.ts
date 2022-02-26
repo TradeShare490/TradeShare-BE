@@ -37,14 +37,12 @@ export default class SessionService {
 
 		if (!user) return false
 
-		const accessToken = signJwt(
+		return signJwt(
 			{
 				...user,
 				session: session._id
 			},
 			{ expiresIn: '15m' }
 		)
-
-		return accessToken
 	}
 }
