@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 import { UserDocument } from './user.model'
 export interface Conversation extends mongoose.Document {
 	members: UserDocument['username'][];
-	latestMessage: object;
+	latestMessage: Object;
 	createdAt: Date;
 	updatedAt: Date;
 }
