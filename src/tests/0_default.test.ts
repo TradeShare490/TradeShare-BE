@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import DefaultService from "../db/service/default.service";
+import DefaultService from "../db/service/DefaultService";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import neo4jInstance from "../db/neo4j/Neo4jInstance";

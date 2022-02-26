@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import AlpacaService from "../db/service/alpaca.service";
+import AlpacaService from "../db/service/AlpacaService";
 
 describe("Alpaca service can", () => {
 	let alpacaService: AlpacaService;

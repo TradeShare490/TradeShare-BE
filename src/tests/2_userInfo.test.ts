@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import { UserDocument } from "../db/models/user.model";
 import { UserInfo } from "../db/models/userInfo.model";
-import UserService from "../db/service/user.service";
+import UserService from "../db/service/UserService";
 import UserCollection from "../db/models/user.model";
-import UserInfoService from "../db/service/userInfo.service";
+import UserInfoService from "../db/service/UserInfoService";
 import UserInfoCollection from "../db/models/userInfo.model";
 
 describe("User Info Service can", () => {

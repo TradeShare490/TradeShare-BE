@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import UserController from "../../controllers/user.controller";
+import UserController from "../../controllers/UserController";
 import { createUserSchema } from "../../db/schema/user.schema";
 import validateResource from "../../middleware/validateResource";
 const userRoute = (app: Express) => {

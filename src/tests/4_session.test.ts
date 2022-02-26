@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { SessionDocument } from "../db/models/session.model";
-import SessionService from "../db/service/session.service";
-import UserService from "../db/service/user.service";
+import SessionService from "../db/service/SessionService";
+import UserService from "../db/service/UserService";
 import { signJwt } from "../utils/authentication/jwt.utils";
 import UserCollection from "../db/models/user.model";
 

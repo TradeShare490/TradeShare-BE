@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import PositionsController from "../../controllers/positions.controller";
+import PositionsController from "../../controllers/PositionsController";
 
 const positionsRoute = (app: Express) => {
 	const accountController = new PositionsController();

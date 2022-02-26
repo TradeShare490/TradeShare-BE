@@ -1,6 +1,6 @@
 import UserInfoCollection, { UserInfo } from "../../db/models/userInfo.model";
 import neo4jInstance, { QueryMode } from "../../db/neo4j/Neo4jInstance";
-import UserInfoService from "../../db/service/userInfo.service";
+import UserInfoService from "../../db/service/UserInfoService";
 import { followQueries } from "./FollowQueries";
 import mongoose from "mongoose";
 import neo4j from "neo4j-driver";

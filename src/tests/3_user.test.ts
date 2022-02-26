@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { UserDocument } from "../db/models/user.model";
-import UserService from "../db/service/user.service";
+import UserService from "../db/service/UserService";
 import UserCollection from "../db/models/user.model";
 import { generateRandomPassword } from "../utils/utils";
 

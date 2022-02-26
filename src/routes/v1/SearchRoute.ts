@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import SearchController from "../../controllers/search.controller";
+import SearchController from "../../controllers/SearchController";
 
 const searchRoute = (app: Express) => {
 	const accountController = new SearchController();

@@ -2,7 +2,7 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import { get } from "lodash";
 import { verifyJwt, signJwt } from "../../utils/authentication/jwt.utils";
 import SessionModel, { SessionDocument } from "../models/session.model";
-import UserService from "./user.service";
+import UserService from "./UserService";
 import UserCollection from "../models/user.model";
 
 export default class SessionService {

@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import ActivitiesController from "../../controllers/activities.controller";
+import ActivitiesController from "../../controllers/ActivitiesController";
 
 const activitiesRoute = (app: Express) => {
 	const activitiesController = new ActivitiesController();

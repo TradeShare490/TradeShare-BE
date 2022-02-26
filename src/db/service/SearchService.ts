@@ -1,5 +1,5 @@
 import axios from "../../utils/axios/axios.v1";
-import { messages } from "../../db/messages";
+import { messages } from "../messages";
 export default class SearchService {
 	constructor() {
         // This is intentional

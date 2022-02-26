@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import SessionController from "../../controllers/session.controller";
+import SessionController from "../../controllers/SessionController";
 import { createSessionSchema } from "../../db/schema/session.schema";
 import requireUser from "../../middleware/requireUser";
 import validateResource from "../../middleware/validateResource";

@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import UserService from "../db/service/user.service";
-import UserInfoService from "../db/service/userInfo.service";
+import UserService from "../db/service/UserService";
+import UserInfoService from "../db/service/UserInfoService";
 import FollowService from "../modules/follows/FollowService";
 import UserCollection, { UserDocument } from "../db/models/user.model";
 import UserInfoCollection, { UserInfo } from "../db/models/userInfo.model";

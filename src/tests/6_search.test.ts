@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import SearchService from "../db/service/search.service";
+import SearchService from "../db/service/SearchService";
 
 describe("Search service can", () => {
     let searchService: SearchService;
