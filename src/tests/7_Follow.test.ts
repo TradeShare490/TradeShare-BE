@@ -5,7 +5,7 @@ import FollowService from '../modules/follows/FollowService'
 import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 
-import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_userInfo.test'
+import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
 import { generateRandomPassword } from '../utils/utils'
 
 interface MockedUser {
