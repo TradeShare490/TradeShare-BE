@@ -72,7 +72,8 @@ describe('User service can', () => {
 	})
 
 	it('update user profile by id', async () => {
-		const updateInput = { password: '4567' }
+		const randomPassword = await generateRandomPassword()
+		const updateInput = { password: randomPassword }
 		const res = await userService.updateUser(mockedUser._id, updateInput)
 		expect(res.success).to.be.true
 		expect(res.user).to.have.property('password')

@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 import UserService from '../db/service/UserService'
-
+import { generateRandomPassword } from '../utils/utils'
 import UserInfoService from '../db/service/UserInfoService'
 
 describe('User Info Service can', () => {
@@ -21,7 +21,7 @@ describe('User Info Service can', () => {
 	it('create a new userInfo', async () => {
 		const createInput = {
 			email: 'ken@email.com',
-			password: 'ken123456',
+			password: await generateRandomPassword(),
 			username: 'kentest4'
 		}
 

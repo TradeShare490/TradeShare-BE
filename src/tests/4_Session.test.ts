@@ -4,6 +4,7 @@ import SessionService from '../db/service/SessionService'
 import UserService from '../db/service/UserService'
 import { signJwt } from '../utils/authentication/jwt.utils'
 import UserCollection from '../db/models/user.model'
+import { generateRandomPassword } from '../utils/utils'
 
 describe('Session service can', () => {
 	let mockedSession: SessionDocument
@@ -15,7 +16,7 @@ describe('Session service can', () => {
 		userService = new UserService(UserCollection)
 		user = await userService.createUser({
 			email: 'sessionTest10@email.com',
-			password: 'ken123456',
+			password: await generateRandomPassword(),
 			username: 'kentest'
 		})
 		expect(sessionService).not.equal(undefined)
