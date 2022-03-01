@@ -18,7 +18,7 @@ const UserSchema: Schema = new Schema({
 	username: { type: String, ref: 'UserDocument' },
 	email: { type: String, ref: 'UserDocument' },
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: 'UserDocument' },
-	alpacaToken: { type: String },
+	alpacaToken: { type: String, default: 'None' },
 	isPrivate: { type: Boolean, default: false }
 })
 
