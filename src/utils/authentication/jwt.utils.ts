@@ -1,34 +1,34 @@
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 /* istanbul ignore if  */
 if (!process.env.JWT_PRIVATE_KEY || !process.env.JWT_PUBLIC_KEY) {
-	throw new Error("JWT keys are not detected");
+	throw new Error('JWT keys are not detected')
 }
 
-const privateKey = `${process.env.JWT_PRIVATE_KEY}`.trim();
-const publicKey = `${process.env.JWT_PUBLIC_KEY}`.trim();
+const privateKey = `${process.env.JWT_PRIVATE_KEY}`.trim()
+const publicKey = `${process.env.JWT_PUBLIC_KEY}`.trim()
 
-export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
+export function signJwt (object: Object, options?: jwt.SignOptions | undefined) {
 	return jwt.sign(object, privateKey, {
 		...(options && options),
-		algorithm: "RS256",
-	});
+		algorithm: 'RS256'
+	})
 }
 
-export function verifyJwt(token: string) {
+export function verifyJwt (token: string) {
 	try {
-		const decoded = jwt.verify(token, publicKey);
+		const decoded = jwt.verify(token, publicKey)
 		return {
 			valid: true,
 			expired: false,
-			decoded,
-		};
+			decoded
+		}
 	} catch (e: any) {
 		return {
 			valid: false,
-			expired: e.message === "jwt expired",
-			decoded: null,
-		};
+			expired: e.message === 'jwt expired',
+			decoded: null
+		}
 	}
 }
