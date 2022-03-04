@@ -5,13 +5,17 @@ import UserCollection from '../db/models/user.model'
 import UserInfoCollection from '../db/models/userInfo.model'
 import { CreateUserInput } from '../db/schema/user.schema'
 import UserInfoService from '../db/service/UserInfoService'
+import EmailService from '../utils/email/email.service'
+import { MailOption } from '../utils/email/email'
 
 class UserController {
 	private userService: UserService;
 	private userInfoService: UserInfoService;
+	private emailService: EmailService;
 	constructor () {
 		this.userService = new UserService(UserCollection)
 		this.userInfoService = new UserInfoService(UserInfoCollection)
+		this.emailService = new EmailService();
 	}
 
 	/**
@@ -25,6 +29,14 @@ class UserController {
 			const info = await this.userInfoService.createUserInfo(user.user._id, req.body)
 			if (info.success) {
 				res.send(user)
+				//here we send the emai as everything has been successful!
+				//I'd suggest here I use a pre-made text for this.
+				//but this is a good start
+				var mailOption: MailOption = {to:req.body.email,
+											subject:"Welcome to Tradeshare",
+											text:"Congratulations "+req.body.username+" you have successfully created a TradeShare account."+
+											"\nWe are happy to have you on board.\nHappy Trading!"};
+				this.emailService.send(mailOption)
 			} else {
 				const payload = info
 				res.status(payload.status).send(payload)
