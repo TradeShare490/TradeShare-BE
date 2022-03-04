@@ -103,6 +103,35 @@ class FollowService {
 	}
 
 	/**
+	 * Get the lenght of list of account_ids the user follows
+	 * @param userId
+	 * @returns \{success, message, data: list of followers' IDs}
+	 */
+	 async getNumFollows (userId: UserInfo['userId']) {
+		const query = followQueries.GET_NUM_FOLLOWS_FOR_USER
+		const params = {
+			userId: userId
+		}
+		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.read)
+		if (queryResponse.success && queryResponse.data.length > 0) {
+			// update the return data
+			const listOfUserIds = []
+			// will receive an array of IDs which the user follows
+			for (const record of queryResponse.data) {
+				listOfUserIds.push(record.get('followId'))
+			}
+
+			return {
+				success: true,
+				message: queryResponse.message,
+				data: listOfUserIds
+			}
+		} else {
+			return queryResponse
+		}
+	}
+
+	/**
 	 * Get the list of account_ids the user follows
 	 * @param userId
 	 * @returns \{success, message, data: list of followers' IDs}
@@ -119,6 +148,35 @@ class FollowService {
 			// will receive an array of IDs which the user follows
 			for (const record of queryResponse.data) {
 				listOfUserIds.push(record.get('followId'))
+			}
+
+			return {
+				success: true,
+				message: queryResponse.message,
+				data: listOfUserIds
+			}
+		} else {
+			return queryResponse
+		}
+	}
+
+	/**
+	 * Get the lenght of list of account_ids who follow this user
+	 * @param userId
+	 * @returns \{success, message, data: ListOfFollowers}
+	 */
+	 async getNumFollowers (userId: UserInfo['userId']) {
+		const query = followQueries.GET_NUM_FOLLOWERS_FOR_USER
+		const params = {
+			userId: userId
+		}
+		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.read)
+		if (queryResponse.success && queryResponse.data.length > 0) {
+			// update the return data
+			const listOfUserIds = []
+			// will receive an array of IDs which follows the user
+			for (const record of queryResponse.data) {
+				listOfUserIds.push(record.get('followerId'))
 			}
 
 			return {

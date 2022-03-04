@@ -18,9 +18,17 @@ export const followQueries = {
                 MATCH (n:User{userId: $userId})-[r:Follows{isPending: false}]->(m:User)
                 RETURN m.userId as followId
         `,
+        GET_NUM_FOLLOWS_FOR_USER: `
+                MATCH (n:User{userId: $userId})-[r:Follows{isPending: false}]->(m:User)
+                RETURN count(m.userId) as followId
+        `,
 	GET_FOLLOWERS_FOR_USER: `
                 MATCH (n:User)-[r:Follows{isPending: false}]->(m:User{userId: $userId})
                 RETURN n.userId as followerId
+        `,
+        GET_NUM_FOLLOWERS_FOR_USER: `
+                MATCH (n:User)-[r:Follows{isPending: false}]->(m:User{userId: $userId})
+                RETURN count(n.userId) as followerId
         `,
 	DELETE_RELATIONSHIP_BY_USER_ID: `
                 MATCH (src: User{userId: $src})-[r:Follows{isPending:$isPending}]->(target: User{userId: $target})

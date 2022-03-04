@@ -7,6 +7,18 @@ class FollowController {
 		this.followService = new FollowService()
 	}
 
+	async getNumFollows (req: Request, res: Response) {
+		const userId = req.params.userId || '-1'
+		const response = await this.followService.getNumFollows(userId)
+		return response.success ? res.send(response.data) : res.status(400).send(response)
+	}
+
+	async getNumFollowers (req: Request, res: Response) {
+		const userId = req.params.userId || '-1'
+		const response = await this.followService.getNumFollowers(userId)
+		return response.success ? res.send(response.data) : res.status(400).send(response)
+	}
+
 	async getFollows (req: Request, res: Response) {
 		const userId = req.params.userId || '-1'
 		const response = await this.followService.getFollows(userId)

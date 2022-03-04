@@ -6,6 +6,16 @@ const followRoute = (app: Express) => {
 	const controller = new FollowController()
 	const router = Router()
 
+	// get num followings
+	router.get('/follows_num/:userId', requireUser, (req, res) => {
+		controller.getNumFollows(req, res)
+	})
+
+	/// get num followers
+	router.get('/followers_num/:userId', requireUser, (req, res) => {
+		controller.getNumFollowers(req, res)
+	})
+
 	// get followings
 	router.get('/follows/:userId', requireUser, (req, res) => {
 		controller.getFollows(req, res)
