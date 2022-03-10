@@ -100,7 +100,7 @@ class NotificationsService {
      * @param notificationId ID of the notification
      * @returns \{success, message, data: numbDeleted}
      */
-    manageNotificaitons(userId: String, notifications: any) {
+    manageNotifications(userId: String, notifications: any) {
         notifications.forEach((n: { id: String, enable: Boolean }) => {
             if (n.enable) {
                 // enable preference in mongo
