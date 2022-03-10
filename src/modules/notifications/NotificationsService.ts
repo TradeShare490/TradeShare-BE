@@ -2,9 +2,9 @@ import neo4jInstance, { QueryMode } from '../../db/neo4j/Neo4jInstance'
 import UserInfoService from '../../db/service/UserInfoService'
 import { notificationsQueries } from './NotificationsQueries'
 import neo4j from 'neo4j-driver'
+import { Interface } from 'readline'
 
 class NotificationsService {
-
     constructor() {
     }
 
@@ -16,7 +16,7 @@ class NotificationsService {
      * @returns Returns error if userId is not found. Else , {data: {numOfPath, relId } }
      */
     async notify(userId: String, content: String, typeOfNotification: String) {
-        //TODO: check user's notification settings here
+        // TODO: check user's notification settings here
         return this.createRelNotifies(userId, content, typeOfNotification)
     }
 
@@ -34,8 +34,8 @@ class NotificationsService {
     ) {
         return {
             success: true,
-            message: "test",
-            data: { id: "123" }
+            message: 'test',
+            data: { id: '123' }
         }
     }
 
@@ -48,8 +48,8 @@ class NotificationsService {
     async verifyRelNotifies(userId: String, notificationId: String) {
         return {
             success: true,
-            message: "test",
-            data: "test"
+            message: 'test',
+            data: 'test'
         }
     }
 
@@ -61,8 +61,8 @@ class NotificationsService {
     async markNotificationRead(userId: String, notificationId: String) {
         return {
             success: true,
-            message: "test",
-            data: "test"
+            message: 'test',
+            data: 'test'
         }
     }
 
@@ -74,7 +74,7 @@ class NotificationsService {
     async getNotifications(userId: String) {
         return {
             success: true,
-            message: "test",
+            message: 'test',
             data: {
                 id: 123,
                 testing: 1234
@@ -90,8 +90,28 @@ class NotificationsService {
     deteletNotificaiton(notificationId: String) {
         return {
             success: true,
-            message: "test",
-            data: "test"
+            message: 'test',
+            data: 'test'
+        }
+    }
+
+    /**
+     * Manage notification preferences
+     * @param notificationId ID of the notification
+     * @returns \{success, message, data: numbDeleted}
+     */
+    manageNotificaitons(userId: String, notifications: any) {
+        notifications.forEach((n: { id: String, enable: Boolean }) => {
+            if (n.enable) {
+                // enable preference in mongo
+            } else {
+                // disable preference in mongo
+            }
+        })
+        return {
+            success: true,
+            message: 'test',
+            data: 'test'
         }
     }
 }

@@ -19,6 +19,13 @@ class NotificationsController {
         const response = await this.notificationsService.markNotificationRead(userId, notificationId)
         return response.success ? res.send(response.data) : res.status(400).send(response)
     }
+
+    async manageNotifications(req: Request, res: Response) {
+        const userId = req.params.userId || '-1'
+        const notifications = req.params.notifications
+        const response = await this.notificationsService.manageNotifications(userId, notifications)
+        return response.success ? res.send(response.data) : res.status(400).send(response)
+    }
 }
 
 export default NotificationsController

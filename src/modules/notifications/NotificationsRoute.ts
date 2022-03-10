@@ -16,6 +16,11 @@ const notificationsRoute = (app: Express) => {
         controller.readNotification(req, res)
     })
 
+    // manage notification preferences
+    router.post('/preferences', requireUser, (req, res) => {
+        controller.manageNotifications(req, res)
+    })
+
     app.use('/api/v1/notifications/', router)
 }
 
