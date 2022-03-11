@@ -1,28 +1,15 @@
-function showTrendingCompanies(){
-    var axios = require("axios").default;
+import { Request, Response } from 'express'
+import TrendingCompaniesService from "../db/service/trendingCompaniesService";
+class TrendingCompaniesController {
+  private topCompaniesService : TrendingCompaniesService;
+  constructor(){
+    this.topCompaniesService = new TrendingCompaniesService();
+  }
 
-    var options = {
-      method: 'GET',
-      url: 'https://yh-finance.p.rapidapi.com/market/get-trending-tickers',
-      params: {region: 'CA'},
-      headers: {
-        'x-rapidapi-host': 'yh-finance.p.rapidapi.com',
-        'x-rapidapi-key': process.env.RAPID_KEY
-      }
-    };
-    
-    axios.request(options).then(function (response: { data:any }) {
-        console.log(response.data);
-        var stock_information = [];
-        const list = response.data.finance.result.quotes;
-        for (let index = 0; index < 10; index++) {
-            stock_information.push(list[index]);
-        }
-        return stock_information;
-    }).catch(function (error: any) {
-        console.error(error);
-    });
+  async getTrendingCompanies(req:Request,res:Response){
+   return res.send(await this.topCompaniesService.getTrendingCompanies());
+  }
 
 }
 
-export default showTrendingCompanies
+export default TrendingCompaniesController;
