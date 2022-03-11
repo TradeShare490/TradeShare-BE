@@ -19,22 +19,22 @@ export const messages = {
 	 * @param entity : the value of the custom property
 	 * @returns A response
 	 */
-	successMessage<T>(message: string, type: string, entity: T): MessageResponse {
+	successMessage<T> (message: string, type: string, entity: T): MessageResponse {
 		return {
 			status: 200,
 			success: true,
 			message: message,
-			[type]: entity,
-		};
+			[type]: entity
+		}
 	},
 
-	createdMessage<T>(message: string, type: string, entity: T): MessageResponse {
+	createdMessage<T> (message: string, type: string, entity: T): MessageResponse {
 		return {
 			status: 201,
 			success: true,
 			message: message,
-			[type]: entity,
-		};
+			[type]: entity
+		}
 	},
 
 	/**
@@ -42,12 +42,12 @@ export const messages = {
 	 * @returns a mutation response
 	 */
 	/* istanbul ignore next */
-	notAuthorized(): MessageResponse {
+	notAuthorized (): MessageResponse {
 		return {
 			status: 401,
 			success: false,
-			message: "Unauthorized access",
-		};
+			message: 'Unauthorized access'
+		}
 	},
 
 	/**
@@ -55,12 +55,12 @@ export const messages = {
 	 * @param message Detail of the error
 	 * @returns
 	 */
-	internalError(message: string): MessageResponse {
+	internalError (message: string): MessageResponse {
 		return {
 			status: 501,
 			success: false,
-			message: message,
-		};
+			message: message
+		}
 	},
 
 	/**
@@ -69,11 +69,11 @@ export const messages = {
 	 * @returns
 	 */
 
-	badInput(message: string): MessageResponse {
+	badInput (message: string): MessageResponse {
 		return {
 			status: 400,
 			success: false,
-			message: message,
-		};
-	},
-};
+			message: message
+		}
+	}
+}
