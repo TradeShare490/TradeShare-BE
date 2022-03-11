@@ -15,7 +15,13 @@ export default class TrendingCompaniesService {
                     region: 'CA'
                 }
             })
+            
             // filter data here
+           /* var trendingList = [];
+            for (let index = 0; index < 10; index++) {
+                trendingList.push(data.finance.result[index])
+            }
+            return messages.successMessage('success', 'trendingCompanies', trendingList) */
             return messages.successMessage('success', 'trendingCompanies', data)
         } catch (error: any) {
             /* istanbul ignore else  */
