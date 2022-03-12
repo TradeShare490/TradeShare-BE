@@ -5,9 +5,6 @@ import neo4j from 'neo4j-driver'
 import { Interface } from 'readline'
 
 class NotificationsService {
-    constructor() {
-    }
-
     /**
      * Set up relationship `notifies`
      * @param userId ID of the actor
@@ -32,24 +29,26 @@ class NotificationsService {
         content: String,
         typeOfNotification: String
     ) {
-        return {
-            success: true,
-            message: 'test',
-            data: { id: '123' }
+        const query = notificationsQueries.CREATE_RELATIONSHIP
+        const params = {
+            user: userId,
+            content: content,
+            typeOfNotification: typeOfNotification,
+            isRead: false
         }
-    }
 
-    /**
-     * Verify if there is a `Notifies` relationship between user and notification
-     * @param userId
-     * @param notificationId
-     * @returns true if there is, otherwise, false
-     */
-    async verifyRelNotifies(userId: String, notificationId: String) {
-        return {
-            success: true,
-            message: 'test',
-            data: 'test'
+        const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
+        if (queryResponse.success && queryResponse.data[0]) {
+            // field_name based on the RETURN in the query
+            const numOfPath = neo4j.integer.toNumber(queryResponse.data[0].get('numOfPath'))
+            const id = neo4j.integer.toNumber(queryResponse.data[0].get('id'))
+            return {
+                success: true,
+                message: queryResponse.message,
+                data: { numOfPath: numOfPath, id: id }
+            }
+        } else {
+            return queryResponse
         }
     }
 
@@ -59,10 +58,23 @@ class NotificationsService {
      * @returns true if the notification is now read, otherwise, false
      */
     async markNotificationRead(userId: String, notificationId: String) {
-        return {
-            success: true,
-            message: 'test',
-            data: 'test'
+        const query = notificationsQueries.MARK_NOTIFICATION_READ_BY_ID
+        const params = {
+            user: userId,
+            notifId: notificationId
+        }
+
+        const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
+        if (queryResponse.success && queryResponse.data[0]) {
+            // field_name based on the RETURN in the query
+            const numRead = neo4j.integer.toNumber(queryResponse.data[0].get('numRead'))
+            return {
+                success: true,
+                message: queryResponse.message,
+                data: { numRead: numRead }
+            }
+        } else {
+            return queryResponse
         }
     }
 
@@ -72,13 +84,23 @@ class NotificationsService {
      * @returns \{success, message, data: list of notifications}
      */
     async getNotifications(userId: String) {
-        return {
-            success: true,
-            message: 'test',
-            data: {
-                id: 123,
-                testing: 1234
+        const query = notificationsQueries.GET_NOTIFICATIONS_FOR_USER
+        const params = {
+            user: userId
+        }
+
+        const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
+        if (queryResponse.success && queryResponse.data[0]) {
+            // field_name based on the RETURN in the query
+            let notifs: any[]
+            notifs = queryResponse.data[0].get('userNotifications')
+            return {
+                success: true,
+                message: queryResponse.message,
+                data: { notifications: notifs }
             }
+        } else {
+            return queryResponse
         }
     }
 
@@ -87,11 +109,49 @@ class NotificationsService {
      * @param notificationId ID of the notification
      * @returns \{success, message, data: numbDeleted}
      */
-    deteletNotificaiton(notificationId: String) {
-        return {
-            success: true,
-            message: 'test',
-            data: 'test'
+    async deteletNotificaiton(notificationId: String) {
+        const query = notificationsQueries.DELETE_NOTIFICATION_NODE_BY_ID
+        const params = {
+            notifId: notificationId
+        }
+
+        const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
+        if (queryResponse.success && queryResponse.data[0]) {
+            // field_name based on the RETURN in the query
+            const numDeleted = neo4j.integer.toNumber(queryResponse.data[0].get('numDeleted'))
+            return {
+                success: true,
+                message: queryResponse.message,
+                data: { numDeleted: numDeleted }
+            }
+        } else {
+            return queryResponse
+        }
+    }
+
+    /**
+     * Delete a notification
+     * @param notificationId ID of the notification
+     * @returns \{success, message, data: numbDeleted}
+     */
+    async deteletNotificaitonRel(notificationId: String, userId: String) {
+        const query = notificationsQueries.DELETE_REL_BY_ID
+        const params = {
+            notifId: notificationId,
+            user: userId
+        }
+
+        const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
+        if (queryResponse.success && queryResponse.data[0]) {
+            // field_name based on the RETURN in the query
+            const numDeleted = neo4j.integer.toNumber(queryResponse.data[0].get('numDeleted'))
+            return {
+                success: true,
+                message: queryResponse.message,
+                data: { numDeleted: numDeleted }
+            }
+        } else {
+            return queryResponse
         }
     }
 
