@@ -17,12 +17,11 @@ export default class TrendingCompaniesService {
             })
             
             // filter data here
-           /* var trendingList = [];
-            for (let index = 0; index < 10; index++) {
-                trendingList.push(data.finance.result[index])
+            var trendingList = [];
+            for (let index = 0; index < data.finance.result[0].quotes.length; index++) {
+                trendingList.push(data.finance.result[0].quotes[index]);
             }
-            return messages.successMessage('success', 'trendingCompanies', trendingList) */
-            return messages.successMessage('success', 'trendingCompanies', data)
+            return messages.successMessage('success', 'trendingCompanies', trendingList) 
         } catch (error: any) {
             /* istanbul ignore else  */
             if (error.response === undefined) {
