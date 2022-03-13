@@ -17,7 +17,7 @@ export default class TrendingCompaniesService {
             })
             var trendingList = [];
             const entry = data.finance.result[0].quotes
-            for (let index = 0; index < entry.length; index++) {
+            for (let index = 0; index < 10; index++) {
                 let info = {
                     "stock_name":entry[index].shortName,
                     "stock_symbol":entry[index].symbol,
