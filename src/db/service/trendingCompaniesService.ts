@@ -18,8 +18,16 @@ export default class TrendingCompaniesService {
             
             // filter data here
             var trendingList = [];
-            for (let index = 0; index < data.finance.result[0].quotes.length; index++) {
-                trendingList.push(data.finance.result[0].quotes[index]);
+            const entry = data.finance.result[0].quotes
+            for (let index = 0; index < entry.length; index++) {
+                let info = {
+                    "stock_name":entry[index].shortName,
+                    "stock_symbol":entry[index].symbol,
+                    "current_price":entry[index].regularMarketPrice,
+                    "price_variation":entry[index].regularMarketChange,
+                    "price_variation_percentage":entry[index].regularMarketChangePercent
+                }
+                trendingList.push(info);
             }
             return messages.successMessage('success', 'trendingCompanies', trendingList) 
         } catch (error: any) {
