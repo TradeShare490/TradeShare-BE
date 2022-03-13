@@ -8,7 +8,7 @@ const trendingCompaniesRoute = (app: Express) => {
     const router = express.Router()
 
     //Someone please correct this cause I don't know what to do from here
-    router.get('/:TrendingCompanies',async (req,res) => {
+    router.get('/',async (req,res) => {
         await TrendingController.getTrendingCompanies(req,res);
     })
 }
