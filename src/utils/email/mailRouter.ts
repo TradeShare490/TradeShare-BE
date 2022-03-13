@@ -1,5 +1,5 @@
 import express, { Express } from 'express'
-import MailController from './email.controller'
+import MailController from './MailController'
 
 const mailRouter = (app:Express) => {
     const router = express.Router()
