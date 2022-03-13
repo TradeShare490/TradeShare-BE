@@ -12,5 +12,5 @@ const trendingCompaniesRoute = (app: Express) => {
         await TrendingController.getTrendingCompanies(req,res);
     })
 }
-
+app.use("/api/v1/trendingCompanies", router)
 export default trendingCompaniesRoute;
