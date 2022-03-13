@@ -15,8 +15,6 @@ export default class TrendingCompaniesService {
                     region: 'CA'
                 }
             })
-            
-            // filter data here
             var trendingList = [];
             const entry = data.finance.result[0].quotes
             for (let index = 0; index < entry.length; index++) {

@@ -9,7 +9,7 @@ describe.only('Trending Companies service can', () => {
 
     it('can successfully pull data from the API',async()=>{
         const response = await trendingCompaniesService.getTrendingCompanies();
-        console.log(response.message.length);
+        expect(response.message.length).equals(10);
         expect(response.status).equals(200);
         expect(response.success).equals(true);
     })
