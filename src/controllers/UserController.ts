@@ -33,9 +33,8 @@ class UserController {
 				//I'd suggest here I use a pre-made text for this.
 				//but this is a good start
 				var mailOption: MailOption = {to:req.body.email,
-											subject:"Welcome to Tradeshare",
-											text:"Congratulations "+req.body.username+" you have successfully created a TradeShare account."+
-											"\nWe are happy to have you on board.\nHappy Trading!"};
+					subject:"Welcome to Tradeshare",
+					text:"Congratulations "+req.body.username+" you have successfully created a TradeShare account." + "\nWe are happy to have you on board.\nHappy Trading!"};
 				this.emailService.send(mailOption)
 			} else {
 				const payload = info

@@ -12,7 +12,7 @@ describe('Alpaca service can', () => {
 		const response = await alpacaService.getInfo('/positions', 'positions', 'fakeAlpacaToken')
 		expect(response.status).equals(501)
 		expect(response.success).equals(false)
-		expect(response.message).equals('request is not authorized')
+		expect(response.message).equals('forbidden.')
 	})
 
 	it('get positions info', async () => {
