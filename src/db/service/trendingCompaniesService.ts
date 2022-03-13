@@ -10,9 +10,6 @@ export default class TrendingCompaniesService {
                 headers: {
                     'x-rapidapi-host': 'yh-finance.p.rapidapi.com',
                     'x-rapidapi-key': process.env.RAPID_KEY as string
-                },
-                params: {
-                    region: 'CA'
                 }
             })
             var trendingList = [];
@@ -27,6 +24,7 @@ export default class TrendingCompaniesService {
                 }
                 trendingList.push(info);
             }
+            console.log(trendingList)
             return messages.successMessage('success', 'trendingCompanies', trendingList) 
         } catch (error: any) {
             /* istanbul ignore else  */
