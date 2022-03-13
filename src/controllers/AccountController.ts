@@ -16,7 +16,11 @@ class AccountController {
 	async getAccount (req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId)
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId })
-		if (userInfo?.alpacaToken || userInfo?.alpacaToken === 'None') {
+		if (!userInfo?.userId) {
+			return res.status(404).send('User not found')
+		}
+
+		if (userInfo.alpacaToken || userInfo?.alpacaToken !== 'None') {
 			return res.send(
 				await this.alpacaService.getInfo('/account', 'account', userInfo.alpacaToken)
 			)
