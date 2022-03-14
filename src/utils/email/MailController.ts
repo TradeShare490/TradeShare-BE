@@ -11,7 +11,7 @@ class MailController {
     async sendEmail(req:Request,res:Response){
         try{
             const mail = this.emailService.send(req.body);
-            return messages.successMessage('success','sentMail',mail)
+            return res.send(messages.successMessage('success','sentMail',mail))
         } catch(error:any){
             if (error.response === undefined){
                 return messages.internalError(error.message)
