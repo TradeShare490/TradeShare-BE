@@ -24,7 +24,6 @@ export default class TrendingCompaniesService {
                 }
                 trendingList.push(info);
             }
-            console.log(trendingList)
             return messages.successMessage('success', 'trendingCompanies', trendingList) 
         } catch (error: any) {
             /* istanbul ignore else  */

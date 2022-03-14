@@ -11,5 +11,6 @@ describe.only('Trending Companies service can', () => {
         const response = await trendingCompaniesService.getTrendingCompanies();
         expect(response.status).equals(200);
         expect(response.success).equals(true);
+        expect(response.trendingCompanies.length).equals(10)
     })
 })
