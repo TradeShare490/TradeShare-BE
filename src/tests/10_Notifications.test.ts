@@ -18,7 +18,7 @@ describe.only('Notifications service can', () => {
 	let notificationsService: NotificationsService
 	let followService: FollowService
 	let mockedUser: MockedUser
-	let testNotificationID: String
+	let testNotificationID: string
 	let userService: UserService
 	let userInfoService: UserInfoService
 

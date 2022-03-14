@@ -1,8 +1,6 @@
 import neo4jInstance, { QueryMode } from '../../db/neo4j/Neo4jInstance'
-import UserInfoService from '../../db/service/UserInfoService'
 import { notificationsQueries } from './NotificationsQueries'
 import neo4j from 'neo4j-driver'
-import { Interface } from 'readline'
 
 class NotificationsService {
     /**
@@ -12,8 +10,8 @@ class NotificationsService {
      * @param typeOfNotification type of notification (follow, like, message etc.)
      * @returns Returns error if userId is not found. Else , {data: {numOfPath, relId } }
      */
-    async notify(userId: String, content: String, typeOfNotification: String) {
-        // TODO: check user's notification settings here
+    async notify(userId: string, content: string, typeOfNotification: string) {
+        // check user's notification settings here
         return this.createRelNotifies(userId, content, typeOfNotification)
     }
 
@@ -25,9 +23,9 @@ class NotificationsService {
      * @returns \{success; message; data: {numOfPath, relId } }
      */
     async createRelNotifies(
-        userId: String,
-        content: String,
-        typeOfNotification: String
+        userId: string,
+        content: string,
+        typeOfNotification: string
     ) {
         const query = notificationsQueries.CREATE_RELATIONSHIP
         const params = {
@@ -57,7 +55,7 @@ class NotificationsService {
      * @param notificationId
      * @returns true if the notification is now read, otherwise, false
      */
-    async markNotificationRead(userId: String, notificationId: String) {
+    async markNotificationRead(userId: string, notificationId: string) {
         const query = notificationsQueries.MARK_NOTIFICATION_READ_BY_ID
         const params = {
             user: userId,
@@ -83,7 +81,7 @@ class NotificationsService {
      * @param userId
      * @returns \{success, message, data: list of notifications}
      */
-    async getNotifications(userId: String) {
+    async getNotifications(userId: string) {
         const query = notificationsQueries.GET_NOTIFICATIONS_FOR_USER
         const params = {
             user: userId
@@ -109,7 +107,7 @@ class NotificationsService {
      * @param notificationId ID of the notification
      * @returns \{success, message, data: numbDeleted}
      */
-    async deteletNotificaiton(notificationId: String) {
+    async deteletNotificaiton(notificationId: string) {
         const query = notificationsQueries.DELETE_NOTIFICATION_NODE_BY_ID
         const params = {
             notifId: notificationId
@@ -134,7 +132,7 @@ class NotificationsService {
      * @param notificationId ID of the notification
      * @returns \{success, message, data: numbDeleted}
      */
-    async deteletNotificaitonRel(notificationId: String, userId: String) {
+    async deteletNotificaitonRel(notificationId: string, userId: string) {
         const query = notificationsQueries.DELETE_REL_BY_ID
         const params = {
             notifId: notificationId,
@@ -160,12 +158,14 @@ class NotificationsService {
      * @param notificationId ID of the notification
      * @returns \{success, message, data: numbDeleted}
      */
-    manageNotifications(userId: String, notifications: any) {
-        notifications.forEach((n: { id: String, enable: Boolean }) => {
+    manageNotifications(userId: string, notifications: any) {
+        notifications.forEach((n: { id: string, enable: Boolean }) => {
             if (n.enable) {
                 // enable preference in mongo
+                console.log('enable')
             } else {
                 // disable preference in mongo
+                console.log('disable')
             }
         })
         return {
