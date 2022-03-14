@@ -29,7 +29,7 @@ class ActivityService {
 	static async fetchIntoNeo4j (userInfo: UserInfo, data: AlpacaActivity[]) {
 		const currActIds = await ActivityService.collectLastFetchedId(userInfo)
 		const unpopulatedActivities = ActivityService.filterNewActivities(currActIds, data)
-		return await ActivityService.createNodes(userInfo, unpopulatedActivities)
+		return ActivityService.createNodes(userInfo, unpopulatedActivities)
 	}
 
 	/**
