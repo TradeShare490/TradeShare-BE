@@ -159,7 +159,7 @@ class NotificationsService {
      * @returns \{success, message, data: numbDeleted}
      */
     manageNotifications(userId: string, notifications: any) {
-        notifications.forEach((n: { id: string, enable: Boolean }) => {
+        notifications.forEach((n: { id: string, enable: boolean }) => {
             if (n.enable) {
                 // enable preference in mongo
                 console.log('enable')
