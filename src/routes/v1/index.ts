@@ -10,6 +10,9 @@ import searchRoute from './SearchRoute'
 import followRoute from '../../modules/follows/FollowRoute'
 import conversationRoute from './ConversationRoute'
 import messageRoute from './MessageRoute'
+import notificationsRoute from '../../modules/notifications/NotificationsRoute'
+import trendingCompaniesRoute from './TrendingCompaniesRoute'
+
 module.exports = function (app: Express) {
 	// Register the routes
 	defaultRoute(app)
@@ -24,4 +27,6 @@ module.exports = function (app: Express) {
 	followRoute(app)
 	conversationRoute(app)
 	messageRoute(app)
+	notificationsRoute(app)
+	trendingCompaniesRoute(app)
 }
