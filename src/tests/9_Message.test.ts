@@ -11,7 +11,7 @@ describe('Message service can', () => {
 		conversationService = new ConversationService()
 		messageService = new MessageService()
 		expect(messageService).not.equal(undefined)
-		const response = await conversationService.createConversation(['user1', 'user2'])
+		const response = await conversationService.createConversation(['user1', 'user2'], ['User 1', 'User 2'])
 		mockedConversation = response.conversation
 	})
 
