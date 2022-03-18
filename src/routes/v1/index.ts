@@ -12,6 +12,8 @@ import conversationRoute from './ConversationRoute'
 import messageRoute from './MessageRoute'
 import notificationsRoute from '../../modules/notifications/NotificationsRoute'
 import trendingCompaniesRoute from './TrendingCompaniesRoute'
+import mailRouter from "../../utils/email/mailRouter"
+
 import historyRoute from './HistoryRoute'
 module.exports = function (app: Express) {
 	// Register the routes
@@ -29,5 +31,6 @@ module.exports = function (app: Express) {
 	messageRoute(app)
 	notificationsRoute(app)
 	trendingCompaniesRoute(app)
+	mailRouter(app)
 	historyRoute(app)
 }
