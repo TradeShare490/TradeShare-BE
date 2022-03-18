@@ -42,4 +42,11 @@ describe('Alpaca service can', () => {
 		expect(response.message).equals('success')
 		expect(response.activities).to.be.an('Array')
 	})
+	it('get history info', async () => {
+		const response = await alpacaService.getInfo('/account/portfolio/history', 'history', alpacaToken)
+		expect(response.status).equals(200)
+		expect(response.success).equals(true)
+		expect(response.message).equals('success')
+		expect(response.history).not.equals(undefined)
+	})
 })

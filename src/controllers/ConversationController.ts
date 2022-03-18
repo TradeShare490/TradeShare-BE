@@ -10,7 +10,7 @@ class ConversationController {
     }
 
     async createConversation (req: Request, res: Response) {
-    	const conversation = await this.conversationService.createConversation([req.body.sender, req.body.receiver])
+    	const conversation = await this.conversationService.createConversation([req.body.sender, req.body.receiver], [req.body.senderName, req.body.receiverName])
     	return res.status(conversation.status).send(conversation)
     }
 
