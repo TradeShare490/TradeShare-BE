@@ -14,7 +14,7 @@ interface MockedUser {
 	mockedInfo: UserInfo;
 }
 
-describe.only('Notifications service can', () => {
+describe('Notifications service can', () => {
 	let notificationsService: NotificationsService
 	let followService: FollowService
 	let mockedUser: MockedUser
