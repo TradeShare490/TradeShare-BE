@@ -8,7 +8,7 @@ import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
 import { generateRandomPassword } from '../utils/utils'
 
-interface MockedUser {
+export interface MockedUser {
 	mockedUser: UserDocument;
 	mockedInfo: UserInfo;
 }
