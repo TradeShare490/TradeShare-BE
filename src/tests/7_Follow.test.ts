@@ -4,6 +4,7 @@ import UserInfoService from '../db/service/UserInfoService'
 import FollowService from '../modules/follows/FollowService'
 import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
+import NotificationsService from '../modules/notifications/NotificationsService'
 
 import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
 import { generateRandomPassword } from '../utils/utils'
@@ -13,16 +14,19 @@ export interface MockedUser {
 	mockedInfo: UserInfo;
 }
 
-describe('Follow service can', () => {
+describe.only('Follow service can', () => {
 	let followService: FollowService
 	let mockedFollower: MockedUser
 	let mockedUser: MockedUser
 	let userService: UserService
 	let userInfoService: UserInfoService
+	let notificationsService: NotificationsService
+	let notificationRel: string
 
 	describe('setup', () => {
 		it('instantiate the service class', () => {
 			followService = new FollowService()
+			notificationsService = new NotificationsService()
 			expect(followService).not.equal(undefined)
 		})
 
@@ -85,6 +89,7 @@ describe('Follow service can', () => {
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()
 			)
+			notificationRel = result.data.relId.toString()
 			expect(result.success).to.be.true
 		})
 
@@ -101,6 +106,14 @@ describe('Follow service can', () => {
 			// mockedFollower sends request to mockedUser
 			const result = await followService.follow(123, { id: 'object type id' })
 			expect(result.success).to.be.false
+		})
+
+		it('target user receives notification', async () => {
+			const result = await notificationsService.getNotifications(
+				mockedUser.mockedInfo.userId.toJSON()
+			)
+			console.log(result.data)
+			expect(result.data.notifications.length).equal(1)
 		})
 
 		it.skip('recevie notification if the profile is private', () => {
@@ -154,6 +167,8 @@ describe('Follow service can', () => {
 
 	describe('clean up the test suite', () => {
 		it('delete mocked user', async () => {
+			const sample = await notificationsService.deteletNotificaitonRel(notificationRel, mockedUser.mockedInfo.userId)
+			console.log(sample)
 			// delete the mocked users
 			await cleanupMockedUserInfo({
 				mockedUserId: mockedUser.mockedInfo.userId,
@@ -172,6 +187,7 @@ describe('Follow service can', () => {
 
 		it('delete mocked nodes', async () => {
 			// Delete the mocked nodes
+
 			const tobeDeletedIDs = [
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()
