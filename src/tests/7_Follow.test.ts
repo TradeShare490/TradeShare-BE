@@ -14,7 +14,7 @@ export interface MockedUser {
 	mockedInfo: UserInfo;
 }
 
-describe.only('Follow service can', () => {
+describe('Follow service can', () => {
 	let followService: FollowService
 	let mockedFollower: MockedUser
 	let mockedUser: MockedUser
