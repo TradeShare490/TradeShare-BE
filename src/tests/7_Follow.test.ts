@@ -112,7 +112,6 @@ describe.only('Follow service can', () => {
 			const result = await notificationsService.getNotifications(
 				mockedUser.mockedInfo.userId.toJSON()
 			)
-			console.log(result.data)
 			expect(result.data.notifications.length).equal(1)
 		})
 
@@ -167,8 +166,6 @@ describe.only('Follow service can', () => {
 
 	describe('clean up the test suite', () => {
 		it('delete mocked user', async () => {
-			const sample = await notificationsService.deteletNotificaitonRel(notificationRel, mockedUser.mockedInfo.userId)
-			console.log(sample)
 			// delete the mocked users
 			await cleanupMockedUserInfo({
 				mockedUserId: mockedUser.mockedInfo.userId,
