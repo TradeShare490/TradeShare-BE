@@ -68,6 +68,38 @@ export default class UserService {
 		}
 	}
 
+	parseParamsMulti(originalParams: UserFindParameters): ParsedParameters{
+		const params = { ...originalParams } // make a deep copy, so we don't change the original if there is error
+
+		// if searching for specific item by id
+		if (params.id !== undefined) {
+			return {
+				find: { _id: {"$search": params.id} },
+				limit: 10,
+				skip: 0
+			}
+		} 
+		// searching for a range of result, empty means taking any available items
+		let searchParams = {}
+
+		// Default limit and skip - in case require pagination
+		const limit = params.limit || GLOBAL_QUERY_LIMIT
+		const skip = params.skip || 0
+
+		// if ommited, will try to match on field which doesn't exist
+		delete params.limit
+		delete params.skip
+
+		searchParams = { ...searchParams, ...params } // ...params in case something remains
+
+		// Finally, return mongoDB search query (or so-called filter)
+		return {
+			find: searchParams,
+			limit: limit,
+			skip: skip
+		}
+	}
+
 	/**
 	 * Create a new user in MongoDB
 	 * @param input the data for creating new user, please consult the UserSchema as a reference
@@ -139,6 +171,33 @@ export default class UserService {
 			/* istanbul ignore next */
 			return messages.internalError(error.message)
 		}
+	}
+
+	/**
+	 * 
+	 * @param originalParam This method is meant to only take the username
+	 * @returns response 
+	 */
+	async getMultipleUsers(originalParam: UserFindParameters): Promise<MessageResponse> {
+		const validInput = originalParam.username !== undefined
+		if(!validInput){
+			return messages.badInput('Missing username')
+		}
+		try{
+			const parsedParam = this.parseParamsMulti(originalParam)
+			const response = await this.userDocumentCollection
+				.find(parsedParam.find)
+				.skip(parsedParam.skip)
+				.limit(parsedParam.limit)
+			return response.length > 0
+			? messages.successMessage('A batch of users filling this match have been found','users',response)
+			: messages.successMessage('No matching users found','users',[])
+
+		}catch(error:any){
+			/* istanbul ignore next */
+			return messages.internalError(error.message);
+		}
+		
 	}
 
 	/**
