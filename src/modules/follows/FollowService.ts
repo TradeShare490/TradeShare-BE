@@ -17,7 +17,7 @@ class FollowService {
 	 * @param targetUserId ID of the target
 	 * @returns Returns error if `Follows` already exists. Else , {data: {numOfPath, relId } }
 	 */
-	async follow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
+	async follow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId'], bypassPrivate = false) {
 		// cannot follow yourself
 		if (srcUserId === targetUserId) return { success: false, message: 'Cannot follow yourself' }
 
@@ -36,7 +36,7 @@ class FollowService {
 			const targerUserInfo = await this.userInfoService.findUserInfo({
 				userId: targetUserMongoId
 			})
-			if (targerUserInfo?.isPrivate) {
+			if (targerUserInfo?.isPrivate && !bypassPrivate) {
 				return { success: false, message: 'This function is not ready, work is in progress' }
 			} else {
 				return this.createRelFollows(srcUserId, targetUserId)
