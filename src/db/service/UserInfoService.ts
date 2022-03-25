@@ -46,10 +46,10 @@ export default class UserInfoService {
 
 		if (params.searchQuery) {
 			searchParams = {
-				$or: [{ username: { $search: params.searchQuery, $options: 'i' } },
-					{ email: { $search: params.searchQuery, $options: 'i' } },
-					{ firstname: { $search: params.searchQuery, $options: 'i' } },
-					{ lastname: { $search: params.searchQuery, $options: 'i' } }]
+				$or: [{ username: { $regex: params.searchQuery, $options: 'i' } },
+					{ email: { $regex: params.searchQuery, $options: 'i' } },
+					{ firstname: { $regex: params.searchQuery, $options: 'i' } },
+					{ lastname: { $regex: params.searchQuery, $options: 'i' } }]
 			}
 		}
 
