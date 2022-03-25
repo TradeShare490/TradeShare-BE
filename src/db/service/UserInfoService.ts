@@ -45,7 +45,12 @@ export default class UserInfoService {
 		let searchParams = {}
 
 		if (params.searchQuery) {
-			searchParams = { $or: [{ username: { $regex: params.searchQuery, $options: 'i' } }] }
+			searchParams = {
+				$or: [{ username: { $regex: params.searchQuery, $options: 'i' } },
+					{ email: { $regex: params.searchQuery, $options: 'i' } },
+					{ firstname: { $regex: params.searchQuery, $options: 'i' } },
+					{ lastname: { $regex: params.searchQuery, $options: 'i' } }]
+			}
 		}
 
 		// Default limit and skip - in case require pagination
