@@ -86,7 +86,6 @@ class NotificationsService {
         const params = {
             user: userId
         }
-
         const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
         if (queryResponse.success && queryResponse.data[0]) {
             // field_name based on the RETURN in the query
