@@ -15,10 +15,12 @@ class PorfolioHistoryController {
 
 	async getHistory (req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId)
+
+		const period = req.query.period ?? '1M'
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId })
 		if (userInfo?.alpacaToken || userInfo?.alpacaToken === 'None') {
 			return res.send(
-				await this.alpacaService.getInfo('/account/portfolio/history', 'history', userInfo.alpacaToken)
+				await this.alpacaService.getInfo(`/account/portfolio/history?extended_hour=true&period=${period}`, 'history', userInfo.alpacaToken)
 			)
 		} else {
 			return res.send(messages.internalError("User hasn't linked any Alpaca account"))
