@@ -21,7 +21,6 @@ describe('Follow service can', () => {
 	let userService: UserService
 	let userInfoService: UserInfoService
 	let notificationsService: NotificationsService
-	let notificationRel: string
 
 	describe('setup', () => {
 		it('instantiate the service class', () => {
@@ -89,7 +88,6 @@ describe('Follow service can', () => {
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()
 			)
-			notificationRel = result.data.relId.toString()
 			expect(result.success).to.be.true
 		})
 

@@ -24,9 +24,8 @@ export default class MessageService {
 		})
 		const conversation = await this.conversationService.findConversation({ _id: conversationId })
 		const members = conversation?.members
-		for (let i = 0; i < members.length; i++) {
-			const m = members[i]
-			if (!(m === sender)) {
+		for (const m of members) {
+			if (m !== sender) {
 				const uId = (await this.userService.getUser({ username: m })).user._id.toJSON()
 				await this.notificationService.notify(uId, sender + ' sent you a new message', 'message')
 			}
