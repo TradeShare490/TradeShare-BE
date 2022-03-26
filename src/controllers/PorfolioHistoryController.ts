@@ -16,8 +16,7 @@ class PorfolioHistoryController {
 	async getHistory (req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId)
 
-		const period = req.body.period ?? '1M'
-
+		const period = req.query.period ?? '1M'
 		const userInfo = await this.userInfoService.findUserInfo({ userId: userId })
 		if (userInfo?.alpacaToken || userInfo?.alpacaToken === 'None') {
 			return res.send(
