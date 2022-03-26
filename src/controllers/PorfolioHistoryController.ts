@@ -8,12 +8,12 @@ import AlpacaService from '../db/service/AlpacaService'
 class PorfolioHistoryController {
 	private userInfoService: UserInfoService;
 	private alpacaService: AlpacaService;
-	constructor() {
+	constructor () {
 		this.userInfoService = new UserInfoService(UserInfoCollection)
 		this.alpacaService = new AlpacaService()
 	}
 
-	async getHistory(req: Request, res: Response) {
+	async getHistory (req: Request, res: Response) {
 		const userId = new mongoose.Types.ObjectId(req.params.userId)
 
 		const period = req.query.period ?? '1M'
