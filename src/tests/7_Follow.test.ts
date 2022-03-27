@@ -4,6 +4,7 @@ import UserInfoService from '../db/service/UserInfoService'
 import FollowService from '../modules/follows/FollowService'
 import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
+import NotificationsService from '../modules/notifications/NotificationsService'
 
 import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
 import { generateRandomPassword } from '../utils/utils'
@@ -19,10 +20,12 @@ describe('Follow service can', () => {
 	let mockedUser: MockedUser
 	let userService: UserService
 	let userInfoService: UserInfoService
+	let notificationsService: NotificationsService
 
 	describe('setup', () => {
 		it('instantiate the service class', () => {
 			followService = new FollowService()
+			notificationsService = new NotificationsService()
 			expect(followService).not.equal(undefined)
 		})
 
@@ -103,6 +106,13 @@ describe('Follow service can', () => {
 			expect(result.success).to.be.false
 		})
 
+		it('target user receives notification', async () => {
+			const result = await notificationsService.getNotifications(
+				mockedUser.mockedInfo.userId.toJSON()
+			)
+			expect(result.data.notifications.length).equal(1)
+		})
+
 		it.skip('recevie notification if the profile is private', () => {
 			// mockedUser gets notification if profile is private; public by default
 			// only do public requests for now
@@ -172,6 +182,7 @@ describe('Follow service can', () => {
 
 		it('delete mocked nodes', async () => {
 			// Delete the mocked nodes
+
 			const tobeDeletedIDs = [
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()

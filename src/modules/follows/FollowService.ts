@@ -4,11 +4,14 @@ import UserInfoService from '../../db/service/UserInfoService'
 import { followQueries } from './FollowQueries'
 import mongoose from 'mongoose'
 import neo4j from 'neo4j-driver'
+import NotificationsService from '../notifications/NotificationsService'
 
 class FollowService {
 	private userInfoService: UserInfoService;
-	constructor () {
+	private notificationsService: NotificationsService
+	constructor() {
 		this.userInfoService = new UserInfoService(UserInfoCollection)
+		this.notificationsService = new NotificationsService()
 	}
 
 	/**
@@ -19,14 +22,14 @@ class FollowService {
 	 */
 	async follow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId'], bypassPrivate = false) {
 		// cannot follow yourself
-		if (srcUserId === targetUserId) return { success: false, message: 'Cannot follow yourself' }
+		if (srcUserId === targetUserId) return { success: false, message: 'Cannot follow yourself', data: { relId: -1 } }
 
 		// Check if the relationship already exist or not
 		const relExists = await this.verifyRelFollows(srcUserId, targetUserId)
 
 		// If exists, return error and message: "Already exists"
 		if (relExists) {
-			return { success: false, message: 'The actor already followed this user' }
+			return { success: false, message: 'The actor already followed this user', data: { relId: -1 } }
 		}
 
 		// If does not exist, setup follow relationship between the two users
@@ -36,14 +39,23 @@ class FollowService {
 			const targerUserInfo = await this.userInfoService.findUserInfo({
 				userId: targetUserMongoId
 			})
-			if (targerUserInfo?.isPrivate && !bypassPrivate) {
-				return { success: false, message: 'This function is not ready, work is in progress' }
+      
+			if (targerUserInfo?.isPrivate && !bypassPrivate)  {
+				const res = { success: false, message: 'This function is not ready, work is in progress', data: { relId: -1 } }
+				if (res.success) {
+					this.notificationsService.notify(targerUserInfo?.firstname + ' ' + targerUserInfo?.lastname, '[User]' + ' has requested to follow you', 'followRequest')
+				}
+				return res
 			} else {
-				return this.createRelFollows(srcUserId, targetUserId)
+				const res = await this.createRelFollows(srcUserId, targetUserId)
+				if (res.success) {
+					this.notificationsService.notify(targetUserId, targerUserInfo?.firstname + ' ' + targerUserInfo?.lastname + ' has requested to follow you', 'followRequest')
+				}
+				return res
 			}
 		} catch (error: any) {
 			console.log(error.message)
-			return { success: false, message: 'Invalid target userID', data: {} }
+			return { success: false, message: 'Invalid target userID', data: { relId: -1 } }
 		}
 	}
 
@@ -54,7 +66,7 @@ class FollowService {
 	 * @param isPending whether this relationship requires approval, false by default
 	 * @returns \{success; message; data: {numOfPath, relId } }
 	 */
-	async createRelFollows (
+	async createRelFollows(
 		srcUserId: UserInfo['userId'],
 		targetUserId: UserInfo['userId'],
 		isPending = false
@@ -87,7 +99,7 @@ class FollowService {
 	 * @param targetUserId
 	 * @returns true if there is, otherwise, false
 	 */
-	async verifyRelFollows (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
+	async verifyRelFollows(srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
 		const query = followQueries.GET_RELATIONSHION_BETWEEN_USERS
 		const params = {
 			src: srcUserId,
@@ -107,7 +119,7 @@ class FollowService {
 	 * @param userId
 	 * @returns \{success, message, data: list of followers' IDs}
 	 */
-	async getFollows (userId: UserInfo['userId']) {
+	async getFollows(userId: UserInfo['userId']) {
 		const query = followQueries.GET_FOLLOWS_FOR_USER
 		const params = {
 			userId: userId
@@ -136,7 +148,7 @@ class FollowService {
 	 * @param userId
 	 * @returns \{success, message, data: ListOfFollowers}
 	 */
-	async getFollowers (userId: UserInfo['userId']) {
+	async getFollowers(userId: UserInfo['userId']) {
 		const query = followQueries.GET_FOLLOWERS_FOR_USER
 		const params = {
 			userId: userId
@@ -166,7 +178,7 @@ class FollowService {
 	 * @param targetUserId ID of the target
 	 * @returns \{success, message, data: numbDeleted}
 	 */
-	unFollow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
+	unFollow(srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
 		return this.deleteRelFollows(srcUserId, targetUserId)
 	}
 
@@ -177,7 +189,7 @@ class FollowService {
 	 * @param isPending if true means cancelling a `follow` request, false by default. By default: unfollow
 	 * @returns \{success, message, data: numbDeleted}
 	 */
-	async deleteRelFollows (
+	async deleteRelFollows(
 		srcUserId: UserInfo['userId'],
 		targetUserId: UserInfo['userId'],
 		isPending = false
@@ -208,7 +220,7 @@ class FollowService {
 	 * @param userId
 	 * @returns \{success, message, data: number of nodes deleted}
 	 */
-	async deleteUserNode (userId: UserInfo['userId']) {
+	async deleteUserNode(userId: UserInfo['userId']) {
 		const query = followQueries.DELETE_USER_NODE_BY_ID
 		const params = {
 			userId: userId
