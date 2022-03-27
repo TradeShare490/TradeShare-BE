@@ -86,16 +86,16 @@ class NotificationsService {
         const params = {
             user: userId
         }
-
         const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
         if (queryResponse.success && queryResponse.data[0]) {
             // field_name based on the RETURN in the query
             let notifs: any[]
             notifs = queryResponse.data[0].get('userNotifications')
+            const ids = queryResponse.data[0].get('notifId')
             return {
                 success: true,
                 message: queryResponse.message,
-                data: { notifications: notifs }
+                data: { notifications: notifs, ids: ids }
             }
         } else {
             return queryResponse
@@ -132,10 +132,10 @@ class NotificationsService {
      * @param notificationId ID of the notification
      * @returns \{success, message, data: numbDeleted}
      */
-    async deteletNotificaitonRel(notificationId: string, userId: string) {
+    async deteletNotificaitonRel(relId: string, userId: string) {
         const query = notificationsQueries.DELETE_REL_BY_ID
         const params = {
-            notifId: notificationId,
+            relId: relId,
             user: userId
         }
 
