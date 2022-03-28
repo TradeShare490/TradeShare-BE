@@ -80,7 +80,7 @@ class FollowService extends Neo4JHelper {
 			isPending: isPending
 		}
 
-		return await this.createRel(query, params)
+		return this.createRel(query, params)
 	}
 
 	/**

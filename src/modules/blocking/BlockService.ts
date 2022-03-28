@@ -54,7 +54,7 @@ class BlockService extends Neo4JHelper {
 			src: srcUserId,
 			target: targetUserId
 		}
-		return await this.createRel(query, params)
+		return this.createRel(query, params)
 	}
 
 	/**
