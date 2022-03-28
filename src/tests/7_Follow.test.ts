@@ -6,8 +6,7 @@ import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 import NotificationsService from '../modules/notifications/NotificationsService'
 
-import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
-import { generateRandomPassword } from '../utils/utils'
+import { cleanupMockedUserInfo, createAndTestUserInfo, mockedActorUserInput, mockedTargetUserInput } from './2_UserInfo.test'
 
 export interface MockedUser {
 	mockedUser: UserDocument;
@@ -37,33 +36,9 @@ describe('Follow service can', () => {
 		})
 
 		it('create two mocked users', async () => {
-			const mockedUserInput = {
-				createUserInput: {
-					email: 'mocked@email.com',
-					password: await generateRandomPassword(),
-					username: 'mockedUser'
-				},
-				createInfoInput: {
-					firstname: 'Mocked',
-					lastname: 'User',
-					email: 'mocked@email.com',
-					username: 'mockedUser'
-				}
-			}
+			const mockedUserInput = await mockedTargetUserInput()
 
-			const mockedFollowerInput = {
-				createUserInput: {
-					email: 'mockedFollower@email.com',
-					password: await generateRandomPassword(),
-					username: 'mockedFollower'
-				},
-				createInfoInput: {
-					firstname: 'Mocked',
-					lastname: 'Follower',
-					email: 'mockedFollower@email.com',
-					username: 'mockedFollower'
-				}
-			}
+			const mockedFollowerInput = await mockedActorUserInput()
 
 			mockedFollower = await createAndTestUserInfo({
 				createUserInfoInput: mockedFollowerInput.createInfoInput,

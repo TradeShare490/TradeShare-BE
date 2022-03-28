@@ -12,7 +12,8 @@ import conversationRoute from './ConversationRoute'
 import messageRoute from './MessageRoute'
 import notificationsRoute from '../../modules/notifications/NotificationsRoute'
 import trendingCompaniesRoute from './TrendingCompaniesRoute'
-import mailRouter from "../../utils/email/mailRouter"
+import mailRouter from '../../utils/email/mailRouter'
+import blockRoute from '../../modules/blocking/BlockRoute'
 
 import historyRoute from './HistoryRoute'
 module.exports = function (app: Express) {
@@ -33,4 +34,5 @@ module.exports = function (app: Express) {
 	trendingCompaniesRoute(app)
 	mailRouter(app)
 	historyRoute(app)
+	blockRoute(app)
 }
