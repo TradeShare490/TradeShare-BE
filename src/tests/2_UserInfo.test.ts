@@ -143,3 +143,35 @@ export const cleanupMockedUserInfo = async (input: CleanupMockedUserInfoInput) =
 	expect(deleteUserDocSuccess).to.be.true
 	expect(deleteUserInfoSuccess).to.be.true
 }
+
+export const mockedTargetUserInput = async () => {
+	return {
+		createUserInput: {
+			email: 'mockedUser@email.com',
+			password: await generateRandomPassword(),
+			username: 'mockedUser2'
+		},
+		createInfoInput: {
+			firstname: 'Mocked',
+			lastname: 'User',
+			email: 'mockedUser@email.com',
+			username: 'mockedUser2'
+		}
+	}
+}
+
+export const mockedActorUserInput = async () => {
+	return {
+		createUserInput: {
+			email: 'mockedActor@email.com',
+			password: await generateRandomPassword(),
+			username: 'mockedActor'
+		},
+		createInfoInput: {
+			firstname: 'Mocked',
+			lastname: 'Follower',
+			email: 'mockedActor@email.com',
+			username: 'mockedActor'
+		}
+	}
+}

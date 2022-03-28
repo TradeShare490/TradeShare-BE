@@ -1,4 +1,3 @@
-import { UserInfo } from '../../db/models/userInfo.model'
 import neo4jInstance, { QueryMode } from '../../db/neo4j/Neo4jInstance'
 import neo4j from 'neo4j-driver'
 

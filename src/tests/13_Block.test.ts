@@ -5,8 +5,7 @@ import BlockService from '../modules/blocking/BlockService'
 import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 
-import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
-import { generateRandomPassword } from '../utils/utils'
+import { cleanupMockedUserInfo, createAndTestUserInfo, mockedActorUserInput, mockedTargetUserInput } from './2_UserInfo.test'
 
 export interface MockedUser {
 	mockedUser: UserDocument;
@@ -34,33 +33,9 @@ describe('Block service can', () => {
 		})
 
 		it('create two mocked users', async () => {
-			const mockedUserInput = {
-				createUserInput: {
-					email: 'mockedUser@email.com',
-					password: await generateRandomPassword(),
-					username: 'mockedUser2'
-				},
-				createInfoInput: {
-					firstname: 'Mocked',
-					lastname: 'User',
-					email: 'mockedUser@email.com',
-					username: 'mockedUser2'
-				}
-			}
+			const mockedUserInput = await mockedTargetUserInput()
 
-			const mockedBlockerInput = {
-				createUserInput: {
-					email: 'mockedBlocker@email.com',
-					password: await generateRandomPassword(),
-					username: 'mockedBlocker'
-				},
-				createInfoInput: {
-					firstname: 'Mocked',
-					lastname: 'Follower',
-					email: 'mockedBlocker@email.com',
-					username: 'mockedBlocker'
-				}
-			}
+			const mockedBlockerInput = await mockedActorUserInput()
 
 			mockedBlocker = await createAndTestUserInfo({
 				createUserInfoInput: mockedBlockerInput.createInfoInput,
