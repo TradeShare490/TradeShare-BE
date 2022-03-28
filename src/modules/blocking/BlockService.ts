@@ -4,7 +4,7 @@ import UserInfoService from '../../db/service/UserInfoService'
 import { blockQueries } from './BlockQueries'
 import neo4j from 'neo4j-driver'
 
-class FollowService {
+class BlockService {
 	private userInfoService: UserInfoService;
 	constructor () {
 		this.userInfoService = new UserInfoService(UserInfoCollection)
@@ -30,7 +30,7 @@ class FollowService {
 
 		// If does not exist, setup block relationship between the two users
 		try {
-			return this.createRelBlocks(srcUserId, targetUserId)
+			return await this.createRelBlocks(srcUserId, targetUserId)
 		} catch (error: any) {
 			console.log(error.message)
 			return { success: false, message: 'Invalid target userID', data: {} }
@@ -184,4 +184,4 @@ class FollowService {
 	}
 }
 
-export default FollowService
+export default BlockService
