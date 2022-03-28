@@ -3,10 +3,12 @@ import neo4jInstance, { QueryMode } from '../../db/neo4j/Neo4jInstance'
 import UserInfoService from '../../db/service/UserInfoService'
 import { blockQueries } from './BlockQueries'
 import neo4j from 'neo4j-driver'
+import Neo4JHelper from '../utils/Neo4JHelper'
 
-class BlockService {
+class BlockService extends Neo4JHelper {
 	private userInfoService: UserInfoService;
 	constructor () {
+		super()
 		this.userInfoService = new UserInfoService(UserInfoCollection)
 	}
 
@@ -52,20 +54,7 @@ class BlockService {
 			src: srcUserId,
 			target: targetUserId
 		}
-
-		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
-		if (queryResponse.success && queryResponse.data[0]) {
-			// field_name based on the RETURN in the query
-			const numOfPath = neo4j.integer.toNumber(queryResponse.data[0].get('numOfPath'))
-			const relId = neo4j.integer.toNumber(queryResponse.data[0].get('relId'))
-			return {
-				success: true,
-				message: queryResponse.message,
-				data: { numOfPath: numOfPath, relId: relId }
-			}
-		} else {
-			return queryResponse
-		}
+		return await this.createRel(query, params)
 	}
 
 	/**

@@ -5,11 +5,13 @@ import { followQueries } from './FollowQueries'
 import mongoose from 'mongoose'
 import neo4j from 'neo4j-driver'
 import NotificationsService from '../notifications/NotificationsService'
+import Neo4JHelper from '../utils/Neo4JHelper'
 
-class FollowService {
+class FollowService extends Neo4JHelper {
 	private userInfoService: UserInfoService;
 	private notificationsService: NotificationsService
-	constructor() {
+	constructor () {
+		super()
 		this.userInfoService = new UserInfoService(UserInfoCollection)
 		this.notificationsService = new NotificationsService()
 	}
@@ -39,8 +41,8 @@ class FollowService {
 			const targerUserInfo = await this.userInfoService.findUserInfo({
 				userId: targetUserMongoId
 			})
-      
-			if (targerUserInfo?.isPrivate && !bypassPrivate)  {
+
+			if (targerUserInfo?.isPrivate && !bypassPrivate) {
 				const res = { success: false, message: 'This function is not ready, work is in progress', data: { relId: -1 } }
 				if (res.success) {
 					this.notificationsService.notify(targerUserInfo?.firstname + ' ' + targerUserInfo?.lastname, '[User]' + ' has requested to follow you', 'followRequest')
@@ -66,7 +68,7 @@ class FollowService {
 	 * @param isPending whether this relationship requires approval, false by default
 	 * @returns \{success; message; data: {numOfPath, relId } }
 	 */
-	async createRelFollows(
+	async createRelFollows (
 		srcUserId: UserInfo['userId'],
 		targetUserId: UserInfo['userId'],
 		isPending = false
@@ -78,19 +80,7 @@ class FollowService {
 			isPending: isPending
 		}
 
-		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
-		if (queryResponse.success && queryResponse.data[0]) {
-			// field_name based on the RETURN in the query
-			const numOfPath = neo4j.integer.toNumber(queryResponse.data[0].get('numOfPath'))
-			const relId = neo4j.integer.toNumber(queryResponse.data[0].get('relId'))
-			return {
-				success: true,
-				message: queryResponse.message,
-				data: { numOfPath: numOfPath, relId: relId }
-			}
-		} else {
-			return queryResponse
-		}
+		return await this.createRel(query, params)
 	}
 
 	/**
@@ -99,7 +89,7 @@ class FollowService {
 	 * @param targetUserId
 	 * @returns true if there is, otherwise, false
 	 */
-	async verifyRelFollows(srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
+	async verifyRelFollows (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
 		const query = followQueries.GET_RELATIONSHION_BETWEEN_USERS
 		const params = {
 			src: srcUserId,
@@ -119,7 +109,7 @@ class FollowService {
 	 * @param userId
 	 * @returns \{success, message, data: list of followers' IDs}
 	 */
-	async getFollows(userId: UserInfo['userId']) {
+	async getFollows (userId: UserInfo['userId']) {
 		const query = followQueries.GET_FOLLOWS_FOR_USER
 		const params = {
 			userId: userId
@@ -148,7 +138,7 @@ class FollowService {
 	 * @param userId
 	 * @returns \{success, message, data: ListOfFollowers}
 	 */
-	async getFollowers(userId: UserInfo['userId']) {
+	async getFollowers (userId: UserInfo['userId']) {
 		const query = followQueries.GET_FOLLOWERS_FOR_USER
 		const params = {
 			userId: userId
@@ -178,7 +168,7 @@ class FollowService {
 	 * @param targetUserId ID of the target
 	 * @returns \{success, message, data: numbDeleted}
 	 */
-	unFollow(srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
+	unFollow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
 		return this.deleteRelFollows(srcUserId, targetUserId)
 	}
 
@@ -189,7 +179,7 @@ class FollowService {
 	 * @param isPending if true means cancelling a `follow` request, false by default. By default: unfollow
 	 * @returns \{success, message, data: numbDeleted}
 	 */
-	async deleteRelFollows(
+	async deleteRelFollows (
 		srcUserId: UserInfo['userId'],
 		targetUserId: UserInfo['userId'],
 		isPending = false
@@ -220,7 +210,7 @@ class FollowService {
 	 * @param userId
 	 * @returns \{success, message, data: number of nodes deleted}
 	 */
-	async deleteUserNode(userId: UserInfo['userId']) {
+	async deleteUserNode (userId: UserInfo['userId']) {
 		const query = followQueries.DELETE_USER_NODE_BY_ID
 		const params = {
 			userId: userId

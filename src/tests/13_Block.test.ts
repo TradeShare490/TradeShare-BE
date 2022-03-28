@@ -36,15 +36,15 @@ describe('Block service can', () => {
 		it('create two mocked users', async () => {
 			const mockedUserInput = {
 				createUserInput: {
-					email: 'mocked@email.com',
+					email: 'mockedUser@email.com',
 					password: await generateRandomPassword(),
-					username: 'mockedUser'
+					username: 'mockedUser2'
 				},
 				createInfoInput: {
 					firstname: 'Mocked',
 					lastname: 'User',
-					email: 'mocked@email.com',
-					username: 'mockedUser'
+					email: 'mockedUser@email.com',
+					username: 'mockedUser2'
 				}
 			}
 
