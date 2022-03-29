@@ -7,6 +7,7 @@ import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 import NotificationsService from '../modules/notifications/NotificationsService'
 
 import { cleanupMockedUserInfo, createAndTestUserInfo, mockedActorUserInput, mockedTargetUserInput } from './2_UserInfo.test'
+import FollowRequestService from '../modules/follows/FollowRequestService'
 
 export interface MockedUser {
 	mockedUser: UserDocument;
@@ -107,28 +108,28 @@ describe('Follow service can', () => {
 		})
 
 		it('private target user receives request', async () => {
-			const result = await followService.getPendingRequests(mockedFollower.mockedInfo.userId.toJSON())
+			const result = await FollowRequestService.getPendingRequests(mockedFollower.mockedInfo.userId.toJSON())
 			expect(result.success).to.be.true
 			expect(result.data.length).to.greaterThanOrEqual(1)
 		})
 
 		it('private target user accepts request', async () => {
 			expect(relId).to.be.a('number')
-			const result = await followService.acceptPendingRequest(relId)
+			const result = await FollowRequestService.acceptPendingRequest(relId)
 			expect(result.success).to.be.true
 			expect(result.data.numbModified).to.equal(1)
 		})
 
 		it('set request to pending for test purpose', async () => {
 			expect(relId).to.be.a('number')
-			const result = await followService.setPendingRequest(relId, false)
+			const result = await FollowRequestService.setPendingRequest(relId, false)
 			expect(result.success).to.be.true
 			expect(result.data.numbModified).to.equal(1)
 		})
 
 		it('private target user declines request', async () => {
 			expect(relId).to.be.a('number')
-			const result = await followService.declinePendingRequest(relId)
+			const result = await FollowRequestService.declinePendingRequest(relId)
 			expect(result.success).to.be.true
 			expect(result.data.numbDeleted).to.equal(1)
 		})

@@ -3,7 +3,7 @@ import neo4jInstance, { QueryMode } from '../../db/neo4j/Neo4jInstance'
 import UserInfoService from '../../db/service/UserInfoService'
 import { followQueries } from './FollowQueries'
 import mongoose from 'mongoose'
-import neo4j, { Record } from 'neo4j-driver'
+import neo4j from 'neo4j-driver'
 import NotificationsService from '../notifications/NotificationsService'
 import Neo4JHelper from '../utils/Neo4JHelper'
 
@@ -168,97 +168,6 @@ class FollowService extends Neo4JHelper {
 	 */
 	unFollow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
 		return this.deleteRelFollows(srcUserId, targetUserId)
-	}
-
-	/**
-	 * Decline a request
-	 * @param srcUserId ID of the actor
-	 * @param targetUserId ID of the target
-	 * @returns \{success, message, data: numbDeleted}
-	 */
-	async declinePendingRequest (relId: number) {
-		const query = followQueries.DELELTE_REQUEST_BY_ID
-		const params = { relId }
-
-		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
-		if (queryResponse.success && queryResponse.data[0]) {
-			// field_name based on the RETURN in the query
-			const numbDeleted = neo4j.integer.toNumber(queryResponse.data[0].get('numbDeleted'))
-			return {
-				success: true,
-				message: queryResponse.message,
-				data: { numbDeleted: numbDeleted }
-			}
-		} else {
-			return queryResponse
-		}
-	}
-
-	/**
-	 * Accepting a request
-	 * @param relId relationship ID / Request ID
-	 * @returns
-	 */
-	acceptPendingRequest (relId: number) {
-		return this.setPendingRequest(relId, false)
-	}
-
-	/**
-	 * Return the status of the relationship
-	 * @param relId
-	 * @returns
-	 */
-	async getPendingRequests (userId: UserInfo['userId']) {
-		const query = followQueries.GET_PENDING_REQUESTS_FOR_USER
-		const params = {
-			userId: userId
-		}
-
-		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.read)
-		if (queryResponse.success && queryResponse.data[0]) {
-			// field_name based on the RETURN in the query
-			return {
-				success: true,
-				message: queryResponse.message,
-				data: this.parseRequestFromNeo4j(queryResponse.data)
-			}
-		} else {
-			return queryResponse
-		}
-	}
-
-	/**
-	 * Set a request to pending. This function is used in test to avoid creating unnecessary new request
-	 * @param relId
-	 * @returns
-	 */
-	async setPendingRequest (relId: number, isPending: boolean) {
-		const query = followQueries.SET_PENDING_REQUEST
-		const params = { relId, isPending }
-
-		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
-		if (queryResponse.success && queryResponse.data[0]) {
-			// field_name based on the RETURN in the query
-			const numbModified = neo4j.integer.toNumber(queryResponse.data[0].get('numbModified'))
-			return {
-				success: true,
-				message: queryResponse.message,
-				data: { numbModified }
-			}
-		} else {
-			return queryResponse
-		}
-	}
-
-	parseRequestFromNeo4j (rows: Record[]) {
-		const requestArr = []
-		for (const row of rows) {
-			requestArr.push({
-				senderId: neo4j.integer.toNumber(row.get('senderId')),
-				requestId: neo4j.integer.toNumber(row.get('relId'))
-			})
-		}
-		return requestArr
 	}
 
 	/**
