@@ -14,22 +14,26 @@ class ActivitiesController {
 	}
 
 	async getActivities (req: Request, res: Response) {
-		const userId = new mongoose.Types.ObjectId(req.params.userId)
-		const userInfo = await this.userInfoService.findUserInfo({ userId: userId })
-		if (!userInfo?.userId) {
-			return res.status(404).send('User not found')
-		}
+		try {
+			const userId = new mongoose.Types.ObjectId(req.params.userId)
+			const userInfo = await this.userInfoService.findUserInfo({ userId: userId })
+			if (!userInfo?.userId) {
+				return res.status(404).send('User not found')
+			}
 
-		if (userInfo?.alpacaToken || userInfo?.alpacaToken !== 'None') {
-			return res.send(
-				await this.alpacaService.getInfo(
-					'/account/activities/FILL',
-					'activities',
-					userInfo.alpacaToken
+			if (userInfo?.alpacaToken || userInfo?.alpacaToken !== 'None') {
+				return res.send(
+					await this.alpacaService.getInfo(
+						'/account/activities/FILL',
+						'activities',
+						userInfo.alpacaToken
+					)
 				)
-			)
-		} else {
-			return res.send(messages.internalError("User hasn't linked any Alpaca account"))
+			} else {
+				return res.send(messages.internalError("User hasn't linked any Alpaca account"))
+			}
+		} catch (error: any) {
+			return res.send(messages.internalError(error.message))
 		}
 	}
 }
