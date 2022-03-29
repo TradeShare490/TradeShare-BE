@@ -7,6 +7,7 @@ import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
 import NotificationsService from '../modules/notifications/NotificationsService'
 
 import { cleanupMockedUserInfo, createAndTestUserInfo, mockedActorUserInput, mockedTargetUserInput } from './2_UserInfo.test'
+import FollowRequestService from '../modules/follows/FollowRequestService'
 
 export interface MockedUser {
 	mockedUser: UserDocument;
@@ -53,10 +54,14 @@ describe('Follow service can', () => {
 				userInfoService: userInfoService,
 				userService: userService
 			})
+
+			// set mockedFollower to be private account
+			const updateMockedFollower = await userInfoService.updateUserInfo({ userId: mockedFollower.mockedInfo.userId.toJSON() }, { isPrivate: true }, { new: true })
+			expect(updateMockedFollower).not.equal(undefined)
 		})
 	})
 
-	describe('follow users', () => {
+	describe('follow public users', () => {
 		it('follow another user', async () => {
 			// mockedFollower sends request to mockedUser
 			const result = await followService.follow(
@@ -80,23 +85,53 @@ describe('Follow service can', () => {
 			const result = await followService.follow(123, { id: 'object type id' })
 			expect(result.success).to.be.false
 		})
+	})
 
-		it('target user receives notification', async () => {
+	describe('follow private users', () => {
+		let relId:number
+		it('follow a private user', async () => {
+			// mockedFollower sends request to mockedUser
+			const result = await followService.follow(
+				mockedUser.mockedInfo.userId.toJSON(),
+				mockedFollower.mockedInfo.userId.toJSON()
+			)
+			expect(result.success).to.be.true
+			expect(result.data.relId).not.equal(undefined)
+			relId = result.data.relId
+		})
+
+		it('private target user receives notification', async () => {
 			const result = await notificationsService.getNotifications(
-				mockedUser.mockedInfo.userId.toJSON()
+				mockedFollower.mockedInfo.userId.toJSON()
 			)
 			expect(result.data.notifications.length).equal(1)
 		})
 
-		it.skip('recevie notification if the profile is private', () => {
-			// mockedUser gets notification if profile is private; public by default
-			// only do public requests for now
+		it('private target user receives request', async () => {
+			const result = await FollowRequestService.getPendingRequests(mockedFollower.mockedInfo.userId.toJSON())
+			expect(result.success).to.be.true
+			expect(result.data.length).to.greaterThanOrEqual(1)
 		})
 
-		it.skip('follow request is pending if the profile is private', () => {
-			// the service searches for the relationship, the relationship should have status as "pending"
-			// look for status as 1 direction
-			// only do public requests for now
+		it('private target user accepts request', async () => {
+			expect(relId).to.be.a('number')
+			const result = await FollowRequestService.acceptPendingRequest(relId)
+			expect(result.success).to.be.true
+			expect(result.data.numbModified).to.equal(1)
+		})
+
+		it('set request to pending for test purpose', async () => {
+			expect(relId).to.be.a('number')
+			const result = await FollowRequestService.setPendingRequest(relId, false)
+			expect(result.success).to.be.true
+			expect(result.data.numbModified).to.equal(1)
+		})
+
+		it('private target user declines request', async () => {
+			expect(relId).to.be.a('number')
+			const result = await FollowRequestService.declinePendingRequest(relId)
+			expect(result.success).to.be.true
+			expect(result.data.numbDeleted).to.equal(1)
 		})
 	})
 

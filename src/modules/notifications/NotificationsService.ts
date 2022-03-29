@@ -89,8 +89,13 @@ class NotificationsService {
 		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
 		if (queryResponse.success && queryResponse.data[0]) {
 			// field_name based on the RETURN in the query
-			const notifs = queryResponse.data[0].get('userNotifications')
-			const ids = queryResponse.data[0].get('notifId')
+			const notifs = []
+			const ids = []
+			for (const row of queryResponse.data) {
+				notifs.push(row.get('userNotifications')[0])
+				ids.push(neo4j.integer.toNumber(row.get('notifId')))
+			}
+
 			return {
 				success: true,
 				message: queryResponse.message,

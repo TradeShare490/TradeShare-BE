@@ -42,19 +42,17 @@ class FollowService extends Neo4JHelper {
 				userId: targetUserMongoId
 			})
 
-			if (targerUserInfo?.isPrivate && !bypassPrivate) {
-				const res = { success: false, message: 'This function is not ready, work is in progress', data: { relId: -1 } }
-				if (res.success) {
-					this.notificationsService.notify(targerUserInfo?.firstname + ' ' + targerUserInfo?.lastname, '[User]' + ' has requested to follow you', 'followRequest')
-				}
-				return res
-			} else {
-				const res = await this.createRelFollows(srcUserId, targetUserId)
-				if (res.success) {
-					this.notificationsService.notify(targetUserId, targerUserInfo?.firstname + ' ' + targerUserInfo?.lastname + ' has requested to follow you', 'followRequest')
-				}
-				return res
+			const res = targerUserInfo?.isPrivate && !bypassPrivate
+				? await this.createRelFollows(srcUserId, targetUserId, true)
+				: await this.createRelFollows(srcUserId, targetUserId)
+
+			// Notify target user if it is a private account
+			if (targerUserInfo?.isPrivate && !bypassPrivate && res.success) {
+				const notiMessage = `${targerUserInfo.firstname} ${targerUserInfo.lastname} has requested to follow you`
+				await this.notificationsService.notify(targetUserId, notiMessage, 'followRequest')
 			}
+
+			return res
 		} catch (error: any) {
 			console.log(error.message)
 			return { success: false, message: 'Invalid target userID', data: { relId: -1 } }
