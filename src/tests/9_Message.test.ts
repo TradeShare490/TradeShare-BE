@@ -26,8 +26,9 @@ describe('Message service can', () => {
 		expect(userService).not.equal(undefined)
 		followService = new FollowService()
 		expect(followService).not.equal(undefined)
-		const response = await conversationService.createConversation(['user1', 'test'], ['User 1', 'test'])
-		uId = (await userService.getUser({ username: 'test' })).user._id.toJSON()
+		const response = await conversationService.createConversation(['user1', 'user2'], ['User 1', 'User 2'])
+		uId = (await userService.getUser({ username: 'user1' })).user._id.toJSON()
+		console.log(uId)
 		mockedConversation = response.conversation
 	})
 

@@ -10,13 +10,13 @@ export default class MessageService {
 	private notificationService: NotificationsService
 	private conversationService: ConversationService
 	private userService: UserService
-	constructor() {
+	constructor () {
 		this.notificationService = new NotificationsService()
 		this.conversationService = new ConversationService()
 		this.userService = new UserService(UserCollection)
 	}
 
-	async createMessage(sender: string, message: string, conversationId: mongoose.Types.ObjectId) {
+	async createMessage (sender: string, message: string, conversationId: mongoose.Types.ObjectId) {
 		const createMessage = await MessageModel.create({
 			sender: sender,
 			message: message,
@@ -33,7 +33,7 @@ export default class MessageService {
 		return messages.createdMessage('Message is created', 'createdMessage', createMessage)
 	}
 
-	async getMessage(conversationId: mongoose.Types.ObjectId) {
+	async getMessage (conversationId: mongoose.Types.ObjectId) {
 		try {
 			const response = await MessageModel.find({
 				conversationId: conversationId
