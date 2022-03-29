@@ -18,3 +18,11 @@ export class BadInputError extends Error implements CustomError {
     	this.status = 400
     }
 }
+
+export class InternalError extends Error implements CustomError {
+    status: number
+    constructor (msg = 'Unexpected error') {
+    	super(msg)
+    	this.status = 500
+    }
+}
