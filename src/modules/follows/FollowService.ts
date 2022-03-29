@@ -48,7 +48,7 @@ class FollowService extends Neo4JHelper {
 
 			// Notify target user if it is a private account
 			if (targerUserInfo?.isPrivate && !bypassPrivate && res.success) {
-				const notiMessage = `${srcUserId?.firstname} ${srcUserId?.lastname} has requested to follow you`
+				const notiMessage = `${targerUserInfo.firstname} ${targerUserInfo.lastname} has requested to follow you`
 				await this.notificationsService.notify(targetUserId, notiMessage, 'followRequest')
 			}
 

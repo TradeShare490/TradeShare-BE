@@ -87,8 +87,8 @@ class FollowRequestService {
 		const requestArr = []
 		for (const row of rows) {
 			requestArr.push({
-				senderId: neo4j.integer.toNumber(row.get('senderId')),
-				requestId: neo4j.integer.toNumber(row.get('relId'))
+				senderId: row.get('senderId'),
+				relId: neo4j.integer.toNumber(row.get('relId'))
 			})
 		}
 		return requestArr
