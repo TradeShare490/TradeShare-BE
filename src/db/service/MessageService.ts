@@ -27,7 +27,6 @@ export default class MessageService {
 		for (const m of members) {
 			if (m !== sender) {
 				const uId = (await this.userService.getUser({ username: m })).user._id.toJSON()
-				console.log('notif' + uId)
 				await this.notificationService.notify(uId, sender + ' sent you a new message', 'message')
 			}
 		}

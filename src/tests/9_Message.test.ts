@@ -7,7 +7,7 @@ import FollowService from '../modules/follows/FollowService'
 import UserService from '../db/service/UserService'
 import UserCollection from '../db/models/user.model'
 
-describe.only('Message service can', () => {
+describe('Message service can', () => {
 	let conversationService: ConversationService
 	let mockedConversation: Conversation
 	let messageService: MessageService
@@ -28,7 +28,6 @@ describe.only('Message service can', () => {
 		expect(followService).not.equal(undefined)
 		const response = await conversationService.createConversation(['user2', 'user1'], ['User 2', 'User 1'])
 		uId = (await userService.getUser({ username: 'user1' })).user._id.toJSON()
-		console.log(uId)
 		mockedConversation = response.conversation
 	})
 
