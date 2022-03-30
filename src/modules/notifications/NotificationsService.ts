@@ -1,5 +1,5 @@
 import neo4jInstance, { QueryMode } from '../../db/neo4j/Neo4jInstance'
-import UserInfoCollection, { UserInfo } from '../../db/models/userInfo.model'
+import UserInfoCollection from '../../db/models/userInfo.model'
 import { notificationsQueries } from './NotificationsQueries'
 import neo4j from 'neo4j-driver'
 import UserInfoService from '../../db/service/UserInfoService'
