@@ -16,6 +16,7 @@ import mailRouter from '../../utils/email/mailRouter'
 import blockRoute from '../../modules/blocking/BlockRoute'
 
 import historyRoute from './HistoryRoute'
+import { newsfeedRoute } from '../../modules/newsfeed/ActivityRoute'
 module.exports = function (app: Express) {
 	// Register the routes
 	defaultRoute(app)
@@ -35,4 +36,5 @@ module.exports = function (app: Express) {
 	mailRouter(app)
 	historyRoute(app)
 	blockRoute(app)
+	newsfeedRoute(app)
 }
