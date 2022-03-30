@@ -3,9 +3,9 @@ import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose'
 import { messages } from '../messages'
 
 export default class ConversationService {
-	async createConversation (members: Array<string>) {
+	async createConversation (members: Array<string>, membersNames: Array<string>) {
 		try {
-			const conversation = await ConversationModel.create({ members: members })
+			const conversation = await ConversationModel.create({ members: members, membersNames: membersNames })
 			return messages.successMessage('Conversation is created', 'conversation', conversation)
 		} catch (error: any) {
 			return messages.internalError(error.message)

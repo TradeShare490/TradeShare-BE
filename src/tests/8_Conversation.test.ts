@@ -11,7 +11,7 @@ describe('Conversation service can', () => {
 	})
 
 	it('create a new converation', async () => {
-		const response = await conversationService.createConversation(['user1', 'user2'])
+		const response = await conversationService.createConversation(['user1', 'user2'], ['User 1', 'User 2'])
 		expect(response).to.have.property('conversation')
 		expect(response.status).equals(200)
 		expect(response.success).equals(true)

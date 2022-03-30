@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import express, { Express } from 'express'
+import express, { Express, NextFunction, Request, Response } from 'express'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -8,6 +8,7 @@ import deserializeUser from './middleware/deserializeUser'
 import neo4j from './db/neo4j/Neo4jInstance'
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
+import { CustomError } from './utils/ErrorSchema/ErrorSchema'
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
@@ -29,6 +30,15 @@ app.use(deserializeUser)
 
 // loading routes
 require('./routes/v1')(app)
+
+// default handler
+app.use((err: CustomError, req: Request, res: Response, next:NextFunction) => {
+	console.log('********************** ERROR ***************')
+	console.log(`Internal_Log >> ${err.message}`)
+	console.log('At: ' + new Date())
+	res.status(err?.status || 500)
+	res.send(err.message)
+})
 
 const server = app.listen(PORT, async () => {
 	await mongoInstance.connect()

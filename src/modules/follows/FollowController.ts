@@ -22,7 +22,8 @@ class FollowController {
 	async follows (req: Request, res: Response) {
 		const actorId = req.body.actorId || '-1'
 		const targetId = req.body.targetId || '-1'
-		const response = await this.followService.follow(actorId, targetId)
+		const bypassPrivate = req.body.bypassPrivate || false
+		const response = await this.followService.follow(actorId, targetId, bypassPrivate)
 		return response.success ? res.send(response.data) : res.status(400).send(response)
 	}
 

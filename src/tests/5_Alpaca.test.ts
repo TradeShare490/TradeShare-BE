@@ -12,7 +12,7 @@ describe('Alpaca service can', () => {
 		const response = await alpacaService.getInfo('/positions', 'positions', 'fakeAlpacaToken')
 		expect(response.status).equals(501)
 		expect(response.success).equals(false)
-		expect(response.message).equals('request is not authorized')
+		expect(response.message).equals('forbidden.')
 	})
 
 	it('get positions info', async () => {
@@ -41,5 +41,12 @@ describe('Alpaca service can', () => {
 		expect(response.success).equals(true)
 		expect(response.message).equals('success')
 		expect(response.activities).to.be.an('Array')
+	})
+	it('get history info', async () => {
+		const response = await alpacaService.getInfo('/account/portfolio/history', 'history', alpacaToken)
+		expect(response.status).equals(200)
+		expect(response.success).equals(true)
+		expect(response.message).equals('success')
+		expect(response.history).not.equals(undefined)
 	})
 })

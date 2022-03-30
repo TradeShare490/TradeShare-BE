@@ -4,11 +4,16 @@ import UserInfoService from '../../db/service/UserInfoService'
 import { followQueries } from './FollowQueries'
 import mongoose from 'mongoose'
 import neo4j from 'neo4j-driver'
+import NotificationsService from '../notifications/NotificationsService'
+import Neo4JHelper from '../utils/Neo4JHelper'
 
-class FollowService {
+class FollowService extends Neo4JHelper {
 	private userInfoService: UserInfoService;
+	private notificationsService: NotificationsService
 	constructor () {
+		super()
 		this.userInfoService = new UserInfoService(UserInfoCollection)
+		this.notificationsService = new NotificationsService()
 	}
 
 	/**
@@ -17,16 +22,16 @@ class FollowService {
 	 * @param targetUserId ID of the target
 	 * @returns Returns error if `Follows` already exists. Else , {data: {numOfPath, relId } }
 	 */
-	async follow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId']) {
+	async follow (srcUserId: UserInfo['userId'], targetUserId: UserInfo['userId'], bypassPrivate = false) {
 		// cannot follow yourself
-		if (srcUserId === targetUserId) return { success: false, message: 'Cannot follow yourself' }
+		if (srcUserId === targetUserId) return { success: false, message: 'Cannot follow yourself', data: { relId: -1 } }
 
 		// Check if the relationship already exist or not
 		const relExists = await this.verifyRelFollows(srcUserId, targetUserId)
 
 		// If exists, return error and message: "Already exists"
 		if (relExists) {
-			return { success: false, message: 'The actor already followed this user' }
+			return { success: false, message: 'The actor already followed this user', data: { relId: -1 } }
 		}
 
 		// If does not exist, setup follow relationship between the two users
@@ -36,14 +41,21 @@ class FollowService {
 			const targerUserInfo = await this.userInfoService.findUserInfo({
 				userId: targetUserMongoId
 			})
-			if (targerUserInfo?.isPrivate) {
-				return { success: false, message: 'This function is not ready, work is in progress' }
-			} else {
-				return this.createRelFollows(srcUserId, targetUserId)
+
+			const res = targerUserInfo?.isPrivate && !bypassPrivate
+				? await this.createRelFollows(srcUserId, targetUserId, true)
+				: await this.createRelFollows(srcUserId, targetUserId)
+
+			// Notify target user if it is a private account
+			if (targerUserInfo?.isPrivate && !bypassPrivate && res.success) {
+				const notiMessage = `${targerUserInfo.firstname} ${targerUserInfo.lastname} has requested to follow you`
+				await this.notificationsService.notify(targetUserId, notiMessage, 'followRequest')
 			}
+
+			return res
 		} catch (error: any) {
 			console.log(error.message)
-			return { success: false, message: 'Invalid target userID', data: {} }
+			return { success: false, message: 'Invalid target userID', data: { relId: -1 } }
 		}
 	}
 
@@ -66,19 +78,7 @@ class FollowService {
 			isPending: isPending
 		}
 
-		const queryResponse = await neo4jInstance.runQueryInTransaction(query, params, QueryMode.write)
-		if (queryResponse.success && queryResponse.data[0]) {
-			// field_name based on the RETURN in the query
-			const numOfPath = neo4j.integer.toNumber(queryResponse.data[0].get('numOfPath'))
-			const relId = neo4j.integer.toNumber(queryResponse.data[0].get('relId'))
-			return {
-				success: true,
-				message: queryResponse.message,
-				data: { numOfPath: numOfPath, relId: relId }
-			}
-		} else {
-			return queryResponse
-		}
+		return this.createRel(query, params)
 	}
 
 	/**

@@ -29,8 +29,23 @@ export const followQueries = {
         `,
 	DELETE_USER_NODE_BY_ID: `
                 MATCH (n:User{userId: $userId})
-                DELETE n
+                DETACH DELETE n
+                RETURN COUNT(*) as numbDeleted                 
+        `,
+	SET_PENDING_REQUEST: `
+                MATCH (src:User)-[r:Follows]->(target: User)
+                WHERE ID(r) = $relId
+                SET r.isPending = $isPending
+                RETURN COUNT(*) as numbModified 
+        `,
+	GET_PENDING_REQUESTS_FOR_USER: `
+                MATCH (n:User)-[r:Follows{isPending: true}]->(m:User{userId: $userId})
+                RETURN n.userId as senderId, ID(r) as relId
+        `,
+	DELELTE_REQUEST_BY_ID: `
+                MATCH (src:User)-[r:Follows]->(target: User)
+                WHERE ID(r) = $relId
+                DELETE r
                 RETURN COUNT(*) as numbDeleted 
-                
         `
 }

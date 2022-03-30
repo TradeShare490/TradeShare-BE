@@ -10,15 +10,15 @@ import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
 import { generateRandomPassword } from '../utils/utils'
 
 interface MockedUser {
-    mockedUser: UserDocument;
-    mockedInfo: UserInfo;
+	mockedUser: UserDocument;
+	mockedInfo: UserInfo;
 }
 
 describe('Notifications service can', () => {
 	let notificationsService: NotificationsService
 	let followService: FollowService
 	let mockedUser: MockedUser
-	let testNotificationID: String
+	let testNotificationID: string
 	let userService: UserService
 	let userInfoService: UserInfoService
 
@@ -31,6 +31,10 @@ describe('Notifications service can', () => {
 		it('create prerequesite services', () => {
 			followService = new FollowService()
 			expect(followService).not.equal(undefined)
+			userService = new UserService(UserCollection)
+			userInfoService = new UserInfoService(UserInfoCollection)
+			expect(userService).not.equal(undefined)
+			expect(userInfoService).not.equal(undefined)
 		})
 
 		it('create mocked user', async () => {
@@ -57,26 +61,34 @@ describe('Notifications service can', () => {
 		})
 	})
 
-	describe('create a new notification', async () => {
-		const result = await notificationsService.notify(
-			mockedUser.mockedInfo.userId.toJSON(), 'test notification', 'follow'
-		)
-		if (result.success) { testNotificationID = result.data.id }
-		expect(result.success).to.be.true
+	describe('create a new notification', () => {
+		it('creates', async () => {
+			const result = await notificationsService.notify(
+				mockedUser.mockedInfo.userId.toJSON(), 'test notification', 'follow'
+			)
+			if (result.success) {
+				testNotificationID = result.data.id
+			}
+			expect(result.success).to.be.true
+		})
 	})
 
-	describe('mark a notification as read', async () => {
-		const result = await notificationsService.markNotificationRead(
-			mockedUser.mockedInfo.userId.toJSON(), testNotificationID
-		)
-		expect(result.success).to.be.true
+	describe('mark a notification as read', () => {
+		it('marks read', async () => {
+			const result = await notificationsService.markNotificationRead(
+				mockedUser.mockedInfo.userId.toJSON(), testNotificationID
+			)
+			expect(result.success).to.be.true
+		})
 	})
 
-	describe('get a list of notifications for a user', async () => {
-		const result = await notificationsService.getNotifications(
-			mockedUser.mockedInfo.userId.toJSON()
-		)
-		expect(result.data).equal(1)
+	describe('get a list of notifications for a user', () => {
+		it('gets notifications', async () => {
+			const result = await notificationsService.getNotifications(
+				mockedUser.mockedInfo.userId.toJSON()
+			)
+			expect(result.data.notifications.length).equal(1)
+		})
 	})
 
 	describe('clean up the test suite', () => {
@@ -87,30 +99,6 @@ describe('Notifications service can', () => {
 				userInfoService: userInfoService,
 				userService: userService
 			})
-		})
-
-		it('delete user node', async () => {
-			// Delete the mocked nodes
-			const tobeDeletedIDs = [
-				mockedUser.mockedInfo.userId.toJSON()
-			]
-			for (const id of tobeDeletedIDs) {
-				const nodeDeleteRes = await followService.deleteUserNode(id)
-				expect(nodeDeleteRes.success).to.be.true
-				expect(nodeDeleteRes.data).equal(1) // number of node deleted
-			}
-		})
-
-		it('delete notification node', async () => {
-			// Delete the mocked nodes
-			const tobeDeletedIDs = [
-				testNotificationID
-			]
-			for (const id of tobeDeletedIDs) {
-				const nodeDeleteRes = await notificationsService.deteletNotificaiton(id)
-				expect(nodeDeleteRes.success).to.be.true
-				expect(nodeDeleteRes.data).equal(1) // number of node deleted
-			}
 		})
 	})
 })

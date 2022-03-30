@@ -4,11 +4,12 @@ import UserInfoService from '../db/service/UserInfoService'
 import FollowService from '../modules/follows/FollowService'
 import UserCollection, { UserDocument } from '../db/models/user.model'
 import UserInfoCollection, { UserInfo } from '../db/models/userInfo.model'
+import NotificationsService from '../modules/notifications/NotificationsService'
 
-import { cleanupMockedUserInfo, createAndTestUserInfo } from './2_UserInfo.test'
-import { generateRandomPassword } from '../utils/utils'
+import { cleanupMockedUserInfo, createAndTestUserInfo, mockedActorUserInput, mockedTargetUserInput } from './2_UserInfo.test'
+import FollowRequestService from '../modules/follows/FollowRequestService'
 
-interface MockedUser {
+export interface MockedUser {
 	mockedUser: UserDocument;
 	mockedInfo: UserInfo;
 }
@@ -19,10 +20,12 @@ describe('Follow service can', () => {
 	let mockedUser: MockedUser
 	let userService: UserService
 	let userInfoService: UserInfoService
+	let notificationsService: NotificationsService
 
 	describe('setup', () => {
 		it('instantiate the service class', () => {
 			followService = new FollowService()
+			notificationsService = new NotificationsService()
 			expect(followService).not.equal(undefined)
 		})
 
@@ -34,33 +37,9 @@ describe('Follow service can', () => {
 		})
 
 		it('create two mocked users', async () => {
-			const mockedUserInput = {
-				createUserInput: {
-					email: 'mocked@email.com',
-					password: await generateRandomPassword(),
-					username: 'mockedUser'
-				},
-				createInfoInput: {
-					firstname: 'Mocked',
-					lastname: 'User',
-					email: 'mocked@email.com',
-					username: 'mockedUser'
-				}
-			}
+			const mockedUserInput = await mockedTargetUserInput()
 
-			const mockedFollowerInput = {
-				createUserInput: {
-					email: 'mockedFollower@email.com',
-					password: await generateRandomPassword(),
-					username: 'mockedFollower'
-				},
-				createInfoInput: {
-					firstname: 'Mocked',
-					lastname: 'Follower',
-					email: 'mockedFollower@email.com',
-					username: 'mockedFollower'
-				}
-			}
+			const mockedFollowerInput = await mockedActorUserInput()
 
 			mockedFollower = await createAndTestUserInfo({
 				createUserInfoInput: mockedFollowerInput.createInfoInput,
@@ -75,10 +54,14 @@ describe('Follow service can', () => {
 				userInfoService: userInfoService,
 				userService: userService
 			})
+
+			// set mockedFollower to be private account
+			const updateMockedFollower = await userInfoService.updateUserInfo({ userId: mockedFollower.mockedInfo.userId.toJSON() }, { isPrivate: true }, { new: true })
+			expect(updateMockedFollower).not.equal(undefined)
 		})
 	})
 
-	describe('follow users', () => {
+	describe('follow public users', () => {
 		it('follow another user', async () => {
 			// mockedFollower sends request to mockedUser
 			const result = await followService.follow(
@@ -102,16 +85,53 @@ describe('Follow service can', () => {
 			const result = await followService.follow(123, { id: 'object type id' })
 			expect(result.success).to.be.false
 		})
+	})
 
-		it.skip('recevie notification if the profile is private', () => {
-			// mockedUser gets notification if profile is private; public by default
-			// only do public requests for now
+	describe('follow private users', () => {
+		let relId:number
+		it('follow a private user', async () => {
+			// mockedFollower sends request to mockedUser
+			const result = await followService.follow(
+				mockedUser.mockedInfo.userId.toJSON(),
+				mockedFollower.mockedInfo.userId.toJSON()
+			)
+			expect(result.success).to.be.true
+			expect(result.data.relId).not.equal(undefined)
+			relId = result.data.relId
 		})
 
-		it.skip('follow request is pending if the profile is private', () => {
-			// the service searches for the relationship, the relationship should have status as "pending"
-			// look for status as 1 direction
-			// only do public requests for now
+		it('private target user receives notification', async () => {
+			const result = await notificationsService.getNotifications(
+				mockedFollower.mockedInfo.userId.toJSON()
+			)
+			expect(result.data.notifications.length).equal(1)
+		})
+
+		it('private target user receives request', async () => {
+			const result = await FollowRequestService.getPendingRequests(mockedFollower.mockedInfo.userId.toJSON())
+			expect(result.success).to.be.true
+			expect(result.data.length).to.greaterThanOrEqual(1)
+		})
+
+		it('private target user accepts request', async () => {
+			expect(relId).to.be.a('number')
+			const result = await FollowRequestService.acceptPendingRequest(relId)
+			expect(result.success).to.be.true
+			expect(result.data.numbModified).to.equal(1)
+		})
+
+		it('set request to pending for test purpose', async () => {
+			expect(relId).to.be.a('number')
+			const result = await FollowRequestService.setPendingRequest(relId, false)
+			expect(result.success).to.be.true
+			expect(result.data.numbModified).to.equal(1)
+		})
+
+		it('private target user declines request', async () => {
+			expect(relId).to.be.a('number')
+			const result = await FollowRequestService.declinePendingRequest(relId)
+			expect(result.success).to.be.true
+			expect(result.data.numbDeleted).to.equal(1)
 		})
 	})
 
@@ -172,6 +192,7 @@ describe('Follow service can', () => {
 
 		it('delete mocked nodes', async () => {
 			// Delete the mocked nodes
+
 			const tobeDeletedIDs = [
 				mockedFollower.mockedInfo.userId.toJSON(),
 				mockedUser.mockedInfo.userId.toJSON()
