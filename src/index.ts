@@ -34,7 +34,7 @@ app.use(deserializeUser)
 require('./routes/v1')(app)
 
 // default handler
-app.use((err: CustomError, req: Request, res: Response, next:NextFunction) => {
+app.use((err: CustomError, req: Request, res: Response, _next:NextFunction) => {
 	console.log('********************** ERROR ***************')
 	console.log('>>>> Request: ' + req.originalUrl)
 	console.log(`Internal_Log >> ${err.message}`)
