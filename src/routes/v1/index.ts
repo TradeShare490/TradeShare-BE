@@ -1,5 +1,4 @@
 import { Express } from 'express'
-import defaultRoute from './DefaultRoute'
 import userRoute from './UserRoute'
 import userInfoRoute from './UserInfoRoute'
 import accountRoute from './AccountRoute'
@@ -18,7 +17,6 @@ import historyRoute from './HistoryRoute'
 import { newsfeedRoute } from '../../modules/newsfeed/ActivityRoute'
 module.exports = function (app: Express) {
 	// Register the routes
-	defaultRoute(app)
 	userRoute(app)
 	userInfoRoute(app)
 	accountRoute(app)
