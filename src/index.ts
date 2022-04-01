@@ -10,6 +10,7 @@ import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 import { CustomError } from './utils/ErrorSchema/ErrorSchema'
 import sessionRoute from './routes/v1/SessionRoute'
+import defaultRoute from './routes/v1/DefaultRoute'
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
@@ -27,6 +28,7 @@ app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+defaultRoute(app)
 sessionRoute(app)
 app.use(deserializeUser)
 
