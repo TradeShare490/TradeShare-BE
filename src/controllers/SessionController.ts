@@ -48,13 +48,13 @@ class SessionController {
 	}
 
 	async getSession (req: Request, res: Response) {
-		const userId = res.locals.user._id
+		const userId = req.app.locals.user._id
 		const sessions = await this.sessionService.findSessions({ userId: userId, valid: true })
 		return res.send(sessions)
 	}
 
 	async deleteSession (req: Request, res: Response) {
-		const sessionID = res.locals.user.session
+		const sessionID = req.app.locals.user.session
 		await this.sessionService.updateSession({ _id: sessionID }, { valid: false })
 		return res.send({
 			accessToken: null,

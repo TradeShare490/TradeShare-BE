@@ -9,6 +9,7 @@ import neo4j from './db/neo4j/Neo4jInstance'
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 import { CustomError } from './utils/ErrorSchema/ErrorSchema'
+import sessionRoute from './routes/v1/SessionRoute'
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
@@ -26,6 +27,7 @@ app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+sessionRoute(app)
 app.use(deserializeUser)
 
 // loading routes
@@ -34,6 +36,7 @@ require('./routes/v1')(app)
 // default handler
 app.use((err: CustomError, req: Request, res: Response, next:NextFunction) => {
 	console.log('********************** ERROR ***************')
+	console.log('>>>> Request: ' + req.originalUrl)
 	console.log(`Internal_Log >> ${err.message}`)
 	console.log('At: ' + new Date())
 	res.status(err?.status || 500)
