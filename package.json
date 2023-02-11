@@ -71,7 +71,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "eslint-plugin-vue": "^8.4.1",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.20"
   },
   "engine": {
     "node": "14.x"
